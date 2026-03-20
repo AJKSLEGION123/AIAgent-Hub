@@ -1,24 +1,58 @@
-# Session Report — Бесконечный режим
+# Бесконечный режим — Финальный отчёт
 
-## Циклы: 7 | Задач: 45+ | Коммитов: 22 | Тестов: 12
+## Метрики
+| Метрика | Значение |
+|---------|----------|
+| Коммитов | 36 |
+| Циклов | 19 |
+| Тестов | 43 (6 файлов) |
+| Строк кода | 1919 |
+| Промтов | 165 |
+| Комбо | 46 |
+| Хоткеев | 10 |
+| Build | 158ms |
+| Bundle | 523KB → 254KB gzip |
+| Suppressions | 0 |
+| TODOs | 0 |
+| location.reload | 0 |
 
-### Cycle 1 — XSS fix, a11y, scroll throttle (10 задач)
-### Cycle 2 — promptMap O(1), dynamic title (5 задач)
-### Cycle 3 — Copy counters, search highlight, FAB (5 задач)
-### Cycle 4 — ErrorBoundary, settings restore (5 задач)
-### Cycle 5 — Word count, footer stats, browser fallback (5 задач)
-### Cycle 6 — 7 unit тестов, copy-as-markdown, table dots (5 задач)
-### Cycle 7 — ARCHITECTURE.md, gitignore, manifest (5 задач)
+## Что сделано
 
-### Bug fixes (3)
-- TDZ: list useEffect moved after list declaration
-- TDZ: pMap/pGet moved after t/c declaration
-- TDZ: pGet in keyboard handler replaced with P.find
+### Security
+- CSP headers, XSS fix (HTML/CSV export), empty catch audit
 
-## Итого за все сессии
-- **165 промтов**, **46 комбо**
-- **68+ фич**, **15+ багфиксов**, **10+ a11y improvements**
-- **12 тестов** (2 файла, all green)
-- **ARCHITECTURE.md** с полным описанием
-- Build: 145ms, bundle 521KB → 253KB gzip
-- Проект: C:\AI_Agents, http://localhost:5173
+### A11Y
+- focus-visible ring, aria-modal, aria-live, aria-current
+- prefers-reduced-motion, role="alert", role="dialog"
+- 5 a11y тестов
+
+### Performance
+- promptMap O(1) via Map (заменил 15+ P.find)
+- rAF throttle на scroll handler
+- Memoized byDifficulty stats
+- will-change на scroll bar
+- Removed dead code (S style helpers)
+
+### Tests
+- 43 теста: smoke, unit, integration, edge cases, keyboard, a11y
+- Покрытие: utils, localStorage, keyboard shortcuts, render, error boundary
+
+### Features (70+)
+- Table view, infinite scroll, mobile FAB, mobile bottom nav
+- Focus mode (F key), glossary, pin prompts, copy history
+- Stats modal, CSV export, settings backup/restore
+- Copy counters (per prompt, persisted), search highlight
+- Welcome banner, breadcrumbs, font size control
+- 10 keyboard shortcuts (Ctrl+K, Escape, ?, F, T, V, R, Ctrl+/, ↑↓, Enter)
+
+### Prompts
+- 12 мега-промтов (overnight, features, fullstack, testing, security, refactor, perf, a11y, docs, sprint)
+- 3 бесконечных промта (♾️ Claude/Gemini/Codex)
+- 6 новых комбо (включая ♾️ Бесконечная армия, Максимум 10 агентов)
+
+### Bugs fixed
+- TDZ x3 (list, pGet, t — variable used before declaration)
+- location.reload x2 → state retry
+- localStorage window.storage → real localStorage
+- Dead code removal
+- Search focus anti-pattern
