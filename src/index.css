@@ -95,6 +95,19 @@ tr[style]:hover { background: rgba(99, 102, 241, 0.04) !important; }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Cycle 18: Smooth transitions for overlays */
+[role="dialog"] {
+  animation: dialog-in 0.15s ease-out;
+}
+@keyframes dialog-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Cycle 18: Better scrollbar for overlay content */
+[role="dialog"] ::-webkit-scrollbar { width: 4px; }
+[role="dialog"] ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 2px; }
+
 /* Feat 20: Mobile bottom nav */
 @media (max-width: 640px) {
   .mobile-bottom-nav { display: flex !important; }
