@@ -500,15 +500,6 @@ function AgentHub({ data, loadTime }) {
   }, [search]);
 
   // ── Callbacks (must be before keyboard effect) ──
-  // Cycle 2: O(1) prompt lookup map
-  const pMap = useMemo(() => new Map(P.map(p => [p.id, p])), [P]);
-  const pGet = useCallback((id) => pMap.get(id), [pMap]);
-
-  // Refactor: shared helper for "copy all prompts as text"
-  const buildPromptBundle = useCallback((ids) => {
-    return ids.map(id => pGet(id)).filter(Boolean).map(p => `═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
-  }, [pGet, t]);
-
   const toggle = useCallback((id) => {
     setExpanded(e => {
       const willOpen = !e[id];
@@ -581,6 +572,13 @@ function AgentHub({ data, loadTime }) {
   const t = T[lang] || T.en; const c = TH[theme];
   // Task 92: kk falls back to en for role names
   if (lang==="kk" && (!t.r || Object.keys(t.r).length===0)) { t.r = T.en.r; }
+
+  // Cycle 2: O(1) prompt lookup map (must be after t/c)
+  const pMap = useMemo(() => new Map(P.map(p => [p.id, p])), [P]);
+  const pGet = useCallback((id) => pMap.get(id), [pMap]);
+  const buildPromptBundle = useCallback((ids) => {
+    return ids.map(id => pGet(id)).filter(Boolean).map(p => `═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
+  }, [pGet, t]);
 
   // ── Copy with toast (task 30, 31, 75: track used) ──
   const cp = useCallback(async (id, txt, skipModify) => {
