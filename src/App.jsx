@@ -78,13 +78,6 @@ const ML = { claude:"Claude Opus 4.6", gemini:"Gemini 3.1 Pro", codex:"Codex CLI
 const MI = { claude:"C", gemini:"G", codex:"X" };
 const font = "'JetBrains Mono','IBM Plex Mono','Fira Code',monospace";
 const alpha = (hex, a) => hex + Math.round(a*255).toString(16).padStart(2,'0');
-// Task 2: Common style objects
-const S = {
-  pill: (on,cl,c) => ({ padding:"5px 14px", fontSize:11, fontFamily:font, border:`1px solid ${on?(cl||c.text):c.brd}`, borderRadius:20, background:on?(cl?alpha(cl,.08):c.text+"0d"):"transparent", color:on?(cl||c.text):c.mut, cursor:"pointer", transition:"all .15s", whiteSpace:"nowrap", fontWeight:on?600:400, outline:"none" }),
-  badge: (bg,cl,brd) => ({ fontSize:9, padding:"2px 7px", borderRadius:10, background:bg, color:cl, border:`1px solid ${brd}`, fontWeight:600 }),
-  iconBox: (bg,brd,sz=36) => ({ width:sz, height:sz, borderRadius:9, background:bg, border:`1px solid ${brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17, flexShrink:0 }),
-  btn: (c) => ({ fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:7, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }),
-};
 
 /* ═══════════════════════════════════════════════
    COMPRESSED DATA
@@ -339,6 +332,8 @@ function AgentHub({ data, loadTime }) {
   const [recentViewed, setRecentViewed] = useState([]); // feat 30: recently viewed
   const [sessionStart] = useState(Date.now()); // feat 33: session timer
   const [showDiff, setShowDiff] = useState(null); // feat 34: diff modal
+  const [pinnedIds, setPinnedIds] = useState([]); // cycle 9: pinned prompts
+  const [showGlossary, setShowGlossary] = useState(false); // cycle 9: glossary
   const [copyCounters, setCopyCounters] = useState({}); // cycle-3: per-prompt copy count
   const [customCombo, setCustomCombo] = useState([]); // task 114
   const [buildingCombo, setBuildingCombo] = useState(false); // task 114
@@ -440,7 +435,7 @@ function AgentHub({ data, loadTime }) {
 
   // Task 5: Lock body scroll when overlays open
   useEffect(() => {
-    const hasOverlay = showShortcuts || focusPrompt || showStats || showCopyHistory || showDiff;
+    const hasOverlay = showShortcuts || focusPrompt || showStats || showCopyHistory || showDiff || showGlossary;
     document.body.style.overflow = hasOverlay ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [showShortcuts, focusPrompt, showStats, showCopyHistory, showDiff]);
@@ -556,6 +551,7 @@ function AgentHub({ data, loadTime }) {
         if (showStats) { setShowStats(false); e.preventDefault(); return; }
         if (showCopyHistory) { setShowCopyHistory(false); e.preventDefault(); return; }
         if (showDiff) { setShowDiff(null); e.preventDefault(); return; }
+        if (showGlossary) { setShowGlossary(false); e.preventDefault(); return; }
         if (isFirstVisit) { setIsFirstVisit(false); e.preventDefault(); return; }
       }
       // Enter to toggle expand on focused card
@@ -653,8 +649,14 @@ function AgentHub({ data, loadTime }) {
       return gt(b.time)-gt(a.time);
     });
     else if (sortBy === "model") f = [...f].sort((a,b) => a.mk.localeCompare(b.mk));
+    // Cycle 9: Pinned prompts float to top
+    if (pinnedIds.length > 0) {
+      const pinned = f.filter(p => pinnedIds.includes(p.id));
+      const rest = f.filter(p => !pinnedIds.includes(p.id));
+      f = [...pinned, ...rest];
+    }
     return f;
-  }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy, showNew, hideUsed, usedPrompts]);
+  }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy, showNew, hideUsed, usedPrompts, pinnedIds]);
 
   const roles = useMemo(() => [...new Set(P.map(p => p.role))], [P]);
   // Feat 27: Infinite scroll (must be after list declaration)
@@ -717,6 +719,26 @@ function AgentHub({ data, loadTime }) {
 
       {/* Feat 6: Offline banner */}
       {isOffline && <div role="alert" style={{ position:"fixed", top:0, left:0, right:0, padding:"6px 0", background:"#ef4444", color:"#fff", textAlign:"center", fontSize:11, fontFamily:font, fontWeight:600, zIndex:9998 }}>{lang==="ru"?"⚡ Нет подключения к интернету":"⚡ No internet connection"}</div>}
+
+      {/* Cycle 9: Glossary overlay */}
+      {showGlossary && <div onClick={()=>setShowGlossary(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
+        <div role="dialog" aria-modal="true" aria-label="Glossary" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:16, padding:"24px 28px", maxWidth:480, width:"100%", maxHeight:"80vh", overflowY:"auto", fontFamily:font }}>
+          <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{lang==="ru"?"Глоссарий":"Glossary"}</div>
+          {[
+            ["АНТИ-ЛУП",lang==="ru"?"Защита от зацикливания: 3 похожих действия = смена подхода":"Loop protection: 3 similar actions = change approach"],
+            ["АНТИ-ГАЛЛЮЦИНАЦИЯ",lang==="ru"?"Правило: прочитай файл перед изменением, не придумывай API":"Rule: read file before changing, don't invent APIs"],
+            ["Worktree",lang==="ru"?"Git worktree — изолированная копия репозитория для параллельной работы":"Git worktree — isolated repo copy for parallel work"],
+            ["Compact mode",lang==="ru"?"Сокращённые промты (~700 символов) для экономии контекста":"Shortened prompts (~700 chars) to save context window"],
+            ["КРИТИЧНО",lang==="ru"?"Наивысший приоритет: баги, security, crashes":"Highest priority: bugs, security, crashes"],
+            ["Story Points",lang==="ru"?"Оценка сложности: 1=5мин, 2=15мин, 3=30мин, 5=1ч":"Complexity estimate: 1=5min, 2=15min, 3=30min, 5=1hr"],
+            ["♾️ Бесконечный",lang==="ru"?"Агент который не останавливается — самогенерирует задачи":"Agent that never stops — self-generates tasks"],
+          ].map(([term,desc])=><div key={term} style={{ padding:"8px 0", borderBottom:`1px solid ${c.brd}` }}>
+            <div style={{ fontSize:11, fontWeight:700, color:"#6366f1" }}>{term}</div>
+            <div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{desc}</div>
+          </div>)}
+          <button onClick={()=>setShowGlossary(false)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+        </div>
+      </div>}
 
       {/* Feat 4: Keyboard shortcuts overlay */}
       {showShortcuts && <div onClick={()=>setShowShortcuts(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
@@ -818,6 +840,8 @@ function AgentHub({ data, loadTime }) {
             <button onClick={()=>setShowStats(true)} aria-label="Stats" title={lang==="ru"?"Статистика":"Statistics"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>📊</button>
             {/* Feat 17: Copy history */}
             <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":"Copy history"} style={{ position:"relative", width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>📋{copyCount>0 && <span style={{ position:"absolute", top:-4, right:-4, background:"#6366f1", color:"#fff", fontSize:8, fontWeight:700, borderRadius:8, padding:"1px 4px", minWidth:14, textAlign:"center" }}>{copyCount}</span>}</button>
+            {/* Cycle 9: Glossary */}
+            <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":"Glossary"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>📖</button>
             {/* Feat 4: Shortcuts */}
             <button onClick={()=>setShowShortcuts(true)} aria-label="Shortcuts" title={lang==="ru"?"Горячие клавиши (?)":"Keyboard shortcuts (?)"} style={{ position:"relative", width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>⌨<span style={{ position:"absolute", bottom:-2, right:-2, fontSize:8, color:c.dim, fontFamily:font, fontWeight:700 }}>?</span></button>
             <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:15, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>{theme==="dark"?"☀":"☾"}</button>
@@ -1210,6 +1234,7 @@ function AgentHub({ data, loadTime }) {
                   {isUsed && <span style={{ fontSize:10, color:"#10b981" }} title={lang==="ru"?"Использован":"Used"}>✓</span>}
                   {/* Task 69: Compare checkbox */}
                   {compareMode && <button onClick={(e)=>{e.stopPropagation();setCompareIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} style={{ width:24, height:24, borderRadius:6, border:`1px solid ${compareIds.includes(p.id)?"#8b5cf6":c.brd}`, background:compareIds.includes(p.id)?"#8b5cf6":"transparent", color:compareIds.includes(p.id)?"#fff":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center" }}>{compareIds.includes(p.id)?"✓":""}</button>}
+                  <button onClick={(e)=>{e.stopPropagation();setPinnedIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} aria-label="Pin" title={lang==="ru"?"Закрепить наверху":"Pin to top"} className="hide-mobile" style={{ width:30, height:30, borderRadius:7, border:`1px solid ${pinnedIds.includes(p.id)?"#6366f140":c.brd}`, background:pinnedIds.includes(p.id)?"#6366f112":"transparent", color:pinnedIds.includes(p.id)?"#6366f1":c.dim, cursor:"pointer", outline:"none", fontSize:12, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{pinnedIds.includes(p.id)?"📌":"📍"}</button>
                   <button onClick={(e)=>{e.stopPropagation();toggleFav(p.id)}} aria-label={favs[p.id]?"Убрать":"Избранное"} aria-pressed={!!favs[p.id]} style={{ width:30, height:30, borderRadius:7, border:`1px solid ${favs[p.id]?"#eab30840":c.brd}`, background:favs[p.id]?"#eab30812":"transparent", color:favs[p.id]?"#eab308":c.dim, cursor:"pointer", outline:"none", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{favs[p.id]?"★":"☆"}</button>
                   <button onClick={(e)=>{e.stopPropagation();toggle(p.id)}} aria-expanded={isO} className="hide-mobile" style={{ padding:"5px 11px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:7, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>{isO ? t.hide : t.show}</button>
                   <CBtn id={p.id} txt={compactMode && p.compact ? p.compact : p.text} cl={p.ac} sm copied={copied} cp={cp} t={t} bg={c.bg} />
