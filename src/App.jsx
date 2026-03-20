@@ -546,7 +546,7 @@ function AgentHub({ data, loadTime }) {
       // F to toggle focus mode on active card
       if (e.key === "f" && !e.ctrlKey && !e.metaKey && document.activeElement?.id?.startsWith("card-")) {
         const pid = document.activeElement.id.replace("card-", "");
-        const fp = pGet(pid);
+        const fp = P.find(x => x.id === pid);
         if (fp) { setFocusPrompt(fp); e.preventDefault(); }
       }
       // Escape closes overlays
