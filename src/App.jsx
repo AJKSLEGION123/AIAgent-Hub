@@ -500,6 +500,10 @@ function AgentHub({ data, loadTime }) {
   }, [search]);
 
   // ── Callbacks (must be before keyboard effect) ──
+  // Cycle 2: O(1) prompt lookup map
+  const pMap = useMemo(() => new Map(P.map(p => [p.id, p])), [P]);
+  const pGet = useCallback((id) => pMap.get(id), [pMap]);
+
   // Refactor: shared helper for "copy all prompts as text"
   const buildPromptBundle = useCallback((ids) => {
     return ids.map(id => pGet(id)).filter(Boolean).map(p => `═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
@@ -653,10 +657,6 @@ function AgentHub({ data, loadTime }) {
     else if (sortBy === "model") f = [...f].sort((a,b) => a.mk.localeCompare(b.mk));
     return f;
   }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy, showNew, hideUsed, usedPrompts]);
-
-  // Cycle 2: O(1) prompt lookup map
-  const pMap = useMemo(() => new Map(P.map(p => [p.id, p])), [P]);
-  const pGet = useCallback((id) => pMap.get(id), [pMap]);
 
   const roles = useMemo(() => [...new Set(P.map(p => p.role))], [P]);
   // Feat 27: Infinite scroll (must be after list declaration)
