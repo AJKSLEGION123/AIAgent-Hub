@@ -1,0 +1,32 @@
+# Agent Hub
+
+> Multi-agent development system. 175 prompts for autonomous AI agents.
+
+## Models
+- Claude Code Opus 4.6 (Anthropic)
+- Gemini 3.1 Pro (Google)
+- Codex CLI (OpenAI)
+
+## Features
+- 175 prompts for different roles and tasks
+- 48 team combinations (combos)
+- Overnight mode (100+ tasks autonomously)
+- Infinite mode (never stops until Ctrl+C)
+- 3 languages: Russian, English, Kazakh
+- Dark/light theme
+- Search, filter, sort, compare
+- Export: Markdown, JSON, CSV, HTML
+- PWA with offline support
+- 12 keyboard shortcuts
+
+## Prompt Categories
+- Roles: Frontend, Backend, Fullstack, Tester, Designer, DevOps, Architect, Security, etc.
+- Tasks: Overnight (100+ tasks), Features (50+), Testing (100+ tests), Security audit, Refactoring, Performance, A11y, Documentation, Sprint
+- Special: Infinite mode (♾️), Mega teams (3-10 agents)
+
+## Links
+- Source: /
+- Prompts: /#prompts
+- Teams: /#combos
+- CLI: /#cheat
+- Setup: /#setup
