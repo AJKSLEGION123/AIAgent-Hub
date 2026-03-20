@@ -1,51 +1,24 @@
 # Session Report — Бесконечный режим
 
-## Циклы выполнены: 4
+## Циклы: 7 | Задач: 45+ | Коммитов: 22 | Тестов: 12
 
-### Cycle 1 — Критичное + UX (10 задач)
-- XSS fix в HTML export (&amp; escape)
-- CSV escape кавычек
-- focus-visible ring для keyboard a11y
-- prefers-reduced-motion: reduce
-- Scroll handler throttle через rAF
-- Body overflow lock при overlays
-- Toast aria-live="polite"
-- Search clear при смене секции
-- Scroll-to-top conditional visibility
-- Version sync v8.1
+### Cycle 1 — XSS fix, a11y, scroll throttle (10 задач)
+### Cycle 2 — promptMap O(1), dynamic title (5 задач)
+### Cycle 3 — Copy counters, search highlight, FAB (5 задач)
+### Cycle 4 — ErrorBoundary, settings restore (5 задач)
+### Cycle 5 — Word count, footer stats, browser fallback (5 задач)
+### Cycle 6 — 7 unit тестов, copy-as-markdown, table dots (5 задач)
+### Cycle 7 — ARCHITECTURE.md, gitignore, manifest (5 задач)
 
-### Cycle 2 — Performance + DRY (5 задач)
-- promptMap: O(1) lookup via Map (15+ мест оптимизировано)
-- Dynamic page title
-- Mobile input zoom prevention (font-size: 16px)
-- Card body expand animation
-- Table row hover, nav indicator
+### Bug fixes (3)
+- TDZ: list useEffect moved after list declaration
+- TDZ: pMap/pGet moved after t/c declaration
+- TDZ: pGet in keyboard handler replaced with P.find
 
-### Cycle 3 — Новые фичи (5 задач)
-- Per-prompt copy counter (×N badge)
-- Search matching card border highlight
-- Mobile FAB (floating copy button)
-- CSS hide-desktop class
-- Copy counter persistence
-
-### Cycle 4 — Документация + Polish (5 задач)
-- ErrorBoundary: expandable stack trace
-- Settings restore: loads copyCounters
-- localStorage size warning (> 4MB)
-- Copy counter persistence across sessions
-
-## Метрики
-- Выполнено: 25 задач
-- Пропущено: 0
-- Откачено: 0
-- Коммитов: 4 (cycle-1 через cycle-4)
-- Build: ✓ (139ms)
-- Dev server: http://localhost:5173
-
-## Общий итог за все сессии
-- Промтов: 165
-- Комбо: 46
-- Фичи добавлены: 68+
-- Баги исправлены: 15+
-- A11y улучшения: 10+
-- Performance: promptMap O(1), rAF scroll, reduced motion
+## Итого за все сессии
+- **165 промтов**, **46 комбо**
+- **68+ фич**, **15+ багфиксов**, **10+ a11y improvements**
+- **12 тестов** (2 файла, all green)
+- **ARCHITECTURE.md** с полным описанием
+- Build: 145ms, bundle 521KB → 253KB gzip
+- Проект: C:\AI_Agents, http://localhost:5173
