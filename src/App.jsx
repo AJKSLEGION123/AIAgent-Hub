@@ -500,6 +500,11 @@ function AgentHub({ data, loadTime }) {
   }, [search]);
 
   // ── Callbacks (must be before keyboard effect) ──
+  // Refactor: shared helper for "copy all prompts as text"
+  const buildPromptBundle = useCallback((ids) => {
+    return ids.map(id => pGet(id)).filter(Boolean).map(p => `═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
+  }, [pGet, t]);
+
   const toggle = useCallback((id) => {
     setExpanded(e => {
       const willOpen = !e[id];
@@ -532,6 +537,11 @@ function AgentHub({ data, loadTime }) {
         const next = e.key === "ArrowDown" ? Math.min(idx+1, cards.length-1) : Math.max(idx-1, 0);
         if (idx === -1 && e.key === "ArrowDown") { cards[0]?.focus(); e.preventDefault(); }
         else if (cards[next]) { cards[next].focus(); cards[next].scrollIntoView({behavior:"smooth",block:"nearest"}); e.preventDefault(); }
+      }
+      // Ctrl+/ to toggle compact mode
+      if ((e.metaKey || e.ctrlKey) && e.key === "/") {
+        e.preventDefault();
+        setCompactMode(m => !m);
       }
       // ? to show shortcuts
       if (e.key === "?" && !e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
@@ -705,10 +715,10 @@ function AgentHub({ data, loadTime }) {
       <Toast msg={toast} c={c} />
 
       {/* Feat 5: Scroll progress bar */}
-      <div style={{ position:"fixed", top:0, left:0, width:scrollPct+"%", height:2, background:"linear-gradient(90deg,#6366f1,#8b5cf6)", zIndex:9999, transition:"width .1s", opacity:scrollPct>0?1:0 }} />
+      <div style={{ position:"fixed", top:0, left:0, width:scrollPct+"%", height:2, background:"linear-gradient(90deg,#6366f1,#8b5cf6)", zIndex:9999, transition:"width .1s", opacity:scrollPct>0?1:0, willChange:"width" }} />
 
       {/* Feat 6: Offline banner */}
-      {isOffline && <div style={{ position:"fixed", top:0, left:0, right:0, padding:"6px 0", background:"#ef4444", color:"#fff", textAlign:"center", fontSize:11, fontFamily:font, fontWeight:600, zIndex:9998 }}>{lang==="ru"?"⚡ Нет подключения к интернету":"⚡ No internet connection"}</div>}
+      {isOffline && <div role="alert" style={{ position:"fixed", top:0, left:0, right:0, padding:"6px 0", background:"#ef4444", color:"#fff", textAlign:"center", fontSize:11, fontFamily:font, fontWeight:600, zIndex:9998 }}>{lang==="ru"?"⚡ Нет подключения к интернету":"⚡ No internet connection"}</div>}
 
       {/* Feat 4: Keyboard shortcuts overlay */}
       {showShortcuts && <div onClick={()=>setShowShortcuts(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
@@ -720,6 +730,7 @@ function AgentHub({ data, loadTime }) {
             ["↑ / ↓",lang==="ru"?"Навигация по карточкам":"Navigate cards"],
             ["Enter",lang==="ru"?"Открыть/закрыть карточку":"Toggle card"],
             ["F",lang==="ru"?"Focus mode (на карточке)":"Focus mode (on card)"],
+            ["Ctrl+/",lang==="ru"?"Compact mode":"Compact mode"],
             ["?",lang==="ru"?"Показать/скрыть подсказки":"Toggle this overlay"],
           ].map(([k,d])=><div key={k} style={{ display:"flex", justifyContent:"space-between", padding:"6px 0", borderBottom:`1px solid ${c.brd}` }}><kbd style={{ padding:"2px 8px", borderRadius:4, background:c.surf, border:`1px solid ${c.brd}`, fontSize:11, color:c.text, fontFamily:font }}>{k}</kbd><span style={{ fontSize:11, color:c.mut }}>{d}</span></div>)}
           <button onClick={()=>setShowShortcuts(false)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
@@ -859,7 +870,7 @@ function AgentHub({ data, loadTime }) {
             { k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru).reduce((a,c)=>a+c.cmds.length,0) },
             { k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length },
           ].map(s => (
-            <button key={s.k} role="tab" aria-selected={section===s.k} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);if(s.k!=="prompts")setSearch("");window.scrollTo({top:0,behavior:"smooth"})}} style={{
+            <button key={s.k} role="tab" aria-selected={section===s.k} aria-current={section===s.k?"page":undefined} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);if(s.k!=="prompts")setSearch("");window.scrollTo({top:0,behavior:"smooth"})}} style={{
               padding:"8px 16px", fontSize:11, fontFamily:font, fontWeight:section===s.k?700:400,
               border:`1px solid ${section===s.k?c.text+"30":c.brd}`, borderRadius:8,
               background:section===s.k?c.text+"0a":"transparent", color:section===s.k?c.text:c.mut,
@@ -1016,7 +1027,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ display:"flex", gap:6, marginTop:8, flexWrap:"wrap" }}>
               {/* Feat 21: Bulk export selected */}
               <button onClick={()=>{
-                const allText = compareIds.map(id=>pGet(id)).filter(Boolean).map(p=>`═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
+                const allText = buildPromptBundle(compareIds);
                 cp("bulk-export", allText, true);
               }} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid #6366f1`, borderRadius:6, background:"#6366f1", color:"#fff", cursor:"pointer", outline:"none" }}>
                 {copied==="bulk-export"?t.copied:(lang==="ru"?"Скопировать все":"Copy all")} ({compareIds.length})
@@ -1366,7 +1377,7 @@ function AgentHub({ data, loadTime }) {
               )}
               <div style={{ display:"flex", gap:6 }}>
                 {customCombo.length >= 2 && <button onClick={()=>{
-                  const allText = customCombo.map(id=>pGet(id)).filter(Boolean).map(p=>`═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
+                  const allText = buildPromptBundle(customCombo);
                   cp("custom-combo", allText);
                 }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #6366f1", borderRadius:6, background:"#6366f1", color:"#fff", cursor:"pointer", outline:"none" }}>
                   {copied==="custom-combo" ? t.copied : (lang==="ru"?"Скопировать":"Copy")} ({customCombo.length})
@@ -1416,7 +1427,7 @@ function AgentHub({ data, loadTime }) {
               <div style={{ display:"flex", gap:6 }}>
                 <div onClick={(e)=>{
                   e.stopPropagation();
-                  const allText = cb.ids.map(id => pGet(id)).filter(Boolean).map(p=>`═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
+                  const allText = buildPromptBundle(cb.ids);
                   cp("combo-"+i, allText);
                 }} style={{ flex:1, fontSize:9, padding:"6px 10px", borderRadius:6, border:`1px solid ${c.brd}`, background:c.surf, color:copied===("combo-"+i)?"#10b981":c.mut, cursor:"pointer", textAlign:"center", fontWeight:600, fontFamily:font, transition:"all .15s" }}>
                   {copied===("combo-"+i) ? t.copied : (lang==="ru"?"Скопировать":"Copy prompts")}
