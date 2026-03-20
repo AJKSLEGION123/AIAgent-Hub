@@ -1,7 +1,7 @@
 {
   "name": "Agent Hub",
   "short_name": "AgentHub",
-  "description": "Мультиагентная система разработки — 132+ промтов для Claude, Gemini, Codex",
+  "description": "Мультиагентная система разработки — 165 промтов для Claude, Gemini, Codex",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#060609",

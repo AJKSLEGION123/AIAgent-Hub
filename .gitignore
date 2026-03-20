@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Agent logs and reports (generated at runtime)
+.claude/logs/
+.claude/reports/
+.gemini/
+.codex/
