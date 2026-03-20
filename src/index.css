@@ -70,6 +70,11 @@ tr[style]:hover { background: rgba(99, 102, 241, 0.04) !important; }
   transition: width 0.15s ease-out, opacity 0.3s !important;
 }
 
+/* Task 4: Prevent zoom on mobile inputs */
+@media (max-width: 640px) {
+  input, select, textarea { font-size: 16px !important; }
+}
+
 /* Feat 20: Mobile bottom nav */
 @media (max-width: 640px) {
   .mobile-bottom-nav { display: flex !important; }

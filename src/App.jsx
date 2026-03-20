@@ -434,6 +434,12 @@ function AgentHub({ data, loadTime }) {
     return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
   }, []);
 
+  // Cycle 2: Dynamic page title
+  useEffect(() => {
+    const titles = { prompts:lang==="ru"?"Промты":"Prompts", combos:lang==="ru"?"Команды":"Teams", cheat:lang==="ru"?"Шпаргалки":"Cheat", quick:"CLI", setup:"Setup" };
+    document.title = `Agent Hub — ${titles[section]||""}`;
+  }, [section, lang]);
+
   // Task 5: Lock body scroll when overlays open
   useEffect(() => {
     const hasOverlay = showShortcuts || focusPrompt || showStats || showCopyHistory || showDiff;
@@ -537,7 +543,7 @@ function AgentHub({ data, loadTime }) {
       // F to toggle focus mode on active card
       if (e.key === "f" && !e.ctrlKey && !e.metaKey && document.activeElement?.id?.startsWith("card-")) {
         const pid = document.activeElement.id.replace("card-", "");
-        const fp = P.find(x=>x.id===pid);
+        const fp = pGet(pid);
         if (fp) { setFocusPrompt(fp); e.preventDefault(); }
       }
       // Escape closes overlays
@@ -574,7 +580,7 @@ function AgentHub({ data, loadTime }) {
     }
     setCopied(id);
     setCopyCount(n => n + 1);
-    const promptData = P.find(p=>p.id===id);
+    const promptData = pGet(id);
     if (promptData) {
       setUsedPrompts(u=>({...u,[id]:true}));
       setCopyHistory(h => [{ id, name: t.r[promptData.role]||promptData.role, icon: promptData.icon, time: new Date().toLocaleTimeString() }, ...h].slice(0, 10));
@@ -638,6 +644,10 @@ function AgentHub({ data, loadTime }) {
     else if (sortBy === "model") f = [...f].sort((a,b) => a.mk.localeCompare(b.mk));
     return f;
   }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy, showNew, hideUsed, usedPrompts]);
+
+  // Cycle 2: O(1) prompt lookup map
+  const pMap = useMemo(() => new Map(P.map(p => [p.id, p])), [P]);
+  const pGet = useCallback((id) => pMap.get(id), [pMap]);
 
   const roles = useMemo(() => [...new Set(P.map(p => p.role))], [P]);
   const allTags = useMemo(() => {
@@ -984,7 +994,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ fontSize:10, fontWeight:700, color:"#8b5cf6", marginBottom:8 }}>{lang==="ru"?"Сравнение":"Compare"} ({compareIds.length})</div>
             <div style={{ display:"grid", gridTemplateColumns:`repeat(${Math.min(compareIds.length, 3)}, 1fr)`, gap:8 }}>
               {compareIds.map(id => {
-                const p = P.find(x=>x.id===id);
+                const p = pGet(id);
                 return p ? (
                   <div key={id} style={{ padding:10, borderRadius:8, border:`1px solid ${p.ac}30`, background:c.surf, fontSize:10 }}>
                     <div style={{ fontWeight:700, color:p.ac, marginBottom:4 }}>{p.icon} {t.r[p.role]||p.role}</div>
@@ -997,7 +1007,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ display:"flex", gap:6, marginTop:8, flexWrap:"wrap" }}>
               {/* Feat 21: Bulk export selected */}
               <button onClick={()=>{
-                const allText = compareIds.map(id=>P.find(x=>x.id===id)).filter(Boolean).map(p=>`═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
+                const allText = compareIds.map(id=>pGet(id)).filter(Boolean).map(p=>`═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
                 cp("bulk-export", allText, true);
               }} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid #6366f1`, borderRadius:6, background:"#6366f1", color:"#fff", cursor:"pointer", outline:"none" }}>
                 {copied==="bulk-export"?t.copied:(lang==="ru"?"Скопировать все":"Copy all")} ({compareIds.length})
@@ -1200,7 +1210,7 @@ function AgentHub({ data, loadTime }) {
                     <div style={{ marginTop:10, display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
                       <span style={{ fontSize:9, color:c.dim, marginRight:4 }}>{lang==="ru"?"Похожие:":"Related:"}</span>
                       {p.related.slice(0,4).map(rid => {
-                        const rp = P.find(x=>x.id===rid);
+                        const rp = pGet(rid);
                         return rp ? <button key={rid} onClick={()=>{toggle(p.id);setExpanded(e=>({...e,[rid]:true}));setTimeout(()=>document.getElementById(`card-${rid}`)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"2px 8px", borderRadius:8, background:rp.ac+"10", color:rp.ac, border:`1px solid ${rp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{rp.icon} {t.r[rp.role]||rp.role}</button> : null;
                       })}
                     </div>
@@ -1241,7 +1251,7 @@ function AgentHub({ data, loadTime }) {
           <div style={{ marginBottom:12, padding:"8px 12px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.bg2 }}>
             <div style={{ fontSize:9, color:c.dim, marginBottom:4, fontWeight:600 }}>{lang==="ru"?"Недавно просмотренные":"Recently viewed"}</div>
             <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
-              {recentViewed.map(rid => { const rp = P.find(x=>x.id===rid); return rp ? <button key={rid} onClick={()=>{setExpanded(e=>({...e,[rid]:true}));setTimeout(()=>document.getElementById("card-"+rid)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"3px 8px", borderRadius:6, background:rp.ac+"10", color:rp.ac, border:`1px solid ${rp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{rp.icon} {t.r[rp.role]||rp.role}</button> : null; })}
+              {recentViewed.map(rid => { const rp = pGet(rid); return rp ? <button key={rid} onClick={()=>{setExpanded(e=>({...e,[rid]:true}));setTimeout(()=>document.getElementById("card-"+rid)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"3px 8px", borderRadius:6, background:rp.ac+"10", color:rp.ac, border:`1px solid ${rp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{rp.icon} {t.r[rp.role]||rp.role}</button> : null; })}
             </div>
           </div>
         )}
@@ -1292,7 +1302,7 @@ function AgentHub({ data, loadTime }) {
                 <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:8 }}>{lang==="ru"?"Последовательность":"Sequence"} ({workflow.length}):</div>
                 <div style={{ display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
                   {workflow.map((wid,wi) => {
-                    const wp = P.find(x=>x.id===wid);
+                    const wp = pGet(wid);
                     return wp ? (
                       <div key={wi} style={{ display:"flex", alignItems:"center", gap:4 }}>
                         {wi > 0 && <span style={{ color:c.dim, fontSize:14 }}>→</span>}
@@ -1307,7 +1317,7 @@ function AgentHub({ data, loadTime }) {
                 <div style={{ display:"flex", gap:8, marginTop:10 }}>
                   <button onClick={()=>{
                     const wfText = workflow.map((wid,i)=>{
-                      const wp = P.find(x=>x.id===wid);
+                      const wp = pGet(wid);
                       return wp ? `═══ ШАГ ${i+1}: ${(t.r[wp.role]||wp.role).toUpperCase()} (${wp.m}) ═══\n\n${wp.text}` : null;
                     }).filter(Boolean).join("\n\n\n");
                     cp("workflow", wfText, true);
@@ -1346,7 +1356,7 @@ function AgentHub({ data, loadTime }) {
               )}
               <div style={{ display:"flex", gap:6 }}>
                 {customCombo.length >= 2 && <button onClick={()=>{
-                  const allText = customCombo.map(id=>P.find(p=>p.id===id)).filter(Boolean).map(p=>`═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
+                  const allText = customCombo.map(id=>pGet(id)).filter(Boolean).map(p=>`═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
                   cp("custom-combo", allText);
                 }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #6366f1", borderRadius:6, background:"#6366f1", color:"#fff", cursor:"pointer", outline:"none" }}>
                   {copied==="custom-combo" ? t.copied : (lang==="ru"?"Скопировать":"Copy")} ({customCombo.length})
@@ -1372,7 +1382,7 @@ function AgentHub({ data, loadTime }) {
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(250px, 1fr))", gap:8 }}>
           {(COMBOS[lang]||COMBOS.ru).map((cb, i) => {
             // Task 71: detect conflicts (multiple prompts for same role type)
-            const agents = cb.ids.map(id=>P.find(x=>x.id===id)).filter(Boolean);
+            const agents = cb.ids.map(id=>pGet(id)).filter(Boolean);
             const roleTypes = agents.map(a=>a.mk+"-"+a.type);
             const hasConflict = roleTypes.length !== new Set(roleTypes).size;
             return (
@@ -1389,21 +1399,21 @@ function AgentHub({ data, loadTime }) {
               <div style={{ fontSize:10, color:c.dim, lineHeight:1.5, marginBottom:8 }}>{cb.desc}</div>
               <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8 }}>
                 {cb.ids.map(id => {
-                  const p = P.find(x=>x.id===id);
+                  const p = pGet(id);
                   return p ? <span key={id} style={{ fontSize:8, padding:"2px 6px", borderRadius:8, background:p.ac+"12", color:p.ac, border:`1px solid ${p.ac}20` }}>{p.icon} {t.r[p.role]||p.role}</span> : null;
                 })}
               </div>
               <div style={{ display:"flex", gap:6 }}>
                 <div onClick={(e)=>{
                   e.stopPropagation();
-                  const allText = cb.ids.map(id => P.find(p=>p.id===id)).filter(Boolean).map(p=>`═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
+                  const allText = cb.ids.map(id => pGet(id)).filter(Boolean).map(p=>`═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${p.text}`).join("\n\n\n");
                   cp("combo-"+i, allText);
                 }} style={{ flex:1, fontSize:9, padding:"6px 10px", borderRadius:6, border:`1px solid ${c.brd}`, background:c.surf, color:copied===("combo-"+i)?"#10b981":c.mut, cursor:"pointer", textAlign:"center", fontWeight:600, fontFamily:font, transition:"all .15s" }}>
                   {copied===("combo-"+i) ? t.copied : (lang==="ru"?"Скопировать":"Copy prompts")}
                 </div>
                 <div onClick={(e)=>{
                   e.stopPropagation();
-                  const agents = cb.ids.map(id => P.find(p=>p.id===id)).filter(Boolean);
+                  const agents = cb.ids.map(id => pGet(id)).filter(Boolean);
                   let script = "#!/bin/bash\n# Team: " + cb.name + "\n\n";
                   agents.forEach(a => {
                     const launcher = a.mk==="claude"?"claude --dangerously-skip-permissions":a.mk==="gemini"?"gemini --model gemini-3.1-pro-preview --yolo":"codex --full-auto";
