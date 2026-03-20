@@ -57,7 +57,7 @@ const T = {
     all: "Барлық", byModel: "Модельдер", byRole: "Рөлдер", byType: "Тапсырмалар",
     roles: "Рөлдер", tasks: "Арнайы тапсырмалар",
     prompts: "промпт", models: "модель", categories: "категория",
-    r: {},
+    r: { frontend:"Фронтенд", backend:"Бэкенд", fullstack:"Фулстек", tester:"Тестші", designer:"Дизайнер", devops:"DevOps", audit:"Қателер аудиті", overnight:"Түнгі режим", architect:"Архитектор", optimizer:"Оптимизатор", security:"Қауіпсіздік", reviewer:"Шолушы", cleanup:"Тазалау", docs:"Құжаттама", migration:"Миграция", refactor:"Рефакторинг", database:"Деректер қоры", api:"API дизайн", errorhandler:"Қателерді өңдеу", e2e:"E2E тесттер", i18n:"Локализация", git:"Git стратегия", monitoring:"Мониторинг", testing:"Тест үлгілері", features:"Жаңа мүмкіндіктер", sprint:"Спринт жоспарлаушы", securityharden:"Қорғау", perfopt:"Оптимизация", perfaudit:"Perf аудит", a11yfix:"A11Y түзетулер", storybook:"Storybook", analytics:"Аналитика", infrastructure:"Инфрақұрылым", darkmode:"Қараңғы тема", forms:"Формалар", teststrategy:"Тест стратегиясы", typeaudit:"Тип аудиті", designtokens:"Дизайн токендер" },
     teamSetup: "Толық команда орнату", teamSetupDesc: "Бір скриптті көшіріңіз — worktree, үйлестіру қалталарын, конфигтерді жасайды",
     configs: "Конфиг файлдар", configsDesc: "CLAUDE.md, GEMINI.md, AGENTS.md үлгілері",
     combos: "Ұсынылған командалар", combosDesc: "Түрлі сценарийлерге дайын агент комбинациялары",
