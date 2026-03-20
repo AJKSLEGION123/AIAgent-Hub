@@ -337,6 +337,7 @@ function AgentHub({ data, loadTime }) {
   const [recentViewed, setRecentViewed] = useState([]); // feat 30: recently viewed
   const [sessionStart] = useState(Date.now()); // feat 33: session timer
   const [showDiff, setShowDiff] = useState(null); // feat 34: diff modal
+  const [copyCounters, setCopyCounters] = useState({}); // cycle-3: per-prompt copy count
   const [customCombo, setCustomCombo] = useState([]); // task 114
   const [buildingCombo, setBuildingCombo] = useState(false); // task 114
   const [promptLang, setPromptLang] = useState("original"); // task 94: separate prompt language
@@ -390,13 +391,14 @@ function AgentHub({ data, loadTime }) {
         if (s.favs) setFavs(s.favs);
         if (s.used) setUsedPrompts(s.used);
         if (s.hist) setSearchHist(s.hist);
+        if (s.cc) setCopyCounters(s.cc);
       }
     } catch {}
   }, []);
 
   useEffect(() => {
-    try { localStorage.setItem("agent-hub-settings", JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist })); } catch {}
-  }, [theme, lang, favs, usedPrompts, searchHist]);
+    try { localStorage.setItem("agent-hub-settings", JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist, cc:copyCounters })); } catch {}
+  }, [theme, lang, favs, usedPrompts, searchHist, copyCounters]);
 
   // Feat 27: Infinite scroll
   useEffect(() => {
@@ -580,6 +582,7 @@ function AgentHub({ data, loadTime }) {
     }
     setCopied(id);
     setCopyCount(n => n + 1);
+    setCopyCounters(cc => ({ ...cc, [id]: (cc[id]||0) + 1 }));
     const promptData = pGet(id);
     if (promptData) {
       setUsedPrompts(u=>({...u,[id]:true}));
@@ -1161,7 +1164,7 @@ function AgentHub({ data, loadTime }) {
             <div key={p.id} id={`card-${p.id}`} tabIndex={0} className={isO?"":"card-enter"}
               onClick={()=>{ if(quickCopy && !isO){ cp(p.id,p.text); return; } }}
               onDoubleClick={()=>cp(p.id,p.text)} style={{
-              marginBottom:8, border:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#8b5cf650":c.brd}`, borderRadius:12,
+              marginBottom:8, border:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#8b5cf650":debouncedSearch?p.ac+"20":c.brd}`, borderRadius:12,
               background:isO?c.cardH:c.card, overflow:"hidden", transition:"all .2s",
               boxShadow:isO?`0 0 20px ${p.ac}08`:"none",
               borderLeft:`3px solid ${MC[p.mk]}`, contain:"content",
@@ -1188,6 +1191,7 @@ function AgentHub({ data, loadTime }) {
                   {/* Task 75: Used indicator */}
                   {/* Feat 18: Focus mode button */}
                   <button onClick={(e)=>{e.stopPropagation();setFocusPrompt(p)}} aria-label="Focus" title={lang==="ru"?"Focus mode (F)":"Focus mode (F)"} className="hide-mobile" style={{ width:30, height:30, borderRadius:7, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", fontSize:12, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>⛶</button>
+                  {copyCounters[p.id] > 0 && <span style={{ fontSize:8, color:c.dim, fontWeight:600 }} title={lang==="ru"?`Скопировано ${copyCounters[p.id]}x`:`Copied ${copyCounters[p.id]}x`}>×{copyCounters[p.id]}</span>}
                   {isUsed && <span style={{ fontSize:10, color:"#10b981" }} title={lang==="ru"?"Использован":"Used"}>✓</span>}
                   {/* Task 69: Compare checkbox */}
                   {compareMode && <button onClick={(e)=>{e.stopPropagation();setCompareIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} style={{ width:24, height:24, borderRadius:6, border:`1px solid ${compareIds.includes(p.id)?"#8b5cf6":c.brd}`, background:compareIds.includes(p.id)?"#8b5cf6":"transparent", color:compareIds.includes(p.id)?"#fff":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center" }}>{compareIds.includes(p.id)?"✓":""}</button>}
@@ -1822,6 +1826,15 @@ function AgentHub({ data, loadTime }) {
           {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>}
         </div>
       </div>
+
+      {/* Cycle 3: FAB for quick copy on mobile */}
+      {(() => {
+        const openId = Object.entries(expanded).find(([,v]) => v)?.[0];
+        const openP = openId ? pGet(openId) : null;
+        return openP && section === "prompts" ? (
+          <button className="hide-desktop" onClick={()=>cp(openP.id, compactMode && openP.compact ? openP.compact : openP.text)} style={{ position:"fixed", bottom:70, right:16, width:56, height:56, borderRadius:"50%", background:openP.ac, color:"#fff", border:"none", cursor:"pointer", fontSize:20, fontWeight:800, boxShadow:`0 4px 20px ${openP.ac}40`, zIndex:8999, display:"none", alignItems:"center", justifyContent:"center", outline:"none" }}>{copied===openP.id?"✓":"⎘"}</button>
+        ) : null;
+      })()}
 
       {/* Feat 20: Mobile bottom nav */}
       <nav className="mobile-bottom-nav" style={{ display:"none", position:"fixed", bottom:0, left:0, right:0, background:c.card, borderTop:`1px solid ${c.brd}`, padding:"6px 0", zIndex:9000, fontFamily:font }}>
