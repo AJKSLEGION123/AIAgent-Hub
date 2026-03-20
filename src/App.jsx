@@ -528,6 +528,16 @@ function AgentHub({ data, loadTime }) {
         if (idx === -1 && e.key === "ArrowDown") { cards[0]?.focus(); e.preventDefault(); }
         else if (cards[next]) { cards[next].focus(); cards[next].scrollIntoView({behavior:"smooth",block:"nearest"}); e.preventDefault(); }
       }
+      // T for theme toggle
+      if (e.key === "t" && !e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
+        setTheme(th => th === "dark" ? "light" : "dark");
+        e.preventDefault();
+      }
+      // V for view mode toggle
+      if (e.key === "v" && !e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA" && section === "prompts") {
+        setViewMode(vm => vm === "card" ? "table" : "card");
+        e.preventDefault();
+      }
       // R for random prompt
       if (e.key === "r" && !e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA" && section === "prompts") {
         const r = P[Math.floor(Math.random()*P.length)];
@@ -759,6 +769,8 @@ function AgentHub({ data, loadTime }) {
             ["↑ / ↓",lang==="ru"?"Навигация по карточкам":"Navigate cards"],
             ["Enter",lang==="ru"?"Открыть/закрыть карточку":"Toggle card"],
             ["F",lang==="ru"?"Focus mode (на карточке)":"Focus mode (on card)"],
+            ["T",lang==="ru"?"Переключить тему":"Toggle theme"],
+            ["V",lang==="ru"?"Карточки/таблица":"Card/table view"],
             ["R",lang==="ru"?"Случайный промт":"Random prompt"],
             ["Ctrl+/",lang==="ru"?"Compact mode":"Compact mode"],
             ["?",lang==="ru"?"Показать/скрыть подсказки":"Toggle this overlay"],
@@ -854,7 +866,7 @@ function AgentHub({ data, loadTime }) {
             <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":"Glossary"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>📖</button>
             {/* Feat 4: Shortcuts */}
             <button onClick={()=>setShowShortcuts(true)} aria-label="Shortcuts" title={lang==="ru"?"Горячие клавиши (?)":"Keyboard shortcuts (?)"} style={{ position:"relative", width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>⌨<span style={{ position:"absolute", bottom:-2, right:-2, fontSize:8, color:c.dim, fontFamily:font, fontWeight:700 }}>?</span></button>
-            <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:15, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>{theme==="dark"?"☀":"☾"}</button>
+            <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} title={`${theme==="dark"?"Light":"Dark"} (T)`} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:15, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>{theme==="dark"?"☀":"☾"}</button>
             <button onClick={nextLang} aria-label={`Switch language to ${langLabel}`} style={{ height:36, padding:"0 12px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, fontWeight:700, outline:"none", transition:"all .15s" }}>{langLabel}</button>
             {/* Feat 9: Font size */}
             <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" style={{ height:36, padding:"0 8px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, outline:"none" }}>
@@ -879,7 +891,7 @@ function AgentHub({ data, loadTime }) {
         {/* ── STATS BAR ── */}
         <div style={{ display:"flex", gap:6, marginBottom:20, flexWrap:"wrap" }} className="gap-mobile">
           {stats.byModel.map(([mk, count]) => (
-            <div key={mk} style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 12px", borderRadius:8, background:alpha(MC[mk],.04), border:`1px solid ${alpha(MC[mk],.12)}` }} className="pad-mobile">
+            <div key={mk} title={`${ML[mk]}: ${count} ${t.prompts} (${Math.round(count/stats.total*100)}%)`} style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 12px", borderRadius:8, background:alpha(MC[mk],.04), border:`1px solid ${alpha(MC[mk],.12)}`, cursor:"default" }} className="pad-mobile">
               <div style={{ width:6, height:6, borderRadius:"50%", background:MC[mk] }} />
               <span style={{ fontSize:10, color:MC[mk], fontWeight:600 }} className="text-sm-mobile">{ML[mk]}</span>
               <span style={{ fontSize:10, color:c.mut }}>{count}</span>
