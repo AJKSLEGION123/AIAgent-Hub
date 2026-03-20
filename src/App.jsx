@@ -406,16 +406,6 @@ function AgentHub({ data, loadTime }) {
     } catch {}
   }, [theme, lang, favs, usedPrompts, searchHist, copyCounters]);
 
-  // Feat 27: Infinite scroll
-  useEffect(() => {
-    if (!loadMoreRef.current) return;
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && list.length > showCount) setShowCount(s => s + 40);
-    }, { rootMargin: "200px" });
-    obs.observe(loadMoreRef.current);
-    return () => obs.disconnect();
-  }, [list.length, showCount]);
-
   // Feat 5: Scroll progress (task 3: throttled via rAF)
   useEffect(() => {
     let ticking = false;
@@ -659,6 +649,16 @@ function AgentHub({ data, loadTime }) {
   const pGet = useCallback((id) => pMap.get(id), [pMap]);
 
   const roles = useMemo(() => [...new Set(P.map(p => p.role))], [P]);
+  // Feat 27: Infinite scroll (must be after list declaration)
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && list.length > showCount) setShowCount(s => s + 40);
+    }, { rootMargin: "200px" });
+    obs.observe(loadMoreRef.current);
+    return () => obs.disconnect();
+  }, [list.length, showCount]);
+
   const allTags = useMemo(() => {
     const tc = {};
     P.forEach(p => (p.tags||[]).forEach(t2 => { tc[t2] = (tc[t2]||0) + 1; }));
