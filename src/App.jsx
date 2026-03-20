@@ -528,6 +528,14 @@ function AgentHub({ data, loadTime }) {
         if (idx === -1 && e.key === "ArrowDown") { cards[0]?.focus(); e.preventDefault(); }
         else if (cards[next]) { cards[next].focus(); cards[next].scrollIntoView({behavior:"smooth",block:"nearest"}); e.preventDefault(); }
       }
+      // R for random prompt
+      if (e.key === "r" && !e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA" && section === "prompts") {
+        const r = P[Math.floor(Math.random()*P.length)];
+        setExpanded(ex=>({...ex,[r.id]:true}));
+        setFm("all"); setFv("all"); setSearch(""); setShowFavsOnly(false);
+        setTimeout(()=>document.getElementById("card-"+r.id)?.scrollIntoView({behavior:"smooth",block:"center"}),100);
+        e.preventDefault();
+      }
       // Ctrl+/ to toggle compact mode
       if ((e.metaKey || e.ctrlKey) && e.key === "/") {
         e.preventDefault();
@@ -697,6 +705,7 @@ function AgentHub({ data, loadTime }) {
       totalHours: Math.round(totalTime / 60 / 5) * 5,
       totalTokens: Math.round(totalChars / 4),
       byModel: Object.entries(P.reduce((a, p) => { a[p.mk] = (a[p.mk]||0) + 1; return a; }, {})),
+      byDifficulty: P.reduce((a, p) => { if (p.difficulty) a[p.difficulty] = (a[p.difficulty]||0) + 1; return a; }, {}),
     };
   }, [P]);
 
@@ -750,6 +759,7 @@ function AgentHub({ data, loadTime }) {
             ["↑ / ↓",lang==="ru"?"Навигация по карточкам":"Navigate cards"],
             ["Enter",lang==="ru"?"Открыть/закрыть карточку":"Toggle card"],
             ["F",lang==="ru"?"Focus mode (на карточке)":"Focus mode (on card)"],
+            ["R",lang==="ru"?"Случайный промт":"Random prompt"],
             ["Ctrl+/",lang==="ru"?"Compact mode":"Compact mode"],
             ["?",lang==="ru"?"Показать/скрыть подсказки":"Toggle this overlay"],
           ].map(([k,d])=><div key={k} style={{ display:"flex", justifyContent:"space-between", padding:"6px 0", borderBottom:`1px solid ${c.brd}` }}><kbd style={{ padding:"2px 8px", borderRadius:4, background:c.surf, border:`1px solid ${c.brd}`, fontSize:11, color:c.text, fontFamily:font }}>{k}</kbd><span style={{ fontSize:11, color:c.mut }}>{d}</span></div>)}
@@ -1662,9 +1672,9 @@ function AgentHub({ data, loadTime }) {
               ))}
               <div style={{ fontSize:10 }}>
                 <span style={{ color:c.mut, fontWeight:600 }}>{lang==="ru"?"Сложность":"Difficulty"}</span>
-                <span style={{ color:"#10b981", marginLeft:6 }}>●{P.filter(p=>p.difficulty==="beginner").length}</span>
-                <span style={{ color:"#f59e0b", marginLeft:4 }}>●{P.filter(p=>p.difficulty==="intermediate").length}</span>
-                <span style={{ color:"#ef4444", marginLeft:4 }}>●{P.filter(p=>p.difficulty==="advanced").length}</span>
+                <span style={{ color:"#10b981", marginLeft:6 }}>●{stats.byDifficulty?.beginner||0}</span>
+                <span style={{ color:"#f59e0b", marginLeft:4 }}>●{stats.byDifficulty?.intermediate||0}</span>
+                <span style={{ color:"#ef4444", marginLeft:4 }}>●{stats.byDifficulty?.advanced||0}</span>
               </div>
             </div>
           </div>
