@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { TH, MC, ML, MI, FONT, DIFF_COLORS, VALID_SECTIONS } from '../utils/constants';
+import { TH, MC, ML, MI, FONT, DIFF_COLORS, VALID_SECTIONS, COLORS } from '../utils/constants';
 
 describe('Theme constants', () => {
   it('has dark and light themes', () => {
@@ -63,5 +63,20 @@ describe('VALID_SECTIONS', () => {
     expect(VALID_SECTIONS.length).toBe(5);
     expect(VALID_SECTIONS).toContain('prompts');
     expect(VALID_SECTIONS).toContain('combos');
+  });
+});
+
+describe('COLORS', () => {
+  it('has all semantic colors', () => {
+    expect(COLORS.success).toBe('#10b981');
+    expect(COLORS.error).toBe('#ef4444');
+    expect(COLORS.primary).toBe('#6366f1');
+    expect(COLORS.warning).toBe('#f59e0b');
+    expect(COLORS.info).toBe('#06b6d4');
+    expect(COLORS.star).toBe('#eab308');
+  });
+
+  it('all are valid hex', () => {
+    Object.values(COLORS).forEach(c => expect(c).toMatch(/^#[0-9a-f]{6}$/));
   });
 });

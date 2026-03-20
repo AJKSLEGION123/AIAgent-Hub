@@ -17,3 +17,14 @@ export const DIFF_COLORS: Record<string, string> = {
 };
 
 export const VALID_SECTIONS = ["prompts", "combos", "cheat", "quick", "setup"] as const;
+
+/** Semantic colors used throughout the app */
+export const COLORS = {
+  success: "#10b981",
+  warning: "#f59e0b",
+  error: "#ef4444",
+  primary: "#6366f1",
+  secondary: "#8b5cf6",
+  info: "#06b6d4",
+  star: "#eab308",
+} as const;
