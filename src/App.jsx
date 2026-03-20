@@ -215,6 +215,7 @@ class ErrBound extends Component {
           <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>Agent Hub</div>
           <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>Произошла ошибка</div>
           <div style={{fontSize:11,color:"#5e5e78",marginBottom:16,maxWidth:400}}>{this.state.err?.message}</div>
+          {this.state.err?.stack && <details style={{marginBottom:16,textAlign:"left",maxWidth:500}}><summary style={{fontSize:10,color:"#5e5e78",cursor:"pointer"}}>Stack trace</summary><pre style={{fontSize:9,color:"#44445a",marginTop:8,padding:8,background:"#0a0a12",borderRadius:6,whiteSpace:"pre-wrap",wordBreak:"break-all",maxHeight:200,overflow:"auto"}}>{this.state.err.stack}</pre></details>}
           <button onClick={()=>this.setState({err:null})} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #6366f1",borderRadius:8,background:"#6366f1",color:"#fff",cursor:"pointer"}}>Перезагрузить</button>
         </div>
       </div>
@@ -397,7 +398,11 @@ function AgentHub({ data, loadTime }) {
   }, []);
 
   useEffect(() => {
-    try { localStorage.setItem("agent-hub-settings", JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist, cc:copyCounters })); } catch {}
+    try {
+      const payload = JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist, cc:copyCounters });
+      if (payload.length > 4 * 1024 * 1024) { console.warn("Agent Hub: localStorage near limit"); }
+      localStorage.setItem("agent-hub-settings", payload);
+    } catch {}
   }, [theme, lang, favs, usedPrompts, searchHist, copyCounters]);
 
   // Feat 27: Infinite scroll
@@ -1803,6 +1808,7 @@ function AgentHub({ data, loadTime }) {
                   if (s.favs) setFavs(s.favs);
                   if (s.used) setUsedPrompts(s.used);
                   if (s.hist) setSearchHist(s.hist);
+                  if (s.cc) setCopyCounters(s.cc);
                   setToast(lang==="ru"?"Настройки восстановлены":"Settings restored");
                 } catch {}
               };
