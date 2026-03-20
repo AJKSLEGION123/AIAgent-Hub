@@ -914,7 +914,7 @@ function AgentHub({ data, loadTime }) {
             { k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru).reduce((a,c)=>a+c.cmds.length,0) },
             { k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length },
           ].map(s => (
-            <button key={s.k} role="tab" aria-selected={section===s.k} aria-current={section===s.k?"page":undefined} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);if(s.k!=="prompts")setSearch("");window.scrollTo({top:0,behavior:"smooth"})}} style={{
+            <button key={s.k} role="tab" aria-selected={section===s.k} aria-current={section===s.k?"page":undefined} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);window.scrollTo({top:0,behavior:"smooth"})}} style={{
               padding:"8px 16px", fontSize:11, fontFamily:font, fontWeight:section===s.k?700:400,
               border:`1px solid ${section===s.k?c.text+"30":c.brd}`, borderRadius:8,
               background:section===s.k?c.text+"0a":"transparent", color:section===s.k?c.text:c.mut,
@@ -1449,8 +1449,9 @@ function AgentHub({ data, loadTime }) {
           })}
         </div>
 
+        {debouncedSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{debouncedSearch}"</div>}
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(250px, 1fr))", gap:8 }}>
-          {(COMBOS[lang]||COMBOS.ru).map((cb, i) => {
+          {(COMBOS[lang]||COMBOS.ru).filter(cb => !debouncedSearch || (cb.name + " " + cb.desc).toLowerCase().includes(debouncedSearch.toLowerCase())).map((cb, i) => {
             // Task 71: detect conflicts (multiple prompts for same role type)
             const agents = cb.ids.map(id=>pGet(id)).filter(Boolean);
             const roleTypes = agents.map(a=>a.mk+"-"+a.type);
@@ -1501,13 +1502,19 @@ function AgentHub({ data, loadTime }) {
 
         {/* ════════════════ SECTION: CHEAT SHEETS ════════════════ */}
         {section === "cheat" && <div role="tabpanel" id="panel-cheat">
-        {Object.entries(CHEAT).map(([key, sheet]) => (
+        {/* Cycle 20: Search in cheat sheets */}
+        {debouncedSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{debouncedSearch}"</div>}
+        {Object.entries(CHEAT).map(([key, sheet]) => {
+          const filteredCmds = debouncedSearch ? sheet.cmds.filter(c2 => (c2.cmd + " " + c2.desc).toLowerCase().includes(debouncedSearch.toLowerCase())) : sheet.cmds;
+          if (debouncedSearch && filteredCmds.length === 0) return null;
+          return (
           <div key={key} style={{ marginBottom:16 }}>
             <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
               <div style={{ width:24, height:24, borderRadius:6, background:sheet.color+"20", color:sheet.color, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:800 }}>{MI[key]||key[0].toUpperCase()}</div>
               <span style={{ fontSize:14, fontWeight:700, color:sheet.color }}>{sheet.name}</span>
+              <span style={{ fontSize:9, color:c.dim }}>{filteredCmds.length}</span>
             </div>
-            {sheet.cmds.map((c2, i) => (
+            {filteredCmds.map((c2, i) => (
               <div key={i} onClick={()=>cp(`cheat-${key}-${i}`, c2.cmd)} className="card-enter" style={{
                 display:"flex", alignItems:"center", justifyContent:"space-between", gap:12,
                 padding:"8px 14px", marginBottom:4, borderRadius:8,
@@ -1523,16 +1530,20 @@ function AgentHub({ data, loadTime }) {
               </div>
             ))}
           </div>
-        ))}
+        );})}
         </div>}
 
         {/* ════════════════ SECTION: QUICK COMMANDS ════════════════ */}
         {section === "quick" && <div role="tabpanel" id="panel-quick">
-        {(QUICK_CMDS[lang]||QUICK_CMDS.ru).map((cat, ci) => (
+        {debouncedSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{debouncedSearch}"</div>}
+        {(QUICK_CMDS[lang]||QUICK_CMDS.ru).map((cat, ci) => {
+          const filteredQC = debouncedSearch ? cat.cmds.filter(cmd => (cmd.cmd + " " + cmd.label).toLowerCase().includes(debouncedSearch.toLowerCase())) : cat.cmds;
+          if (debouncedSearch && filteredQC.length === 0) return null;
+          return (
           <div key={ci} style={{ marginBottom:20 }}>
-            <div style={{ fontSize:11, fontWeight:700, color:c.text, marginBottom:8, paddingLeft:4, letterSpacing:1 }}>{cat.cat}</div>
+            <div style={{ fontSize:11, fontWeight:700, color:c.text, marginBottom:8, paddingLeft:4, letterSpacing:1 }}>{cat.cat} <span style={{ fontSize:9, color:c.dim, fontWeight:400 }}>({filteredQC.length})</span></div>
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(260px, 1fr))", gap:6 }}>
-              {cat.cmds.map((cmd, i) => (
+              {filteredQC.map((cmd, i) => (
                 <div key={i} onClick={()=>cp(`qc-${ci}-${i}`, cmd.cmd)} className="card-enter" style={{
                   padding:"10px 14px", borderRadius:8, border:`1px solid ${c.brd}`,
                   background:c.card, cursor:"pointer", transition:"all .15s",
@@ -1544,7 +1555,7 @@ function AgentHub({ data, loadTime }) {
               ))}
             </div>
           </div>
-        ))}
+        );})}
         </div>}
 
         {/* ════════════════ SECTION: SETUP ════════════════ */}
