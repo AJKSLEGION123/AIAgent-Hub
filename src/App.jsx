@@ -190,7 +190,7 @@ const CBtn = memo(({ id, txt, cl, sm, copied, cp, t, bg, skip }) => (
 ));
 
 const Toast = memo(({ msg, c }) => msg ? (
-  <div className="toast" style={{ background:"#10b981", color:"#fff", fontFamily:font }}>{msg}</div>
+  <div className="toast" role="status" aria-live="polite" style={{ background:"#10b981", color:"#fff", fontFamily:font }}>{msg}</div>
 ) : null);
 
 /* ═══════════════════════════════════════════════
@@ -408,11 +408,18 @@ function AgentHub({ data, loadTime }) {
     return () => obs.disconnect();
   }, [list.length, showCount]);
 
-  // Feat 5: Scroll progress
+  // Feat 5: Scroll progress (task 3: throttled via rAF)
   useEffect(() => {
+    let ticking = false;
     const fn = () => {
-      const h = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollPct(h > 0 ? Math.round(window.scrollY / h * 100) : 0);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const h = document.documentElement.scrollHeight - window.innerHeight;
+          setScrollPct(h > 0 ? Math.round(window.scrollY / h * 100) : 0);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
@@ -426,6 +433,13 @@ function AgentHub({ data, loadTime }) {
     window.addEventListener("offline", off);
     return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
   }, []);
+
+  // Task 5: Lock body scroll when overlays open
+  useEffect(() => {
+    const hasOverlay = showShortcuts || focusPrompt || showStats || showCopyHistory || showDiff;
+    document.body.style.overflow = hasOverlay ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [showShortcuts, focusPrompt, showStats, showCopyHistory, showDiff]);
 
   // Feat 16: First visit welcome
   useEffect(() => {
@@ -532,6 +546,8 @@ function AgentHub({ data, loadTime }) {
         if (focusPrompt) { setFocusPrompt(null); e.preventDefault(); return; }
         if (showStats) { setShowStats(false); e.preventDefault(); return; }
         if (showCopyHistory) { setShowCopyHistory(false); e.preventDefault(); return; }
+        if (showDiff) { setShowDiff(null); e.preventDefault(); return; }
+        if (isFirstVisit) { setIsFirstVisit(false); e.preventDefault(); return; }
       }
       // Enter to toggle expand on focused card
       if (e.key === "Enter" && document.activeElement?.id?.startsWith("card-")) {
@@ -765,7 +781,7 @@ function AgentHub({ data, loadTime }) {
         {/* ── HEADER ── */}
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16 }} className="stack-mobile">
           <div>
-            <div style={{ fontSize:9, letterSpacing:6, color:c.dim, textTransform:"uppercase", marginBottom:6 }}>v8.0 · {stats.total} {t.prompts} · {stats.models} {t.models} · ~{stats.totalHours}h</div>
+            <div style={{ fontSize:9, letterSpacing:6, color:c.dim, textTransform:"uppercase", marginBottom:6 }}>v8.1 · {stats.total} {t.prompts} · {stats.models} {t.models} · ~{stats.totalHours}h</div>
             <h1 style={{ fontSize:28, fontWeight:800, margin:0, lineHeight:1.1, letterSpacing:"-0.5px" }}>{t.title}</h1>
             <p style={{ fontSize:12, color:c.mut, marginTop:6, letterSpacing:0.3 }}>{t.subtitle}</p>
           </div>
@@ -824,7 +840,7 @@ function AgentHub({ data, loadTime }) {
             { k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru).reduce((a,c)=>a+c.cmds.length,0) },
             { k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length },
           ].map(s => (
-            <button key={s.k} role="tab" aria-selected={section===s.k} aria-controls={`panel-${s.k}`} onClick={()=>setSection(s.k)} style={{
+            <button key={s.k} role="tab" aria-selected={section===s.k} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);window.scrollTo({top:0,behavior:"smooth"})}} style={{
               padding:"8px 16px", fontSize:11, fontFamily:font, fontWeight:section===s.k?700:400,
               border:`1px solid ${section===s.k?c.text+"30":c.brd}`, borderRadius:8,
               background:section===s.k?c.text+"0a":"transparent", color:section===s.k?c.text:c.mut,
@@ -841,7 +857,7 @@ function AgentHub({ data, loadTime }) {
           <span>Agent Hub</span>
           <span>›</span>
           <span style={{ color:c.text, fontWeight:600 }}>{section==="prompts"?(lang==="ru"?"Промты":"Prompts"):section==="combos"?(lang==="ru"?"Команды":"Teams"):section==="cheat"?(lang==="ru"?"Шпаргалки":"Cheat"):section==="quick"?"CLI":(lang==="ru"?"Настройка":"Setup")}</span>
-          {hasFilters && <><span>›</span><span style={{ color:"#6366f1" }}>{fm!=="all"?(fm==="model"?fv:fm==="role"?(t.r[fv]||fv):fv):(debouncedSearch||"...")}</span></>}
+          {hasFilters && <><span>›</span><span style={{ color:"#6366f1" }}>{debouncedSearch?`"${debouncedSearch}"`:fm!=="all"?(fm==="model"?(ML[fv]||fv):fm==="role"?(t.r[fv]||fv):fv):(showNew?"NEW":hideUsed?"Hide ✓":"filter")}</span></>}
         </div>
 
         {/* ── MODEL BADGES (task 018: toggle) ── */}
@@ -966,7 +982,7 @@ function AgentHub({ data, loadTime }) {
         {compareMode && compareIds.length >= 2 && (
           <div style={{ marginBottom:12, padding:12, borderRadius:10, border:`2px solid #8b5cf640`, background:"#8b5cf608" }}>
             <div style={{ fontSize:10, fontWeight:700, color:"#8b5cf6", marginBottom:8 }}>{lang==="ru"?"Сравнение":"Compare"} ({compareIds.length})</div>
-            <div style={{ display:"grid", gridTemplateColumns:`repeat(${compareIds.length}, 1fr)`, gap:8 }}>
+            <div style={{ display:"grid", gridTemplateColumns:`repeat(${Math.min(compareIds.length, 3)}, 1fr)`, gap:8 }}>
               {compareIds.map(id => {
                 const p = P.find(x=>x.id===id);
                 return p ? (
@@ -1604,7 +1620,7 @@ function AgentHub({ data, loadTime }) {
           <details style={{ marginTop:8 }}>
             <summary style={{ fontSize:10, fontWeight:600, color:c.mut, cursor:"pointer", letterSpacing:1, textTransform:"uppercase", marginBottom:6 }}>{lang==="ru"?"История версий":"Changelog"}</summary>
             <div style={{ fontSize:10, color:c.dim, lineHeight:1.8, paddingLeft:8, borderLeft:`2px solid ${c.brd}`, marginTop:8 }}>
-              <div><strong>v8.0</strong> — {lang==="ru"?"132 промта, 14 конфигов, 35 комбо. Теги, сложность, related. Sticky поиск, сортировка, фильтр по сложности/времени, random, toast, CSS анимации, a11y, mobile responsive, ErrorBoundary, persistent storage, URL routing.":"132 prompts, 14 configs, 35 combos. Tags, difficulty, related. Sticky search, sorting, difficulty/time filters, random, toast, CSS animations, a11y, mobile responsive, ErrorBoundary, persistent storage, URL routing."}</div>
+              <div><strong>v8.1</strong> — {lang==="ru"?"132 промта, 14 конфигов, 35 комбо. Теги, сложность, related. Sticky поиск, сортировка, фильтр по сложности/времени, random, toast, CSS анимации, a11y, mobile responsive, ErrorBoundary, persistent storage, URL routing.":"132 prompts, 14 configs, 35 combos. Tags, difficulty, related. Sticky search, sorting, difficulty/time filters, random, toast, CSS animations, a11y, mobile responsive, ErrorBoundary, persistent storage, URL routing."}</div>
               <div style={{marginTop:4}}><strong>v6.0</strong> — {lang==="ru"?"127 промтов. Все промты имеют АНТИ-ЛУП, РЕЗУЛЬТАТ, ПЕРВЫЙ ШАГ. Stats bar, copy filtered, DevTools промт.":"127 prompts. All prompts have ANTI-LOOP, RESULT, FIRST STEP. Stats bar, copy filtered, DevTools prompt."}</div>
               <div style={{marginTop:4}}><strong>v5.0</strong> — {lang==="ru"?"55 промтов. Начальная версия с 3 моделями, конфигами, шпаргалками.":"55 prompts. Initial version with 3 models, configs, cheat sheets."}</div>
             </div>
@@ -1690,7 +1706,7 @@ function AgentHub({ data, loadTime }) {
           <button onClick={() => {
             const items = section==="prompts" && hasFilters ? list : P;
             const totalTokens = items.reduce((a,p)=>a+Math.round(p.text.length/4),0);
-            let md = `# Agent Hub v8.0\n\n> ${items.length} ${t.prompts} · ${stats.models} ${t.models} · ~${(totalTokens/1000).toFixed(0)}K tokens\n\n`;
+            let md = `# Agent Hub v8.1\n\n> ${items.length} ${t.prompts} · ${stats.models} ${t.models} · ~${(totalTokens/1000).toFixed(0)}K tokens\n\n`;
             const grouped = {};
             items.forEach(p => { (grouped[p.mk] = grouped[p.mk]||[]).push(p); });
             Object.entries(grouped).forEach(([mk, grp]) => {
@@ -1734,7 +1750,7 @@ function AgentHub({ data, loadTime }) {
           {/* Export as self-contained HTML */}
           <button onClick={() => {
             const items = section==="prompts" && hasFilters ? list : P;
-            let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Agent Hub v8.0</title><style>body{font-family:monospace;background:#060609;color:#ddd;padding:20px;max-width:800px;margin:0 auto}h1{color:#6366f1}h2{color:#f97316;border-bottom:1px solid #222;padding-bottom:8px}h3{color:#8b5cf6;margin-top:24px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap;font-size:12px;line-height:1.6;overflow-x:auto;border:1px solid #222}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#1a1a28;color:#888;margin:2px}</style></head><body><h1>Agent Hub v8.0</h1><p>${items.length} prompts · ${stats.models} models · ~${stats.totalHours}h</p>`;
+            let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Agent Hub v8.1</title><style>body{font-family:monospace;background:#060609;color:#ddd;padding:20px;max-width:800px;margin:0 auto}h1{color:#6366f1}h2{color:#f97316;border-bottom:1px solid #222;padding-bottom:8px}h3{color:#8b5cf6;margin-top:24px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap;font-size:12px;line-height:1.6;overflow-x:auto;border:1px solid #222}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#1a1a28;color:#888;margin:2px}</style></head><body><h1>Agent Hub v8.1</h1><p>${items.length} prompts · ${stats.models} models · ~${stats.totalHours}h</p>`;
             items.forEach(p => {
               html += `<h3>${p.icon} ${t.r[p.role]||p.role} <small>(${p.m} · ${p.time||""} · ${p.difficulty||""})</small></h3>`;
               if (p.tags) html += `<div>${p.tags.map(t2=>`<span class="tag">#${t2}</span>`).join(" ")}</div>`;
@@ -1767,7 +1783,12 @@ function AgentHub({ data, loadTime }) {
                 try {
                   const s = JSON.parse(ev.target.result);
                   localStorage.setItem("agent-hub-settings", JSON.stringify(s));
-                  location.reload();
+                  if (s.theme) setTheme(s.theme);
+                  if (s.lang) setLang(s.lang);
+                  if (s.favs) setFavs(s.favs);
+                  if (s.used) setUsedPrompts(s.used);
+                  if (s.hist) setSearchHist(s.hist);
+                  setToast(lang==="ru"?"Настройки восстановлены":"Settings restored");
                 } catch {}
               };
               reader.readAsText(file);
