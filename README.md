@@ -1,16 +1,39 @@
-# React + Vite
+# Agent Hub v8.0
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Мультиагентная система разработки. 132+ промтов для автономных AI-агентов.
 
-Currently, two official plugins are available:
+## Модели
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Claude Opus 4.6** — Claude Code CLI
+- **Gemini 3.1 Pro** — Gemini CLI
+- **Codex CLI** — OpenAI Codex
 
-## React Compiler
+## Возможности
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 132+ промтов для разных ролей и задач
+- Фильтрация по модели, роли, типу, сложности, тегам, времени
+- Поиск с подсветкой (Ctrl+K)
+- Тёмная/светлая тема
+- 3 языка: русский, английский, казахский
+- Конструктор промтов
+- Рекомендуемые команды агентов
+- Шпаргалки CLI
+- Экспорт в Markdown, JSON, HTML
+- Избранное, прогресс, сравнение промтов
+- Режим Compact для Claude Code
 
-## Expanding the ESLint configuration
+## Запуск
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+```
+
+Открой http://localhost:5173
+
+## Использование
+
+1. Выбери промт для нужной задачи
+2. Скопируй одной кнопкой
+3. Вставь в терминал агента (Claude Code / Gemini CLI / Codex CLI)
+4. Агент работает автономно

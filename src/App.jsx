@@ -317,6 +317,7 @@ function AgentHub({ data, loadTime }) {
   const [compareMode, setCompareMode] = useState(false); // task 69
   const [usedPrompts, setUsedPrompts] = useState({}); // task 75: progress tracker
   const [searchHist, setSearchHist] = useState([]); // task 49
+  const [searchFocused, setSearchFocused] = useState(false); // fix: track focus via state
   const [customCombo, setCustomCombo] = useState([]); // task 114
   const [buildingCombo, setBuildingCombo] = useState(false); // task 114
   const [promptLang, setPromptLang] = useState("original"); // task 94: separate prompt language
@@ -360,25 +361,21 @@ function AgentHub({ data, loadTime }) {
 
   // ── Persist settings (task 027) ──
   useEffect(() => {
-    (async () => {
-      try {
-        const r = await window.storage?.get("agent-hub-settings");
-        if (r?.value) {
-          const s = JSON.parse(r.value);
-          if (s.theme) setTheme(s.theme);
-          if (s.lang) setLang(s.lang);
-          if (s.favs) setFavs(s.favs);
-          if (s.used) setUsedPrompts(s.used);
-          if (s.hist) setSearchHist(s.hist);
-        }
-      } catch {}
-    })();
+    try {
+      const raw = localStorage.getItem("agent-hub-settings");
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s.theme) setTheme(s.theme);
+        if (s.lang) setLang(s.lang);
+        if (s.favs) setFavs(s.favs);
+        if (s.used) setUsedPrompts(s.used);
+        if (s.hist) setSearchHist(s.hist);
+      }
+    } catch {}
   }, []);
-  
+
   useEffect(() => {
-    (async () => {
-      try { await window.storage?.set("agent-hub-settings", JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist })); } catch {}
-    })();
+    try { localStorage.setItem("agent-hub-settings", JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist })); } catch {}
   }, [theme, lang, favs, usedPrompts, searchHist]);
 
   // Task 16: Meta theme-color
@@ -659,7 +656,7 @@ function AgentHub({ data, loadTime }) {
         <div className="sticky-bar" style={{ background:alpha(c.bg,.85) }}>
           {/* Search */}
           <div style={{ position:"relative", marginBottom:10 }}>
-            <input ref={searchRef} value={search} onChange={e=>setSearch(e.target.value)} type="search" placeholder={`${t.search} (Ctrl+K)`} aria-label={t.search} style={{
+            <input ref={searchRef} value={search} onChange={e=>setSearch(e.target.value)} onFocus={()=>setSearchFocused(true)} onBlur={()=>setTimeout(()=>setSearchFocused(false),150)} type="search" placeholder={`${t.search} (Ctrl+K)`} aria-label={t.search} style={{
               width:"100%", padding:"10px 14px 10px 36px", fontSize:12, fontFamily:font,
               border:`1px solid ${c.brd}`, borderRadius:10, background:c.card, color:c.text,
               outline:"none", boxSizing:"border-box", transition:"border-color .15s,box-shadow .15s",
@@ -698,7 +695,6 @@ function AgentHub({ data, loadTime }) {
           <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
           {roles.map(r=>{const p=P.find(x=>x.role===r);return <Pill key={r} on={fv===r} fn={()=>setFv(r)} lb={t.r[r]||r} cl={p?.ac} c={c}/>;})}
         </div>}
-        {fm==="model" && fm==="model" && fv!=="all" ? null : null}
         {fm==="type" && <div style={{display:"flex",gap:5,marginBottom:12,flexWrap:"wrap"}}>
           <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
           <Pill on={fv==="role"} fn={()=>setFv("role")} lb={lang==="ru"?"Роли":"Roles"} cl="#10b981" c={c} />
@@ -974,7 +970,7 @@ function AgentHub({ data, loadTime }) {
         )}
 
         {/* Task 49: Search history */}
-        {!search && searchHist.length > 0 && document.activeElement === searchRef.current && (
+        {!search && searchHist.length > 0 && searchFocused && (
           <div style={{ marginBottom:12 }}>
             <div style={{ fontSize:9, color:c.dim, marginBottom:4, letterSpacing:1 }}>{lang==="ru"?"НЕДАВНИЕ":"RECENT"}</div>
             <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
