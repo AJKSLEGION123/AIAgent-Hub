@@ -333,6 +333,10 @@ function AgentHub({ data, loadTime }) {
   const [showCopyHistory, setShowCopyHistory] = useState(false); // feat 17
   const [focusPrompt, setFocusPrompt] = useState(null); // feat 18: focus mode
   const [showStats, setShowStats] = useState(false); // feat 24: stats modal
+  const [viewMode, setViewMode] = useState("card"); // feat 26: card/table
+  const [recentViewed, setRecentViewed] = useState([]); // feat 30: recently viewed
+  const [sessionStart] = useState(Date.now()); // feat 33: session timer
+  const [showDiff, setShowDiff] = useState(null); // feat 34: diff modal
   const [customCombo, setCustomCombo] = useState([]); // task 114
   const [buildingCombo, setBuildingCombo] = useState(false); // task 114
   const [promptLang, setPromptLang] = useState("original"); // task 94: separate prompt language
@@ -348,6 +352,7 @@ function AgentHub({ data, loadTime }) {
   const [workflow, setWorkflow] = useState([]); // task 70: workflow sequencer
   const [showWorkflow, setShowWorkflow] = useState(false); // task 70
   const searchRef = useRef(null);
+  const loadMoreRef = useRef(null); // feat 27: infinite scroll sentinel
   
   // Task 92: lang cycle helper
   const nextLang = useCallback(() => {
@@ -392,6 +397,16 @@ function AgentHub({ data, loadTime }) {
   useEffect(() => {
     try { localStorage.setItem("agent-hub-settings", JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist })); } catch {}
   }, [theme, lang, favs, usedPrompts, searchHist]);
+
+  // Feat 27: Infinite scroll
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && list.length > showCount) setShowCount(s => s + 40);
+    }, { rootMargin: "200px" });
+    obs.observe(loadMoreRef.current);
+    return () => obs.disconnect();
+  }, [list.length, showCount]);
 
   // Feat 5: Scroll progress
   useEffect(() => {
@@ -467,12 +482,14 @@ function AgentHub({ data, loadTime }) {
   }, [search]);
 
   // ── Callbacks (must be before keyboard effect) ──
-  const toggle = useCallback((id) => setExpanded(e => {
-    if (autoCollapse) {
-      return { [id]: !e[id] };
-    }
-    return { ...e, [id]: !e[id] };
-  }), [autoCollapse]);
+  const toggle = useCallback((id) => {
+    setExpanded(e => {
+      const willOpen = !e[id];
+      if (willOpen) setRecentViewed(rv => [id, ...rv.filter(x=>x!==id)].slice(0,5));
+      if (autoCollapse) return { [id]: willOpen };
+      return { ...e, [id]: willOpen };
+    });
+  }, [autoCollapse]);
   const toggleFav = useCallback((id) => setFavs(f => ({ ...f, [id]: !f[id] })), []);
   const favCount = useMemo(() => Object.values(favs).filter(Boolean).length, [favs]);
   const usedCount = useMemo(() => Object.values(usedPrompts).filter(Boolean).length, [usedPrompts]);
@@ -819,6 +836,14 @@ function AgentHub({ data, loadTime }) {
         {/* ════════════════ SECTION: PROMPTS ════════════════ */}
         {section === "prompts" && <div role="tabpanel" id="panel-prompts">
 
+        {/* Feat 35: Breadcrumbs */}
+        <div style={{ display:"flex", alignItems:"center", gap:4, marginBottom:12, fontSize:10, color:c.dim }}>
+          <span>Agent Hub</span>
+          <span>›</span>
+          <span style={{ color:c.text, fontWeight:600 }}>{section==="prompts"?(lang==="ru"?"Промты":"Prompts"):section==="combos"?(lang==="ru"?"Команды":"Teams"):section==="cheat"?(lang==="ru"?"Шпаргалки":"Cheat"):section==="quick"?"CLI":(lang==="ru"?"Настройка":"Setup")}</span>
+          {hasFilters && <><span>›</span><span style={{ color:"#6366f1" }}>{fm!=="all"?(fm==="model"?fv:fm==="role"?(t.r[fv]||fv):fv):(debouncedSearch||"...")}</span></>}
+        </div>
+
         {/* ── MODEL BADGES (task 018: toggle) ── */}
         <div style={{ display:"flex", gap:10, marginBottom:20, flexWrap:"wrap" }} className="gap-mobile">
           {Object.entries(ML).map(([k,v]) => {
@@ -930,6 +955,10 @@ function AgentHub({ data, loadTime }) {
               {copied==="copy-filtered" ? t.copied : t.copyFiltered} ({list.length})
             </button>}
             <button onClick={toggleAll} style={{ fontSize:10, fontFamily:font, color:c.mut, background:"none", border:"none", cursor:"pointer", padding:"4px 8px", outline:"none" }}>{allExpanded ? t.collapseAll : t.expandAll}</button>
+            {/* Feat 26: View mode toggle */}
+            <div style={{ display:"flex", border:`1px solid ${c.brd}`, borderRadius:6, overflow:"hidden" }}>
+              {[{k:"card",l:"▤"},{k:"table",l:"☰"}].map(v=><button key={v.k} onClick={()=>setViewMode(v.k)} style={{ padding:"3px 8px", fontSize:10, background:viewMode===v.k?c.text+"10":"transparent", color:viewMode===v.k?c.text:c.dim, border:"none", cursor:"pointer", fontFamily:font, outline:"none" }}>{v.l}</button>)}
+            </div>
           </div>
         </div>
 
@@ -1070,8 +1099,34 @@ function AgentHub({ data, loadTime }) {
           </div>
         )}
 
+        {/* Feat 26: Table view */}
+        {viewMode === "table" && list.length > 0 && (
+          <div style={{ overflowX:"auto", marginBottom:12 }}>
+            <table style={{ width:"100%", borderCollapse:"collapse", fontSize:10, fontFamily:font }}>
+              <thead><tr style={{ borderBottom:`2px solid ${c.brd}`, textAlign:"left" }}>
+                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>#</th>
+                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>{lang==="ru"?"Роль":"Role"}</th>
+                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>{lang==="ru"?"Модель":"Model"}</th>
+                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }} className="hide-mobile">{lang==="ru"?"Время":"Time"}</th>
+                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }} className="hide-mobile">Tokens</th>
+                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}></th>
+              </tr></thead>
+              <tbody>{list.slice(0, showCount).map((p, i) => (
+                <tr key={p.id} style={{ borderBottom:`1px solid ${c.brd}`, cursor:"pointer" }} onClick={()=>{setViewMode("card");setExpanded(e=>({...e,[p.id]:true}));setTimeout(()=>document.getElementById("card-"+p.id)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}}>
+                  <td style={{ padding:"6px 8px", color:c.dim }}>{i+1}</td>
+                  <td style={{ padding:"6px 8px" }}><span style={{ color:p.ac, fontWeight:600 }}>{p.icon} {t.r[p.role]||p.role}</span></td>
+                  <td style={{ padding:"6px 8px" }}><span style={{ color:MC[p.mk], fontSize:9 }}>{ML[p.mk]}</span></td>
+                  <td style={{ padding:"6px 8px", color:c.mut }} className="hide-mobile">{p.time}</td>
+                  <td style={{ padding:"6px 8px", color:c.dim }} className="hide-mobile">~{Math.ceil(p.text.length/4)}</td>
+                  <td style={{ padding:"6px 8px" }}><button onClick={(e)=>{e.stopPropagation();cp(p.id,p.text)}} style={{ padding:"3px 10px", fontSize:9, fontFamily:font, fontWeight:600, border:`1px solid ${p.ac}`, borderRadius:6, background:copied===p.id?"transparent":p.ac, color:copied===p.id?p.ac:c.bg, cursor:"pointer", outline:"none" }}>{copied===p.id?"✓":t.copy}</button></td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+        )}
+
         {/* ── PROMPT CARDS (task 81: paginated) ── */}
-        {list.slice(0, showCount).map((p) => {
+        {viewMode === "card" && list.slice(0, showCount).map((p) => {
           const isO = expanded[p.id]; const ln = p.text.split("\n").length;
           const preview = p.text.split("\n").slice(0, 2).join(" ").slice(0, 100);
           const diffColors = {beginner:"#10b981",intermediate:"#f59e0b",advanced:"#ef4444"};
@@ -1165,6 +1220,16 @@ function AgentHub({ data, loadTime }) {
           );
         })}
 
+        {/* Feat 30: Recently viewed */}
+        {!hasFilters && recentViewed.length > 0 && viewMode === "card" && (
+          <div style={{ marginBottom:12, padding:"8px 12px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.bg2 }}>
+            <div style={{ fontSize:9, color:c.dim, marginBottom:4, fontWeight:600 }}>{lang==="ru"?"Недавно просмотренные":"Recently viewed"}</div>
+            <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
+              {recentViewed.map(rid => { const rp = P.find(x=>x.id===rid); return rp ? <button key={rid} onClick={()=>{setExpanded(e=>({...e,[rid]:true}));setTimeout(()=>document.getElementById("card-"+rid)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"3px 8px", borderRadius:6, background:rp.ac+"10", color:rp.ac, border:`1px solid ${rp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{rp.icon} {t.r[rp.role]||rp.role}</button> : null; })}
+            </div>
+          </div>
+        )}
+
         {list.length === 0 && (
           <div style={{ textAlign:"center", padding:"40px 0", color:c.dim, fontSize:12 }}>
             {lang==="ru" ? "Ничего не найдено" : "Nothing found"}
@@ -1172,12 +1237,10 @@ function AgentHub({ data, loadTime }) {
           </div>
         )}
 
-        {/* Task 81: Load more */}
+        {/* Feat 27: Infinite scroll sentinel */}
         {list.length > showCount && (
-          <div style={{ textAlign:"center", padding:"16px 0" }}>
-            <button onClick={()=>setShowCount(s=>s+40)} style={{ padding:"8px 28px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.text, cursor:"pointer", outline:"none", transition:"all .15s" }}>
-              {lang==="ru"?"Показать ещё":"Load more"} ({list.length - showCount} {lang==="ru"?"осталось":"remaining"})
-            </button>
+          <div ref={loadMoreRef} style={{ textAlign:"center", padding:"16px 0" }}>
+            <div style={{ fontSize:10, color:c.dim }}>{lang==="ru"?"Загрузка...":"Loading..."} ({list.length - showCount} {lang==="ru"?"осталось":"remaining"})</div>
           </div>
         )}
 
@@ -1685,6 +1748,32 @@ function AgentHub({ data, loadTime }) {
             border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
             cursor:"pointer", transition:"all .15s", outline:"none",
           }}>{lang==="ru"?"Экспорт HTML":"Export HTML"}</button>
+          {/* Feat 36: Settings backup/restore */}
+          <button onClick={() => {
+            try {
+              const settings = localStorage.getItem("agent-hub-settings");
+              if (settings) {
+                const blob = new Blob([settings], { type:"application/json" });
+                const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "agent-hub-settings.json"; a.click(); URL.revokeObjectURL(url);
+              }
+            } catch {}
+          }} style={{ padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600, border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>💾 {lang==="ru"?"Бэкап":"Backup"}</button>
+          <button onClick={() => {
+            const input = document.createElement("input"); input.type = "file"; input.accept = ".json";
+            input.onchange = (e) => {
+              const file = e.target.files?.[0]; if (!file) return;
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                try {
+                  const s = JSON.parse(ev.target.result);
+                  localStorage.setItem("agent-hub-settings", JSON.stringify(s));
+                  location.reload();
+                } catch {}
+              };
+              reader.readAsText(file);
+            };
+            input.click();
+          }} style={{ padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600, border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>📂 {lang==="ru"?"Восстановить":"Restore"}</button>
         </div>
 
         {/* ── FOOTER ── */}
@@ -1697,7 +1786,7 @@ function AgentHub({ data, loadTime }) {
               </div>
             ))}
           </div>
-          <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AGENT HUB v8.0 · {P.length} {t.prompts} · {CONFIGS.length} configs · {(COMBOS[lang]||COMBOS.ru).length} combos · {stats.roles} {lang==="ru"?"ролей":"roles"} · ~{stats.totalHours}h{loadTime ? ` · ${loadTime}ms` : ""}</div>
+          <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AGENT HUB v8.1 · {P.length} {t.prompts} · {CONFIGS.length} configs · {(COMBOS[lang]||COMBOS.ru).length} combos · {stats.roles} {lang==="ru"?"ролей":"roles"} · ~{stats.totalHours}h{loadTime ? ` · ${loadTime}ms` : ""} · {lang==="ru"?"сессия":"session"} {Math.round((Date.now()-sessionStart)/60000)}{lang==="ru"?"м":"m"}</div>
           <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>
         </div>
       </div>
