@@ -23,6 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
+# Database
+data/
+
 # Agent logs and reports (generated at runtime)
 .claude/logs/
 .claude/reports/

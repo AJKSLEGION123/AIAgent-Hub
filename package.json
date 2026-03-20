@@ -14,9 +14,14 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "npx playwright test",
-    "test:all": "vitest run && npx playwright test"
+    "test:all": "vitest run && npx playwright test",
+    "api": "node api/server.cjs",
+    "dev:all": "concurrently \"npm run dev\" \"npm run api\""
   },
   "dependencies": {
+    "@hono/node-server": "^1.19.11",
+    "better-sqlite3": "^12.8.0",
+    "hono": "^4.12.8",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
