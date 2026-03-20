@@ -791,7 +791,7 @@ function AgentHub({ data, loadTime }) {
             {/* Feat 17: Copy history */}
             <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":"Copy history"} style={{ position:"relative", width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>📋{copyCount>0 && <span style={{ position:"absolute", top:-4, right:-4, background:"#6366f1", color:"#fff", fontSize:8, fontWeight:700, borderRadius:8, padding:"1px 4px", minWidth:14, textAlign:"center" }}>{copyCount}</span>}</button>
             {/* Feat 4: Shortcuts */}
-            <button onClick={()=>setShowShortcuts(true)} aria-label="Shortcuts" title={lang==="ru"?"Горячие клавиши (?)":"Keyboard shortcuts (?)"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>⌨</button>
+            <button onClick={()=>setShowShortcuts(true)} aria-label="Shortcuts" title={lang==="ru"?"Горячие клавиши (?)":"Keyboard shortcuts (?)"} style={{ position:"relative", width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>⌨<span style={{ position:"absolute", bottom:-2, right:-2, fontSize:8, color:c.dim, fontFamily:font, fontWeight:700 }}>?</span></button>
             <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:15, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>{theme==="dark"?"☀":"☾"}</button>
             <button onClick={nextLang} aria-label={`Switch language to ${langLabel}`} style={{ height:36, padding:"0 12px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, fontWeight:700, outline:"none", transition:"all .15s" }}>{langLabel}</button>
             {/* Feat 9: Font size */}
@@ -840,7 +840,7 @@ function AgentHub({ data, loadTime }) {
             { k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru).reduce((a,c)=>a+c.cmds.length,0) },
             { k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length },
           ].map(s => (
-            <button key={s.k} role="tab" aria-selected={section===s.k} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);window.scrollTo({top:0,behavior:"smooth"})}} style={{
+            <button key={s.k} role="tab" aria-selected={section===s.k} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);if(s.k!=="prompts")setSearch("");window.scrollTo({top:0,behavior:"smooth"})}} style={{
               padding:"8px 16px", fontSize:11, fontFamily:font, fontWeight:section===s.k?700:400,
               border:`1px solid ${section===s.k?c.text+"30":c.brd}`, borderRadius:8,
               background:section===s.k?c.text+"0a":"transparent", color:section===s.k?c.text:c.mut,
@@ -1729,7 +1729,8 @@ function AgentHub({ data, loadTime }) {
             const items = section==="prompts" && hasFilters ? list : P;
             let csv = "ID,Role,Model,Type,Difficulty,Time,Tags,Chars,Tokens\n";
             items.forEach(p => {
-              csv += `"${p.id}","${t.r[p.role]||p.role}","${p.m}","${p.type}","${p.difficulty||""}","${p.time||""}","${(p.tags||[]).join(";")}",${p.text.length},${Math.ceil(p.text.length/4)}\n`;
+              const esc = s => (s||"").replace(/"/g,'""');
+              csv += `"${esc(p.id)}","${esc(t.r[p.role]||p.role)}","${esc(p.m)}","${p.type}","${esc(p.difficulty)}","${esc(p.time)}","${esc((p.tags||[]).join(";"))}",${p.text.length},${Math.ceil(p.text.length/4)}\n`;
             });
             const blob = new Blob([csv], { type:"text/csv" });
             const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "agent-hub-prompts.csv"; a.click(); URL.revokeObjectURL(url);
@@ -1754,7 +1755,7 @@ function AgentHub({ data, loadTime }) {
             items.forEach(p => {
               html += `<h3>${p.icon} ${t.r[p.role]||p.role} <small>(${p.m} · ${p.time||""} · ${p.difficulty||""})</small></h3>`;
               if (p.tags) html += `<div>${p.tags.map(t2=>`<span class="tag">#${t2}</span>`).join(" ")}</div>`;
-              html += `<pre>${p.text.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre>`;
+              html += `<pre>${p.text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}</pre>`;
             });
             html += `</body></html>`;
             const blob = new Blob([html], { type:"text/html" });
@@ -1808,7 +1809,7 @@ function AgentHub({ data, loadTime }) {
             ))}
           </div>
           <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AGENT HUB v8.1 · {P.length} {t.prompts} · {CONFIGS.length} configs · {(COMBOS[lang]||COMBOS.ru).length} combos · {stats.roles} {lang==="ru"?"ролей":"roles"} · ~{stats.totalHours}h{loadTime ? ` · ${loadTime}ms` : ""} · {lang==="ru"?"сессия":"session"} {Math.round((Date.now()-sessionStart)/60000)}{lang==="ru"?"м":"m"}</div>
-          <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>
+          {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>}
         </div>
       </div>
 

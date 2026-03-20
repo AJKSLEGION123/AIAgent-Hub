@@ -41,6 +41,35 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
   [style*="position:fixed"], .mobile-bottom-nav, .sticky-bar { display: none !important; }
 }
 
+/* Task 9: Card body expand transition */
+.card-body-enter {
+  animation: card-body-in 0.2s ease-out;
+}
+@keyframes card-body-in {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 500px; }
+}
+
+/* Task 10: Table row hover */
+tr[style]:hover { background: rgba(99, 102, 241, 0.04) !important; }
+
+/* Task 14: Mobile nav active indicator */
+.mobile-bottom-nav button[style*="font-weight:700"]::after,
+.mobile-bottom-nav button[style*="font-weight: 700"]::after {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 2px;
+  background: #6366f1;
+  border-radius: 1px;
+  margin: 2px auto 0;
+}
+
+/* Task 15: Scroll progress bar smooth */
+[style*="position:fixed"][style*="height:2"] {
+  transition: width 0.15s ease-out, opacity 0.3s !important;
+}
+
 /* Feat 20: Mobile bottom nav */
 @media (max-width: 640px) {
   .mobile-bottom-nav { display: flex !important; }
