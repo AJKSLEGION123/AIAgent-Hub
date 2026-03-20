@@ -297,7 +297,9 @@ function AgentHub({ data, loadTime }) {
   const [lang, setLang] = useState(() => {
     try { const n = navigator.language; return n?.startsWith("ru") ? "ru" : "en"; } catch { return "ru"; }
   });
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState(() => {
+    try { return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"; } catch { return "dark"; }
+  });
   const [copied, setCopied] = useState(null);
   const [toast, setToast] = useState(null);
   const [expanded, setExpanded] = useState({});
@@ -318,6 +320,19 @@ function AgentHub({ data, loadTime }) {
   const [usedPrompts, setUsedPrompts] = useState({}); // task 75: progress tracker
   const [searchHist, setSearchHist] = useState([]); // task 49
   const [searchFocused, setSearchFocused] = useState(false); // fix: track focus via state
+  const [scrollPct, setScrollPct] = useState(0); // feat 5: scroll progress
+  const [isOffline, setIsOffline] = useState(!navigator.onLine); // feat 6: offline
+  const [copyCount, setCopyCount] = useState(0); // feat 7: session counter
+  const [autoCollapse, setAutoCollapse] = useState(false); // feat 8: auto-collapse
+  const [fontSize, setFontSize] = useState(100); // feat 9: font size %
+  const [showNew, setShowNew] = useState(false); // feat 10: new only
+  const [hideUsed, setHideUsed] = useState(false); // feat 11: hide used
+  const [showShortcuts, setShowShortcuts] = useState(false); // feat 4: shortcuts overlay
+  const [isFirstVisit, setIsFirstVisit] = useState(false); // feat 16: welcome
+  const [copyHistory, setCopyHistory] = useState([]); // feat 17: copy history
+  const [showCopyHistory, setShowCopyHistory] = useState(false); // feat 17
+  const [focusPrompt, setFocusPrompt] = useState(null); // feat 18: focus mode
+  const [showStats, setShowStats] = useState(false); // feat 24: stats modal
   const [customCombo, setCustomCombo] = useState([]); // task 114
   const [buildingCombo, setBuildingCombo] = useState(false); // task 114
   const [promptLang, setPromptLang] = useState("original"); // task 94: separate prompt language
@@ -378,6 +393,35 @@ function AgentHub({ data, loadTime }) {
     try { localStorage.setItem("agent-hub-settings", JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist })); } catch {}
   }, [theme, lang, favs, usedPrompts, searchHist]);
 
+  // Feat 5: Scroll progress
+  useEffect(() => {
+    const fn = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollPct(h > 0 ? Math.round(window.scrollY / h * 100) : 0);
+    };
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  // Feat 6: Offline detection
+  useEffect(() => {
+    const on = () => setIsOffline(false);
+    const off = () => setIsOffline(true);
+    window.addEventListener("online", on);
+    window.addEventListener("offline", off);
+    return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
+  }, []);
+
+  // Feat 16: First visit welcome
+  useEffect(() => {
+    try {
+      if (!localStorage.getItem("agent-hub-visited")) {
+        setIsFirstVisit(true);
+        localStorage.setItem("agent-hub-visited", "1");
+      }
+    } catch {}
+  }, []);
+
   // Task 16: Meta theme-color
   useEffect(() => {
     try {
@@ -423,7 +467,12 @@ function AgentHub({ data, loadTime }) {
   }, [search]);
 
   // ── Callbacks (must be before keyboard effect) ──
-  const toggle = useCallback((id) => setExpanded(e => ({ ...e, [id]: !e[id] })), []);
+  const toggle = useCallback((id) => setExpanded(e => {
+    if (autoCollapse) {
+      return { [id]: !e[id] };
+    }
+    return { ...e, [id]: !e[id] };
+  }), [autoCollapse]);
   const toggleFav = useCallback((id) => setFavs(f => ({ ...f, [id]: !f[id] })), []);
   const favCount = useMemo(() => Object.values(favs).filter(Boolean).length, [favs]);
   const usedCount = useMemo(() => Object.values(usedPrompts).filter(Boolean).length, [usedPrompts]);
@@ -449,6 +498,24 @@ function AgentHub({ data, loadTime }) {
         if (idx === -1 && e.key === "ArrowDown") { cards[0]?.focus(); e.preventDefault(); }
         else if (cards[next]) { cards[next].focus(); cards[next].scrollIntoView({behavior:"smooth",block:"nearest"}); e.preventDefault(); }
       }
+      // ? to show shortcuts
+      if (e.key === "?" && !e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
+        e.preventDefault();
+        setShowShortcuts(s => !s);
+      }
+      // F to toggle focus mode on active card
+      if (e.key === "f" && !e.ctrlKey && !e.metaKey && document.activeElement?.id?.startsWith("card-")) {
+        const pid = document.activeElement.id.replace("card-", "");
+        const fp = P.find(x=>x.id===pid);
+        if (fp) { setFocusPrompt(fp); e.preventDefault(); }
+      }
+      // Escape closes overlays
+      if (e.key === "Escape") {
+        if (showShortcuts) { setShowShortcuts(false); e.preventDefault(); return; }
+        if (focusPrompt) { setFocusPrompt(null); e.preventDefault(); return; }
+        if (showStats) { setShowStats(false); e.preventDefault(); return; }
+        if (showCopyHistory) { setShowCopyHistory(false); e.preventDefault(); return; }
+      }
       // Enter to toggle expand on focused card
       if (e.key === "Enter" && document.activeElement?.id?.startsWith("card-")) {
         const pid = document.activeElement.id.replace("card-", "");
@@ -473,7 +540,12 @@ function AgentHub({ data, loadTime }) {
       document.body.appendChild(a); a.select(); document.execCommand("copy"); document.body.removeChild(a);
     }
     setCopied(id);
-    if (P.find(p=>p.id===id)) setUsedPrompts(u=>({...u,[id]:true}));
+    setCopyCount(n => n + 1);
+    const promptData = P.find(p=>p.id===id);
+    if (promptData) {
+      setUsedPrompts(u=>({...u,[id]:true}));
+      setCopyHistory(h => [{ id, name: t.r[promptData.role]||promptData.role, icon: promptData.icon, time: new Date().toLocaleTimeString() }, ...h].slice(0, 10));
+    }
     const tokens = Math.round(finalTxt.length / 4);
     setToast(`${t.copied} · ~${(tokens/1000).toFixed(1)}K tokens`);
     setTimeout(() => setCopied(null), 2000);
@@ -497,6 +569,8 @@ function AgentHub({ data, loadTime }) {
   const list = useMemo(() => {
     let f = P;
     if (showFavsOnly) f = f.filter(p => favs[p.id]);
+    if (showNew) f = f.filter(p => p.v === "7.1");
+    if (hideUsed) f = f.filter(p => !usedPrompts[p.id]);
     if (fm === "model" && fv !== "all") f = f.filter(p => p.mk === fv);
     else if (fm === "role" && fv !== "all") f = f.filter(p => p.role === fv);
     else if (fm === "type" && fv !== "all") f = f.filter(p => p.type === fv);
@@ -530,7 +604,7 @@ function AgentHub({ data, loadTime }) {
     });
     else if (sortBy === "model") f = [...f].sort((a,b) => a.mk.localeCompare(b.mk));
     return f;
-  }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy]);
+  }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy, showNew, hideUsed, usedPrompts]);
 
   const roles = useMemo(() => [...new Set(P.map(p => p.role))], [P]);
   const allTags = useMemo(() => {
@@ -570,14 +644,99 @@ function AgentHub({ data, loadTime }) {
   }, [list]);
 
   // ── Clear filters (task 040, 106) ──
-  const clearFilters = () => { setFm("all"); setFv("all"); setSearch(""); setShowFavsOnly(false); };
-  const hasFilters = fm !== "all" || search.trim() || showFavsOnly;
+  const clearFilters = () => { setFm("all"); setFv("all"); setSearch(""); setShowFavsOnly(false); setShowNew(false); setHideUsed(false); };
+  const hasFilters = fm !== "all" || search.trim() || showFavsOnly || showNew || hideUsed;
 
   return (
-    <div data-theme={theme} style={{ minHeight:"100vh", background:c.bg, color:c.text, fontFamily:font, transition:"background .3s,color .3s" }}>
+    <div data-theme={theme} style={{ minHeight:"100vh", background:c.bg, color:c.text, fontFamily:font, transition:"background .3s,color .3s", fontSize: fontSize + "%" }}>
       <style>{CSS}</style>
       <Toast msg={toast} c={c} />
-      
+
+      {/* Feat 5: Scroll progress bar */}
+      <div style={{ position:"fixed", top:0, left:0, width:scrollPct+"%", height:2, background:"linear-gradient(90deg,#6366f1,#8b5cf6)", zIndex:9999, transition:"width .1s", opacity:scrollPct>0?1:0 }} />
+
+      {/* Feat 6: Offline banner */}
+      {isOffline && <div style={{ position:"fixed", top:0, left:0, right:0, padding:"6px 0", background:"#ef4444", color:"#fff", textAlign:"center", fontSize:11, fontFamily:font, fontWeight:600, zIndex:9998 }}>{lang==="ru"?"⚡ Нет подключения к интернету":"⚡ No internet connection"}</div>}
+
+      {/* Feat 4: Keyboard shortcuts overlay */}
+      {showShortcuts && <div onClick={()=>setShowShortcuts(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
+        <div onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:16, padding:"24px 32px", maxWidth:420, width:"100%", fontFamily:font }}>
+          <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{lang==="ru"?"Горячие клавиши":"Keyboard Shortcuts"}</div>
+          {[
+            ["Ctrl+K",lang==="ru"?"Фокус на поиск":"Focus search"],
+            ["Escape",lang==="ru"?"Закрыть / очистить":"Close / clear"],
+            ["↑ / ↓",lang==="ru"?"Навигация по карточкам":"Navigate cards"],
+            ["Enter",lang==="ru"?"Открыть/закрыть карточку":"Toggle card"],
+            ["F",lang==="ru"?"Focus mode (на карточке)":"Focus mode (on card)"],
+            ["?",lang==="ru"?"Показать/скрыть подсказки":"Toggle this overlay"],
+          ].map(([k,d])=><div key={k} style={{ display:"flex", justifyContent:"space-between", padding:"6px 0", borderBottom:`1px solid ${c.brd}` }}><kbd style={{ padding:"2px 8px", borderRadius:4, background:c.surf, border:`1px solid ${c.brd}`, fontSize:11, color:c.text, fontFamily:font }}>{k}</kbd><span style={{ fontSize:11, color:c.mut }}>{d}</span></div>)}
+          <button onClick={()=>setShowShortcuts(false)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+        </div>
+      </div>}
+
+      {/* Feat 18: Focus mode */}
+      {focusPrompt && <div onClick={()=>setFocusPrompt(null)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.85)", zIndex:9991, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
+        <div onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${focusPrompt.ac}40`, borderRadius:16, padding:"24px 28px", maxWidth:720, width:"100%", maxHeight:"90vh", overflowY:"auto", fontFamily:font }}>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:16 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+              <span style={{ fontSize:24 }}>{focusPrompt.icon}</span>
+              <div>
+                <div style={{ fontSize:16, fontWeight:800, color:focusPrompt.ac }}>{t.r[focusPrompt.role]||focusPrompt.role}</div>
+                <div style={{ fontSize:10, color:c.mut }}>{ML[focusPrompt.mk]} · {focusPrompt.time} · {focusPrompt.text.length} chars · ~{Math.ceil(focusPrompt.text.length/4)} tokens</div>
+              </div>
+            </div>
+            <div style={{ display:"flex", gap:6 }}>
+              <CBtn id={"focus-"+focusPrompt.id} txt={focusPrompt.text} cl={focusPrompt.ac} copied={copied} cp={cp} t={t} bg={c.bg} />
+              <button onClick={()=>setFocusPrompt(null)} style={{ width:32, height:32, borderRadius:8, border:`1px solid ${c.brd}`, background:"transparent", color:c.mut, cursor:"pointer", fontSize:16, outline:"none" }}>×</button>
+            </div>
+          </div>
+          <pre style={{ fontSize:11, lineHeight:1.7, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", margin:0, fontFamily:font, padding:16, background:c.surf, borderRadius:10, border:`1px solid ${c.brd}` }}>{focusPrompt.text}</pre>
+        </div>
+      </div>}
+
+      {/* Feat 24: Stats modal */}
+      {showStats && <div onClick={()=>setShowStats(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
+        <div onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:16, padding:"24px 28px", maxWidth:500, width:"100%", fontFamily:font }}>
+          <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{lang==="ru"?"Статистика":"Statistics"}</div>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
+            {[
+              [stats.total, lang==="ru"?"Промтов":"Prompts", "#6366f1"],
+              [stats.models, lang==="ru"?"Моделей":"Models", "#f97316"],
+              [stats.roles, lang==="ru"?"Ролей":"Roles", "#8b5cf6"],
+              [`~${stats.totalHours}h`, lang==="ru"?"Время":"Time", "#06b6d4"],
+              [`~${(stats.totalTokens/1000).toFixed(0)}K`, "Tokens", "#10b981"],
+              [copyCount, lang==="ru"?"Скопировано":"Copied", "#eab308"],
+              [usedCount, lang==="ru"?"Использовано":"Used", "#10b981"],
+              [favCount, lang==="ru"?"Избранных":"Favorites", "#eab308"],
+            ].map(([v,l,cl])=><div key={l} style={{ padding:12, borderRadius:10, background:c.surf, border:`1px solid ${c.brd}`, textAlign:"center" }}><div style={{ fontSize:20, fontWeight:800, color:cl }}>{v}</div><div style={{ fontSize:9, color:c.mut, marginTop:2 }}>{l}</div></div>)}
+          </div>
+          <div style={{ marginBottom:12 }}>
+            <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"По моделям":"By model"}</div>
+            {stats.byModel.map(([mk,n])=><div key={mk} style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
+              <div style={{ width:6, height:6, borderRadius:"50%", background:MC[mk] }} />
+              <span style={{ fontSize:10, color:MC[mk], fontWeight:600, width:120 }}>{ML[mk]}</span>
+              <div style={{ flex:1, height:6, borderRadius:3, background:c.surf, overflow:"hidden" }}><div style={{ width:`${n/stats.total*100}%`, height:"100%", background:MC[mk], borderRadius:3 }} /></div>
+              <span style={{ fontSize:10, color:c.dim, minWidth:30, textAlign:"right" }}>{n}</span>
+            </div>)}
+          </div>
+          {(() => { try { const used = localStorage.getItem("agent-hub-settings"); return used ? <div style={{ fontSize:9, color:c.dim, marginTop:8 }}>💾 localStorage: {(used.length/1024).toFixed(1)} KB</div> : null; } catch { return null; } })()}
+          <button onClick={()=>setShowStats(false)} style={{ marginTop:12, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+        </div>
+      </div>}
+
+      {/* Feat 17: Copy history sidebar */}
+      {showCopyHistory && <div onClick={()=>setShowCopyHistory(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.5)", zIndex:9989 }}>
+        <div onClick={e=>e.stopPropagation()} style={{ position:"fixed", right:0, top:0, bottom:0, width:280, background:c.card, borderLeft:`1px solid ${c.brd}`, padding:"20px 16px", fontFamily:font, overflowY:"auto" }}>
+          <div style={{ fontSize:14, fontWeight:800, marginBottom:16, color:c.text }}>{lang==="ru"?"История копирования":"Copy History"}</div>
+          {copyHistory.length===0 && <div style={{ fontSize:11, color:c.dim }}>{lang==="ru"?"Ещё ничего не скопировано":"Nothing copied yet"}</div>}
+          {copyHistory.map((h,i)=><div key={i} style={{ padding:"8px 10px", borderRadius:8, border:`1px solid ${c.brd}`, marginBottom:6, background:c.surf }}>
+            <div style={{ fontSize:11, fontWeight:600, color:c.text }}>{h.icon} {h.name}</div>
+            <div style={{ fontSize:9, color:c.dim, marginTop:2 }}>{h.time}</div>
+          </div>)}
+          <button onClick={()=>setShowCopyHistory(false)} style={{ marginTop:12, width:"100%", padding:"8px", fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+        </div>
+      </div>}
+
       {/* Skip link (task 100) */}
       <a href="#main-content" className="skip-link">{lang==="ru"?"К содержимому":"Skip to content"}</a>
       
@@ -593,11 +752,34 @@ function AgentHub({ data, loadTime }) {
             <h1 style={{ fontSize:28, fontWeight:800, margin:0, lineHeight:1.1, letterSpacing:"-0.5px" }}>{t.title}</h1>
             <p style={{ fontSize:12, color:c.mut, marginTop:6, letterSpacing:0.3 }}>{t.subtitle}</p>
           </div>
-          <div style={{ display:"flex", gap:6, marginTop:4 }}>
+          <div style={{ display:"flex", gap:6, marginTop:4, flexWrap:"wrap" }}>
+            {/* Feat 24: Stats */}
+            <button onClick={()=>setShowStats(true)} aria-label="Stats" title={lang==="ru"?"Статистика":"Statistics"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>📊</button>
+            {/* Feat 17: Copy history */}
+            <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":"Copy history"} style={{ position:"relative", width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>📋{copyCount>0 && <span style={{ position:"absolute", top:-4, right:-4, background:"#6366f1", color:"#fff", fontSize:8, fontWeight:700, borderRadius:8, padding:"1px 4px", minWidth:14, textAlign:"center" }}>{copyCount}</span>}</button>
+            {/* Feat 4: Shortcuts */}
+            <button onClick={()=>setShowShortcuts(true)} aria-label="Shortcuts" title={lang==="ru"?"Горячие клавиши (?)":"Keyboard shortcuts (?)"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>⌨</button>
             <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:15, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>{theme==="dark"?"☀":"☾"}</button>
             <button onClick={nextLang} aria-label={`Switch language to ${langLabel}`} style={{ height:36, padding:"0 12px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, fontWeight:700, outline:"none", transition:"all .15s" }}>{langLabel}</button>
+            {/* Feat 9: Font size */}
+            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" style={{ height:36, padding:"0 8px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, outline:"none" }}>
+              <option value={85}>A-</option>
+              <option value={100}>A</option>
+              <option value={115}>A+</option>
+            </select>
           </div>
         </div>
+
+        {/* Feat 16: Welcome banner */}
+        {isFirstVisit && <div style={{ marginBottom:16, padding:"16px 20px", borderRadius:12, border:`2px solid #6366f140`, background:"linear-gradient(135deg, #6366f10a, #8b5cf60a)", position:"relative" }}>
+          <button onClick={()=>setIsFirstVisit(false)} style={{ position:"absolute", top:8, right:12, background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:16, outline:"none" }}>×</button>
+          <div style={{ fontSize:14, fontWeight:800, color:"#6366f1", marginBottom:8 }}>👋 {lang==="ru"?"Добро пожаловать в Agent Hub!":"Welcome to Agent Hub!"}</div>
+          <div style={{ fontSize:11, color:c.mut, lineHeight:1.8 }}>
+            {lang==="ru"
+              ? "Здесь 132+ промтов для автономных AI-агентов. Выбери промт → скопируй → вставь в терминал агента. Нажми ? для горячих клавиш."
+              : "132+ prompts for autonomous AI agents. Pick a prompt → copy → paste into agent terminal. Press ? for keyboard shortcuts."}
+          </div>
+        </div>}
 
         {/* ── STATS BAR ── */}
         <div style={{ display:"flex", gap:6, marginBottom:20, flexWrap:"wrap" }} className="gap-mobile">
@@ -671,6 +853,13 @@ function AgentHub({ data, loadTime }) {
               <Pill key={f.k} on={fm===f.k} fn={()=>{setFm(f.k);setFv("all");}} lb={f.l} c={c} />
             )}
             {hasFilters && <button onClick={clearFilters} style={{ padding:"5px 14px", fontSize:11, fontFamily:font, border:`1px solid #ef444440`, borderRadius:20, background:"#ef444408", color:"#ef4444", cursor:"pointer", outline:"none" }}>✕ {lang==="ru"?"Сброс":"Reset"}</button>}
+            <div style={{ width:1, height:16, background:c.brd }} />
+            {/* Feat 10: NEW only */}
+            <Pill on={showNew} fn={()=>setShowNew(!showNew)} lb="NEW" cl="#10b981" c={c} />
+            {/* Feat 11: Hide used */}
+            {usedCount > 0 && <Pill on={hideUsed} fn={()=>setHideUsed(!hideUsed)} lb={lang==="ru"?"Скрыть ✓":"Hide ✓"} cl="#8888a0" c={c} />}
+            {/* Feat 8: Auto-collapse */}
+            <Pill on={autoCollapse} fn={()=>setAutoCollapse(!autoCollapse)} lb={lang==="ru"?"Авто-свёрт":"Auto-fold"} cl="#06b6d4" c={c} />
           </div>
           {/* Extra filter rows (tasks 044, 046) */}
           {fm==="difficulty" && <div style={{display:"flex",gap:5,marginBottom:8,flexWrap:"wrap"}}>
@@ -905,6 +1094,8 @@ function AgentHub({ data, loadTime }) {
                 </div>
                 <div style={{ display:"flex", gap:6, flexShrink:0, alignItems:"center" }}>
                   {/* Task 75: Used indicator */}
+                  {/* Feat 18: Focus mode button */}
+                  <button onClick={(e)=>{e.stopPropagation();setFocusPrompt(p)}} aria-label="Focus" title={lang==="ru"?"Focus mode (F)":"Focus mode (F)"} className="hide-mobile" style={{ width:30, height:30, borderRadius:7, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", fontSize:12, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>⛶</button>
                   {isUsed && <span style={{ fontSize:10, color:"#10b981" }} title={lang==="ru"?"Использован":"Used"}>✓</span>}
                   {/* Task 69: Compare checkbox */}
                   {compareMode && <button onClick={(e)=>{e.stopPropagation();setCompareIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):ids.length<3?[...ids,p.id]:ids)}} style={{ width:24, height:24, borderRadius:6, border:`1px solid ${compareIds.includes(p.id)?"#8b5cf6":c.brd}`, background:compareIds.includes(p.id)?"#8b5cf6":"transparent", color:compareIds.includes(p.id)?"#fff":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center" }}>{compareIds.includes(p.id)?"✓":""}</button>}
@@ -1417,6 +1608,20 @@ function AgentHub({ data, loadTime }) {
             border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
             cursor:"pointer", transition:"all .15s", outline:"none",
           }}>{lang==="ru"?"Экспорт .md":"Export .md"} ({section==="prompts"&&hasFilters?list.length:P.length})</button>
+          {/* Feat 19: CSV export */}
+          <button onClick={() => {
+            const items = section==="prompts" && hasFilters ? list : P;
+            let csv = "ID,Role,Model,Type,Difficulty,Time,Tags,Chars,Tokens\n";
+            items.forEach(p => {
+              csv += `"${p.id}","${t.r[p.role]||p.role}","${p.m}","${p.type}","${p.difficulty||""}","${p.time||""}","${(p.tags||[]).join(";")}",${p.text.length},${Math.ceil(p.text.length/4)}\n`;
+            });
+            const blob = new Blob([csv], { type:"text/csv" });
+            const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "agent-hub-prompts.csv"; a.click(); URL.revokeObjectURL(url);
+          }} style={{
+            padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
+            border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
+            cursor:"pointer", transition:"all .15s", outline:"none",
+          }}>{lang==="ru"?"Экспорт CSV":"Export CSV"}</button>
           <button onClick={() => {
             const json = JSON.stringify(data, null, 2);
             const blob = new Blob([json], { type:"application/json" });
@@ -1459,6 +1664,18 @@ function AgentHub({ data, loadTime }) {
           <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>
         </div>
       </div>
+
+      {/* Feat 20: Mobile bottom nav */}
+      <nav className="mobile-bottom-nav" style={{ display:"none", position:"fixed", bottom:0, left:0, right:0, background:c.card, borderTop:`1px solid ${c.brd}`, padding:"6px 0", zIndex:9000, fontFamily:font }}>
+        <div style={{ display:"flex", justifyContent:"space-around", maxWidth:500, margin:"0 auto" }}>
+          {[
+            { k:"prompts", i:"📝", l:lang==="ru"?"Промты":"Prompts" },
+            { k:"combos", i:"👥", l:lang==="ru"?"Команды":"Teams" },
+            { k:"cheat", i:"📋", l:lang==="ru"?"CLI":"CLI" },
+            { k:"setup", i:"⚙", l:lang==="ru"?"Setup":"Setup" },
+          ].map(n=><button key={n.k} onClick={()=>{setSection(n.k);window.scrollTo({top:0,behavior:"smooth"})}} style={{ background:"none", border:"none", color:section===n.k?c.text:c.dim, cursor:"pointer", outline:"none", textAlign:"center", padding:"4px 8px", fontSize:10, fontFamily:font, fontWeight:section===n.k?700:400 }}><div style={{ fontSize:16, marginBottom:2 }}>{n.i}</div>{n.l}</button>)}
+        </div>
+      </nav>
     </div>
   );
 }

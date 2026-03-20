@@ -9,3 +9,9 @@ html, body, #root { width: 100%; height: 100%; }
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
+/* Feat 20: Mobile bottom nav */
+@media (max-width: 640px) {
+  .mobile-bottom-nav { display: flex !important; }
+  #root > div > div:last-of-type { padding-bottom: 80px !important; }
+}
