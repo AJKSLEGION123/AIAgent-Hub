@@ -1,0 +1,22 @@
+{
+  "name": "agent-hub-vscode",
+  "displayName": "Agent Hub",
+  "description": "200 промтов для автономных AI-агентов прямо в VS Code",
+  "version": "0.1.0",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onCommand:agent-hub.search"],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "agent-hub.search", "title": "Agent Hub: Search Prompts" },
+      { "command": "agent-hub.copy", "title": "Agent Hub: Copy Prompt" },
+      { "command": "agent-hub.list", "title": "Agent Hub: List All Prompts" },
+      { "command": "agent-hub.random", "title": "Agent Hub: Random Prompt" },
+      { "command": "agent-hub.insert", "title": "Agent Hub: Insert Prompt at Cursor" }
+    ],
+    "keybindings": [
+      { "command": "agent-hub.search", "key": "ctrl+shift+a", "when": "editorTextFocus" }
+    ]
+  }
+}
