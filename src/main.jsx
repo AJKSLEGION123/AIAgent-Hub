@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
+// Performance mark
+if (typeof performance !== 'undefined') performance.mark('app-init');
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
