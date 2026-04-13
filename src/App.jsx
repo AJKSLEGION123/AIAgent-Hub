@@ -13,7 +13,7 @@ const T = {
     setup: "Git Worktree Setup", setupDesc: "Изоляция агентов через git worktree",
     launch: "Команды запуска", launchDesc: "Запуск каждого агента в своём терминале",
     tipTitle: "Быстрый старт",
-    tip: "1. Выполни Git Worktree Setup  2. Открой терминалы для каждого агента  3. Скопируй промт при первом запросе  4. Агенты работают полностью автономно без твоего участия",
+    tip: "1. Выбери промт для задачи  2. Скопируй команду (начинается с /ralph-loop, /feature-dev и др.)  3. Вставь в Claude Code CLI  4. Агент изучит проект и работает автономно",
     all: "Все", byModel: "Модели", byRole: "Роли", byType: "Задачи",
     roles: "Роли", tasks: "Спец. задачи",
     prompts: "промтов", models: "модели", categories: "категорий",
@@ -33,7 +33,7 @@ const T = {
     setup: "Git Worktree Setup", setupDesc: "Agent isolation via git worktree",
     launch: "Launch Commands", launchDesc: "Start each agent in its own terminal",
     tipTitle: "Quick Start",
-    tip: "1. Run Git Worktree Setup  2. Open terminals for each agent  3. Paste the prompt on first request  4. Agents work fully autonomously",
+    tip: "1. Pick a prompt for your task  2. Copy the command (/ralph-loop, /feature-dev, etc.)  3. Paste into Claude Code CLI  4. Agent explores the project and works autonomously",
     all: "All", byModel: "Models", byRole: "Roles", byType: "Tasks",
     roles: "Roles", tasks: "Special tasks",
     prompts: "prompts", models: "models", categories: "categories",
@@ -73,9 +73,9 @@ const TH = {
   dark: { bg:"#060609", bg2:"#0c0c12", card:"#0e0e16", cardH:"#12121c", brd:"#1a1a28", brdH:"#252538", text:"#ddddef", mut:"#8888a0", dim:"#555577", surf:"#0a0a10", glow:"rgba(99,102,241,0.04)", meta:"#060609" },
   light: { bg:"#f0f0f5", bg2:"#e8e8ef", card:"#ffffff", cardH:"#f8f8fc", brd:"#d8d8e4", brdH:"#c0c0d4", text:"#12122a", mut:"#555570", dim:"#8888a8", surf:"#eaeaf0", glow:"rgba(99,102,241,0.06)", meta:"#f0f0f5" },
 };
-const MC = { claude:"#f97316", gemini:"#8b5cf6", codex:"#06b6d4" };
-const ML = { claude:"Claude Opus 4.6", gemini:"Gemini 3.1 Pro", codex:"Codex CLI" };
-const MI = { claude:"C", gemini:"G", codex:"X" };
+const MC = { claude:"#f97316" };
+const ML = { claude:"Claude Code" };
+const MI = { claude:"C" };
 const font = "'JetBrains Mono','IBM Plex Mono','Fira Code',monospace";
 const alpha = (hex, a) => hex + Math.round(a*255).toString(16).padStart(2,'0');
 
@@ -893,7 +893,7 @@ function AgentHub({ data, loadTime }) {
         {/* ── HEADER ── */}
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16 }} className="stack-mobile">
           <div>
-            <div style={{ fontSize:9, letterSpacing:6, color:c.dim, textTransform:"uppercase", marginBottom:6 }}>v8.2 · {stats.total} {t.prompts} · {stats.models} {t.models}{usedCount>0?` · ✓${usedCount}`:""}</div>
+            <div style={{ fontSize:9, letterSpacing:6, color:c.dim, textTransform:"uppercase", marginBottom:6 }}>v9.0 · {stats.total} {t.prompts} · {stats.models} {t.models}{usedCount>0?` · ✓${usedCount}`:""}</div>
             <h1 style={{ fontSize:28, fontWeight:800, margin:0, lineHeight:1.1, letterSpacing:"-0.5px" }}>{t.title}</h1>
             <p style={{ fontSize:12, color:c.mut, marginTop:6, letterSpacing:0.3 }}>{t.subtitle}</p>
           </div>
@@ -949,10 +949,10 @@ function AgentHub({ data, loadTime }) {
         <div role="tablist" aria-label="Sections" style={{ display:"flex", gap:4, marginBottom:20, overflowX:"auto", paddingBottom:4 }}>
           {[
             { k:"prompts", l:lang==="ru"?"Промты":"Prompts", n:P.length },
-            { k:"combos", l:lang==="ru"?"Команды":"Teams", n:(COMBOS[lang]||COMBOS.ru).length },
-            { k:"cheat", l:lang==="ru"?"Шпаргалки":"Cheat Sheets", n:Object.keys(CHEAT).length },
-            { k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).reduce((a,c)=>a+c.cmds.length,0) },
-            { k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length },
+            { k:"combos", l:lang==="ru"?"Комбо":"Combos", n:(COMBOS[lang]||COMBOS.ru).length },
+            ...(Object.keys(CHEAT).length > 0 ? [{ k:"cheat", l:lang==="ru"?"Шпаргалки":"Cheat Sheets", n:Object.keys(CHEAT).length }] : []),
+            ...((QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).length > 0 ? [{ k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).reduce((a,c)=>a+c.cmds.length,0) }] : []),
+            ...(CONFIGS.length > 0 ? [{ k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length }] : []),
           ].map(s => (
             <button key={s.k} role="tab" aria-selected={section===s.k} aria-current={section===s.k?"page":undefined} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);window.scrollTo({top:0,behavior:"smooth"})}} style={{
               padding:"8px 16px", fontSize:11, fontFamily:font, fontWeight:section===s.k?700:400,
@@ -1756,7 +1756,7 @@ function AgentHub({ data, loadTime }) {
           <details style={{ marginTop:8 }}>
             <summary style={{ fontSize:10, fontWeight:600, color:c.mut, cursor:"pointer", letterSpacing:1, textTransform:"uppercase", marginBottom:6 }}>{lang==="ru"?"История версий":"Changelog"}</summary>
             <div style={{ fontSize:10, color:c.dim, lineHeight:1.8, paddingLeft:8, borderLeft:`2px solid ${c.brd}`, marginTop:8 }}>
-              <div><strong>v8.1</strong> — {lang==="ru"?"165 промтов, 46 комбо, 10 хоткеев. 12 мега-промтов (ночной режим 100+ задач), ♾️ бесконечный режим, глобальный поиск, table view, infinite scroll, focus mode, glossary, pin промтов, copy counters, FAB, 43 теста, CSP, aria-modal, focus-visible.":"165 prompts, 46 combos, 10 shortcuts. 12 mega prompts (overnight 100+ tasks), ♾️ infinite mode, global search, table view, infinite scroll, focus mode, glossary, pin prompts, copy counters, FAB, 43 tests, CSP, aria-modal, focus-visible."}</div>
+              <div><strong>v9.0</strong> — {lang==="ru"?"165 промтов, 46 комбо, 10 хоткеев. 12 мега-промтов (ночной режим 100+ задач), ♾️ бесконечный режим, глобальный поиск, table view, infinite scroll, focus mode, glossary, pin промтов, copy counters, FAB, 43 теста, CSP, aria-modal, focus-visible.":"165 prompts, 46 combos, 10 shortcuts. 12 mega prompts (overnight 100+ tasks), ♾️ infinite mode, global search, table view, infinite scroll, focus mode, glossary, pin prompts, copy counters, FAB, 43 tests, CSP, aria-modal, focus-visible."}</div>
               <div style={{marginTop:4}}><strong>v8.0</strong> — {lang==="ru"?"132 промта, 14 конфигов, 35 комбо. Теги, сложность, related. Sticky поиск, сортировка, random, toast, CSS анимации, a11y, mobile responsive, ErrorBoundary, persistent storage, URL routing.":"132 prompts, 14 configs, 35 combos. Tags, difficulty, related. Sticky search, sorting, random, toast, CSS animations, a11y, mobile responsive, ErrorBoundary, persistent storage, URL routing."}</div>
               <div style={{marginTop:4}}><strong>v6.0</strong> — {lang==="ru"?"127 промтов. Все промты имеют АНТИ-ЛУП, РЕЗУЛЬТАТ, ПЕРВЫЙ ШАГ. Stats bar, copy filtered, DevTools промт.":"127 prompts. All prompts have ANTI-LOOP, RESULT, FIRST STEP. Stats bar, copy filtered, DevTools prompt."}</div>
               <div style={{marginTop:4}}><strong>v5.0</strong> — {lang==="ru"?"55 промтов. Начальная версия с 3 моделями, конфигами, шпаргалками.":"55 prompts. Initial version with 3 models, configs, cheat sheets."}</div>
@@ -1843,7 +1843,7 @@ function AgentHub({ data, loadTime }) {
           <button onClick={() => {
             const items = section==="prompts" && hasFilters ? list : P;
             const totalTokens = items.reduce((a,p)=>a+Math.round(p.text.length/4),0);
-            let md = `# AIAgent-Hub v8.1\n\n> ${items.length} ${t.prompts} · ${stats.models} ${t.models} · ~${(totalTokens/1000).toFixed(0)}K tokens\n\n`;
+            let md = `# AIAgent-Hub v9.0\n\n> ${items.length} ${t.prompts} · ${stats.models} ${t.models} · ~${(totalTokens/1000).toFixed(0)}K tokens\n\n`;
             const grouped = {};
             items.forEach(p => { (grouped[p.mk] = grouped[p.mk]||[]).push(p); });
             Object.entries(grouped).forEach(([mk, grp]) => {
@@ -1888,7 +1888,7 @@ function AgentHub({ data, loadTime }) {
           {/* Export as self-contained HTML */}
           <button onClick={() => {
             const items = section==="prompts" && hasFilters ? list : P;
-            let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>AIAgent-Hub v8.1</title><style>body{font-family:monospace;background:#060609;color:#ddd;padding:20px;max-width:800px;margin:0 auto}h1{color:#6366f1}h2{color:#f97316;border-bottom:1px solid #222;padding-bottom:8px}h3{color:#8b5cf6;margin-top:24px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap;font-size:12px;line-height:1.6;overflow-x:auto;border:1px solid #222}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#1a1a28;color:#888;margin:2px}</style></head><body><h1>AIAgent-Hub v8.1</h1><p>${items.length} prompts · ${stats.models} models · ~${stats.totalHours}h</p>`;
+            let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>AIAgent-Hub v9.0</title><style>body{font-family:monospace;background:#060609;color:#ddd;padding:20px;max-width:800px;margin:0 auto}h1{color:#6366f1}h2{color:#f97316;border-bottom:1px solid #222;padding-bottom:8px}h3{color:#8b5cf6;margin-top:24px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap;font-size:12px;line-height:1.6;overflow-x:auto;border:1px solid #222}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#1a1a28;color:#888;margin:2px}</style></head><body><h1>AIAgent-Hub v9.0</h1><p>${items.length} prompts · ${stats.models} models · ~${stats.totalHours}h</p>`;
             items.forEach(p => {
               html += `<h3>${p.icon} ${t.r[p.role]||p.role} <small>(${p.m} · ${p.time||""} · ${p.difficulty||""})</small></h3>`;
               if (p.tags) html += `<div>${p.tags.map(t2=>`<span class="tag">#${t2}</span>`).join(" ")}</div>`;
@@ -1946,7 +1946,7 @@ function AgentHub({ data, loadTime }) {
               </div>
             ))}
           </div>
-          <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AGENT HUB v8.1 · {P.length} {t.prompts} · {(COMBOS[lang]||COMBOS.ru).length} combos · {stats.roles} {lang==="ru"?"ролей":"roles"}{loadTime ? ` · ${loadTime}ms` : ""}{copyCount > 0 ? ` · ${copyCount} ${lang==="ru"?"скопировано":"copied"}` : ""}</div>
+          <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AIAgent-Hub v9.0 · {P.length} {t.prompts} · {(COMBOS[lang]||COMBOS.ru).length} combos · {stats.roles} {lang==="ru"?"ролей":"roles"}{loadTime ? ` · ${loadTime}ms` : ""}{copyCount > 0 ? ` · ${copyCount} ${lang==="ru"?"скопировано":"copied"}` : ""}</div>
           {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>}
         </div>
       </div>
