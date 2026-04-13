@@ -1498,7 +1498,7 @@ function AgentHub({ data, loadTime }) {
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(250px, 1fr))", gap:8 }}>
           {(COMBOS[lang]||COMBOS.ru).filter(cb => !debouncedSearch || (cb.name + " " + cb.desc).toLowerCase().includes(debouncedSearch.toLowerCase())).map((cb, i) => {
             // Task 71: detect conflicts (multiple prompts for same role type)
-            const agents = cb.ids.map(id=>pGet(id)).filter(Boolean);
+            const agents = (cb.ids||[]).map(id=>pGet(id)).filter(Boolean);
             const roleTypes = agents.map(a=>a.mk+"-"+a.type);
             const hasConflict = roleTypes.length !== new Set(roleTypes).size;
             return (
@@ -1510,11 +1510,11 @@ function AgentHub({ data, loadTime }) {
               <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }}>
                 <div style={{ fontSize:12, fontWeight:700, color:c.text }}>{cb.name}</div>
                 {hasConflict && <span style={{ fontSize:8, padding:"1px 6px", borderRadius:6, background:"#f59e0b18", color:"#f59e0b", border:"1px solid #f59e0b30" }}>⚠</span>}
-                <span style={{ fontSize:9, color:c.dim }}>{cb.ids.length} {lang==="ru"?"агентов":"agents"}</span>
+                <span style={{ fontSize:9, color:c.dim }}>{(cb.ids||[]).length} {lang==="ru"?"агентов":"agents"}</span>
               </div>
               <div style={{ fontSize:10, color:c.dim, lineHeight:1.5, marginBottom:8 }}>{cb.desc}</div>
               <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8 }}>
-                {cb.ids.map(id => {
+                {(cb.ids||[]).map(id => {
                   const p = pGet(id);
                   return p ? <span key={id} style={{ fontSize:8, padding:"2px 6px", borderRadius:8, background:p.ac+"12", color:p.ac, border:`1px solid ${p.ac}20` }}>{p.icon} {t.r[p.role]||p.role}</span> : null;
                 })}
@@ -1529,7 +1529,7 @@ function AgentHub({ data, loadTime }) {
                 </div>
                 <div onClick={(e)=>{
                   e.stopPropagation();
-                  const agents = cb.ids.map(id => pGet(id)).filter(Boolean);
+                  const agents = (cb.ids||[]).map(id => pGet(id)).filter(Boolean);
                   let script = "#!/bin/bash\n# Team: " + cb.name + "\n\n";
                   agents.forEach(a => {
                     const launcher = a.mk==="claude"?"claude --dangerously-skip-permissions":a.mk==="gemini"?"gemini --model gemini-3.1-pro-preview --yolo":"codex --full-auto";
