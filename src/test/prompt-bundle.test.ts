@@ -3,31 +3,30 @@ import { buildBundle, buildLaunchScript, totalTime, totalTokens } from '../utils
 import type { Prompt } from '../types';
 
 const makePrompt = (id: string, mk: string, role: string, time: string, text: string): Prompt => ({
-  id, m: mk === 'claude' ? 'Claude Code Opus 4.6' : 'Gemini 3.1 Pro',
-  mk: mk as any, role, type: 'role', icon: '🖥', ac: '#10b981', time,
+  id, m: 'Claude Code Opus 4.6',
+  mk: mk as any, role, type: 'command' as any, icon: '🖥', ac: '#10b981', time,
   text, tags: [], difficulty: 'intermediate', output: '', related: [],
   prereqs: [], v: '8.2', compact: text.slice(0, 50),
 });
 
-const roleNames = { frontend: 'Frontend', backend: 'Backend' };
+const roleNames = { feature: 'Feature', api: 'API' };
 const prompts = [
-  makePrompt('c-fe', 'claude', 'frontend', '~2h', 'Frontend prompt text'),
-  makePrompt('g-be', 'gemini', 'backend', '~30m', 'Backend prompt text'),
+  makePrompt('rl-feat', 'claude', 'feature', '~2h', 'Feature prompt text'),
+  makePrompt('rl-api', 'claude', 'api', '~30m', 'API prompt text'),
 ];
 
 describe('buildBundle', () => {
   it('combines prompts with headers', () => {
     const bundle = buildBundle(prompts, roleNames);
-    expect(bundle).toContain('═══ FRONTEND');
-    expect(bundle).toContain('═══ BACKEND');
-    expect(bundle).toContain('Frontend prompt text');
-    expect(bundle).toContain('Backend prompt text');
+    expect(bundle).toContain('═══ FEATURE');
+    expect(bundle).toContain('═══ API');
+    expect(bundle).toContain('Feature prompt text');
+    expect(bundle).toContain('API prompt text');
   });
 
   it('includes model name', () => {
     const bundle = buildBundle(prompts, roleNames);
     expect(bundle).toContain('Claude Code Opus 4.6');
-    expect(bundle).toContain('Gemini 3.1 Pro');
   });
 
   it('handles empty array', () => {
@@ -36,8 +35,8 @@ describe('buildBundle', () => {
 
   it('handles single prompt', () => {
     const bundle = buildBundle([prompts[0]], roleNames);
-    expect(bundle).toContain('FRONTEND');
-    expect(bundle).not.toContain('BACKEND');
+    expect(bundle).toContain('FEATURE');
+    expect(bundle).not.toContain('═══ API');
   });
 });
 
@@ -46,19 +45,18 @@ describe('buildLaunchScript', () => {
     const script = buildLaunchScript(prompts, roleNames);
     expect(script).toContain('#!/bin/bash');
     expect(script).toContain('claude --dangerously-skip-permissions');
-    expect(script).toContain('gemini --model gemini-3.1-pro-preview --yolo');
   });
 
   it('includes role names', () => {
     const script = buildLaunchScript(prompts, roleNames);
-    expect(script).toContain('Frontend');
-    expect(script).toContain('Backend');
+    expect(script).toContain('Feature');
+    expect(script).toContain('API');
   });
 
-  it('handles codex model', () => {
-    const codexPrompt = makePrompt('x-do', 'codex', 'devops', '~1h', 'text');
-    const script = buildLaunchScript([codexPrompt], { devops: 'DevOps' });
-    expect(script).toContain('codex --full-auto');
+  it('handles all-claude prompts', () => {
+    const extraPrompt = makePrompt('sm-simplify', 'claude', 'simplify', '~1h', 'text');
+    const script = buildLaunchScript([extraPrompt], { simplify: 'Simplify' });
+    expect(script).toContain('claude --dangerously-skip-permissions');
   });
 });
 
@@ -89,9 +87,9 @@ describe('totalTokens', () => {
   it('calculates token estimate', () => {
     const tokens = totalTokens(prompts);
     expect(tokens).toBeGreaterThan(0);
-    // "Frontend prompt text" = 20 chars → 5 tokens
-    // "Backend prompt text" = 19 chars → 5 tokens
-    expect(tokens).toBe(10);
+    // "Feature prompt text" = 19 chars → 5 tokens
+    // "API prompt text" = 15 chars → 4 tokens
+    expect(tokens).toBe(9);
   });
 
   it('handles empty array', () => {

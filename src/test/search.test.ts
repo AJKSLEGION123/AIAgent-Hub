@@ -3,14 +3,14 @@ import { escapeRegex, matchesSearch, highlightMatch, searchRelevance } from '../
 import type { Prompt } from '../types';
 
 const mockPrompt: Prompt = {
-  id: 'c-fe', m: 'Claude Code Opus 4.6', mk: 'claude', role: 'frontend',
-  type: 'role', icon: '🖥', ac: '#10b981', time: '~2h',
-  text: 'Frontend developer prompt with React and TypeScript',
+  id: 'rl-feat', m: 'Claude Code Opus 4.6', mk: 'claude', role: 'feature',
+  type: 'command' as any, icon: '🖥', ac: '#10b981', time: '~2h',
+  text: 'Feature development prompt with React and TypeScript',
   tags: ['react', 'typescript', 'ui'], difficulty: 'intermediate',
   output: '', related: [], prereqs: [], v: '8.2', compact: 'Short'
 };
 
-const roleNames = { frontend: 'Фронтенд' };
+const roleNames = { feature: 'Фича' };
 
 describe('escapeRegex', () => {
   it('escapes special characters', () => {
@@ -40,11 +40,11 @@ describe('matchesSearch', () => {
   });
 
   it('matches by role name (translated)', () => {
-    expect(matchesSearch(mockPrompt, 'Фронтенд', roleNames)).toBe(true);
+    expect(matchesSearch(mockPrompt, 'Фича', roleNames)).toBe(true);
   });
 
   it('matches by ID', () => {
-    expect(matchesSearch(mockPrompt, 'c-fe', roleNames)).toBe(true);
+    expect(matchesSearch(mockPrompt, 'rl-feat', roleNames)).toBe(true);
   });
 
   it('matches by tag', () => {
@@ -93,12 +93,12 @@ describe('searchRelevance', () => {
   });
 
   it('highest score for exact ID match', () => {
-    const score = searchRelevance(mockPrompt, 'c-fe', roleNames);
+    const score = searchRelevance(mockPrompt, 'rl-feat', roleNames);
     expect(score).toBeGreaterThanOrEqual(100);
   });
 
   it('high score for role name match', () => {
-    const score = searchRelevance(mockPrompt, 'фронтенд', roleNames);
+    const score = searchRelevance(mockPrompt, 'фича', roleNames);
     expect(score).toBeGreaterThanOrEqual(50);
   });
 
@@ -108,7 +108,7 @@ describe('searchRelevance', () => {
   });
 
   it('low score for text-only match', () => {
-    const score = searchRelevance(mockPrompt, 'developer', roleNames);
+    const score = searchRelevance(mockPrompt, 'development', roleNames);
     expect(score).toBe(10);
   });
 });

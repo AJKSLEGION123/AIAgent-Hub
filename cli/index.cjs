@@ -97,7 +97,7 @@ if (cmd === 'combos') {
   console.log(`\n${cl('bold', data.COMBOS.ru.length + ' combos')}\n`);
   data.COMBOS.ru.forEach((cb,i) => {
     console.log(`  ${cl('green', String(i+1).padStart(2))}. ${cl('bold', cb.name)} ${cl('dim', '— '+cb.desc)}`);
-    console.log(`     ${cb.ids.map(id=>cl('cyan',id)).join(', ')}\n`);
+    console.log(`     ${(cb.ids||cb.agents||[]).map(id=>cl('cyan',id)).join(', ')}\n`);
   });
   process.exit(0);
 }

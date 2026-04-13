@@ -3,8 +3,8 @@ import { describe, it, expect } from 'vitest';
 // Test data structure integrity without importing the actual compressed data
 describe('Prompt schema validation', () => {
   const requiredKeys = ['id', 'm', 'mk', 'role', 'type', 'icon', 'ac', 'time', 'text', 'tags', 'difficulty'];
-  const validMks = ['claude', 'gemini', 'codex'];
-  const validTypes = ['role', 'task'];
+  const validMks = ['claude'];
+  const validTypes = ['command'];
   const validDifficulties = ['beginner', 'intermediate', 'advanced'];
 
   it('schema keys are defined', () => {
@@ -12,11 +12,11 @@ describe('Prompt schema validation', () => {
   });
 
   it('valid model keys', () => {
-    expect(validMks).toEqual(['claude', 'gemini', 'codex']);
+    expect(validMks).toEqual(['claude']);
   });
 
   it('valid types', () => {
-    expect(validTypes).toEqual(['role', 'task']);
+    expect(validTypes).toEqual(['command']);
   });
 
   it('valid difficulties', () => {
@@ -25,23 +25,18 @@ describe('Prompt schema validation', () => {
 });
 
 describe('ID conventions', () => {
-  it('claude IDs start with c-', () => {
-    expect('c-fe'.startsWith('c-')).toBe(true);
-  });
-
-  it('gemini IDs start with g-', () => {
-    expect('g-qa'.startsWith('g-')).toBe(true);
-  });
-
-  it('codex IDs start with x-', () => {
-    expect('x-do'.startsWith('x-')).toBe(true);
+  it('IDs use prefix-name format', () => {
+    expect('rl-feat'.startsWith('rl-')).toBe(true);
+    expect('rv-pr'.startsWith('rv-')).toBe(true);
+    expect('sm-simplify'.startsWith('sm-')).toBe(true);
   });
 
   it('IDs are lowercase with hyphens', () => {
-    const validId = /^[a-z]-[a-z0-9-]+$/;
-    expect(validId.test('c-mega-overnight')).toBe(true);
-    expect(validId.test('g-unstoppable')).toBe(true);
-    expect(validId.test('x-cost-opt')).toBe(true);
+    const validId = /^[a-z]+-[a-z0-9-]+$/;
+    expect(validId.test('rl-feat')).toBe(true);
+    expect(validId.test('rl-api')).toBe(true);
+    expect(validId.test('rv-code')).toBe(true);
+    expect(validId.test('sm-simplify')).toBe(true);
   });
 });
 

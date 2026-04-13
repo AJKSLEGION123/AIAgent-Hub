@@ -9,16 +9,16 @@ const mp = (id: string, mk: string, role: string, type: string, diff: string, ti
 });
 
 const prompts: Prompt[] = [
-  mp('c-fe', 'claude', 'frontend', 'role', 'beginner', '~1h', ['react', 'ui'], 'Frontend text'),
-  mp('c-be', 'claude', 'backend', 'role', 'intermediate', '~2h', ['api', 'node'], 'Backend text'),
-  mp('g-qa', 'gemini', 'tester', 'task', 'advanced', '~3h', ['testing'], 'Tester text'),
-  mp('c-new', 'claude', 'features', 'task', 'intermediate', '~30m', ['new'], 'New feature', '8.2'),
+  mp('rl-feat', 'claude', 'feature', 'command', 'beginner', '~1h', ['feature', 'ui'], 'Feature text'),
+  mp('rl-api', 'claude', 'api', 'command', 'intermediate', '~2h', ['api', 'backend'], 'API text'),
+  mp('rv-pr', 'claude', 'review', 'command', 'advanced', '~3h', ['testing'], 'Review text'),
+  mp('sm-new', 'claude', 'simplify', 'command', 'intermediate', '~30m', ['new'], 'New simplify', '8.2'),
 ];
 
 const defaultOpts = {
   mode: 'all' as any, value: 'all', search: '',
   showFavsOnly: false, favs: {}, showNew: false,
-  hideUsed: false, usedPrompts: {}, roleNames: { frontend: 'Frontend', backend: 'Backend', tester: 'Tester', features: 'Features' },
+  hideUsed: false, usedPrompts: {}, roleNames: { feature: 'Feature', api: 'API', review: 'Review', simplify: 'Simplify' },
 };
 
 describe('filterPrompts', () => {
@@ -28,36 +28,36 @@ describe('filterPrompts', () => {
 
   it('filters by model', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, mode: 'model', value: 'claude' });
-    expect(result).toHaveLength(3);
+    expect(result).toHaveLength(4);
     expect(result.every(p => p.mk === 'claude')).toBe(true);
   });
 
   it('filters by role', () => {
-    const result = filterPrompts(prompts, { ...defaultOpts, mode: 'role', value: 'frontend' });
+    const result = filterPrompts(prompts, { ...defaultOpts, mode: 'role', value: 'feature' });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('c-fe');
+    expect(result[0].id).toBe('rl-feat');
   });
 
   it('filters by type', () => {
-    const result = filterPrompts(prompts, { ...defaultOpts, mode: 'type', value: 'task' });
-    expect(result).toHaveLength(2);
+    const result = filterPrompts(prompts, { ...defaultOpts, mode: 'type', value: 'command' });
+    expect(result).toHaveLength(4);
   });
 
   it('filters by difficulty', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, mode: 'difficulty', value: 'advanced' });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('g-qa');
+    expect(result[0].id).toBe('rv-pr');
   });
 
   it('filters by tag', () => {
-    const result = filterPrompts(prompts, { ...defaultOpts, mode: 'tag', value: 'react' });
+    const result = filterPrompts(prompts, { ...defaultOpts, mode: 'tag', value: 'feature' });
     expect(result).toHaveLength(1);
   });
 
   it('filters by time <1h', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, mode: 'time', value: '<1h' });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('c-new');
+    expect(result[0].id).toBe('sm-new');
   });
 
   it('filters by time 1-2h', () => {
@@ -66,29 +66,29 @@ describe('filterPrompts', () => {
   });
 
   it('filters by search', () => {
-    const result = filterPrompts(prompts, { ...defaultOpts, search: 'frontend' });
+    const result = filterPrompts(prompts, { ...defaultOpts, search: 'feature' });
     expect(result).toHaveLength(1);
   });
 
   it('multi-word search', () => {
-    const result = filterPrompts(prompts, { ...defaultOpts, search: 'claude backend' });
+    const result = filterPrompts(prompts, { ...defaultOpts, search: 'claude api' });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('c-be');
+    expect(result[0].id).toBe('rl-api');
   });
 
   it('filters favorites only', () => {
-    const result = filterPrompts(prompts, { ...defaultOpts, showFavsOnly: true, favs: { 'c-fe': true } });
+    const result = filterPrompts(prompts, { ...defaultOpts, showFavsOnly: true, favs: { 'rl-feat': true } });
     expect(result).toHaveLength(1);
   });
 
   it('filters NEW only', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, showNew: true });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('c-new');
+    expect(result[0].id).toBe('sm-new');
   });
 
   it('hides used prompts', () => {
-    const result = filterPrompts(prompts, { ...defaultOpts, hideUsed: true, usedPrompts: { 'c-fe': true, 'c-be': true } });
+    const result = filterPrompts(prompts, { ...defaultOpts, hideUsed: true, usedPrompts: { 'rl-feat': true, 'rl-api': true } });
     expect(result).toHaveLength(2);
   });
 });
@@ -96,12 +96,12 @@ describe('filterPrompts', () => {
 describe('sortPrompts', () => {
   it('default returns same order', () => {
     const sorted = sortPrompts(prompts, 'default', defaultOpts.roleNames);
-    expect(sorted.map(p => p.id)).toEqual(['c-fe', 'c-be', 'g-qa', 'c-new']);
+    expect(sorted.map(p => p.id)).toEqual(['rl-feat', 'rl-api', 'rv-pr', 'sm-new']);
   });
 
   it('sorts by name', () => {
     const sorted = sortPrompts(prompts, 'name', defaultOpts.roleNames);
-    expect(sorted[0].role).toBe('backend');
+    expect(sorted[0].role).toBe('api');
   });
 
   it('sorts by length (longest first)', () => {
@@ -117,6 +117,6 @@ describe('sortPrompts', () => {
   it('sorts by model', () => {
     const sorted = sortPrompts(prompts, 'model', defaultOpts.roleNames);
     expect(sorted[0].mk).toBe('claude');
-    expect(sorted[sorted.length - 1].mk).toBe('gemini');
+    expect(sorted[sorted.length - 1].mk).toBe('claude');
   });
 });
