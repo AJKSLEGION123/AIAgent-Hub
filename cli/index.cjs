@@ -23,7 +23,7 @@ const cmd = args[0] || 'help';
 
 if (cmd === 'help' || cmd === '--help') {
   console.log(`
-${cl('bold', `AIAgent-Hub CLI v${VERSION}`)} — 200 промтов для AI-агентов
+${cl('bold', `AIAgent-Hub CLI v${VERSION}`)} — универсальные промты для Claude Code
 
 ${cl('yellow', 'Команды:')}
   ${cl('green', 'list')}                Список промтов

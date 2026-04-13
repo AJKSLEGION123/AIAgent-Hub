@@ -1,7 +1,7 @@
 {
   "name": "aiagent-hub-vscode",
   "displayName": "AIAgent-Hub",
-  "description": "200 промтов для автономных AI-агентов прямо в VS Code",
+  "description": "Универсальные промты для Claude Code прямо в VS Code",
   "version": "0.1.0",
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Other"],
