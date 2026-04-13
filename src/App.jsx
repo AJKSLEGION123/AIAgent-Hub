@@ -950,9 +950,9 @@ function AgentHub({ data, loadTime }) {
           {[
             { k:"prompts", l:lang==="ru"?"Промты":"Prompts", n:P.length },
             { k:"combos", l:lang==="ru"?"Комбо":"Combos", n:(COMBOS[lang]||COMBOS.ru).length },
-            ...(Object.keys(CHEAT).length > 0 ? [{ k:"cheat", l:lang==="ru"?"Шпаргалки":"Cheat Sheets", n:Object.keys(CHEAT).length }] : []),
-            ...((QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).length > 0 ? [{ k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).reduce((a,c)=>a+c.cmds.length,0) }] : []),
-            ...(CONFIGS.length > 0 ? [{ k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length }] : []),
+            { k:"cheat", l:lang==="ru"?"Шпаргалки":"Cheat Sheets", n:Object.keys(CHEAT).length },
+            { k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).reduce((a,c)=>a+c.cmds.length,0) },
+            { k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length },
           ].map(s => (
             <button key={s.k} role="tab" aria-selected={section===s.k} aria-current={section===s.k?"page":undefined} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);window.scrollTo({top:0,behavior:"smooth"})}} style={{
               padding:"8px 16px", fontSize:11, fontFamily:font, fontWeight:section===s.k?700:400,
