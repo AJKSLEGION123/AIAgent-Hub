@@ -1,6 +1,6 @@
 {
-  "name": "Agent Hub",
-  "short_name": "AgentHub",
+  "name": "AIAgent-Hub",
+  "short_name": "AIAgentHub",
   "description": "Мультиагентная система разработки — 165 промтов для Claude, Gemini, Codex",
   "start_url": "/",
   "display": "standalone",

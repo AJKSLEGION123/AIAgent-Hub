@@ -1,4 +1,4 @@
-# Agent Hub
+# AIAgent-Hub
 
 > Multi-agent development system. 175 prompts for autonomous AI agents.
 

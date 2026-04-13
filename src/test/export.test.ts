@@ -26,7 +26,7 @@ const roleNames = { frontend: 'Frontend' };
 describe('exportMarkdown', () => {
   it('generates valid markdown', () => {
     const md = exportMarkdown([mockPrompt], roleNames);
-    expect(md).toContain('# Agent Hub');
+    expect(md).toContain('# AIAgent-Hub');
     expect(md).toContain('Frontend');
     expect(md).toContain('```');
     expect(md).toContain('Test prompt text');

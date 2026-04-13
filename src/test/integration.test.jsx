@@ -5,12 +5,12 @@ import App from '../App';
 describe('App integration', () => {
   it('renders loading state with progress bar', () => {
     const { container } = render(<App />);
-    expect(container.querySelector('[style*="background: linear-gradient"]') || container.textContent.includes('Agent Hub')).toBeTruthy();
+    expect(container.querySelector('[style*="background: linear-gradient"]') || container.textContent.includes('AIAgent-Hub')).toBeTruthy();
   });
 
   it('has noscript-like fallback in DOM structure', () => {
     const { container } = render(<App />);
-    expect(container.innerHTML).toContain('Agent Hub');
+    expect(container.innerHTML).toContain('AIAgent-Hub');
   });
 
   it('renders skip link', () => {

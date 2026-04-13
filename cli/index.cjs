@@ -23,7 +23,7 @@ const cmd = args[0] || 'help';
 
 if (cmd === 'help' || cmd === '--help') {
   console.log(`
-${cl('bold', `Agent Hub CLI v${VERSION}`)} — 200 промтов для AI-агентов
+${cl('bold', `AIAgent-Hub CLI v${VERSION}`)} — 200 промтов для AI-агентов
 
 ${cl('yellow', 'Команды:')}
   ${cl('green', 'list')}                Список промтов
@@ -47,7 +47,7 @@ const P = data.P;
 if (cmd === 'stats') {
   const models = {};
   P.forEach(p => { models[p.mk] = (models[p.mk] || 0) + 1; });
-  console.log(`\n${cl('bold', 'Agent Hub Stats')}\n${'─'.repeat(40)}`);
+  console.log(`\n${cl('bold', 'AIAgent-Hub Stats')}\n${'─'.repeat(40)}`);
   console.log(`Промтов: ${cl('green', P.length)}  Комбо: ${cl('green', data.COMBOS.ru.length)}  Ролей: ${cl('green', new Set(P.map(p=>p.role)).size)}`);
   Object.entries(models).forEach(([mk, n]) => {
     const bar = '█'.repeat(Math.round(n / P.length * 30));
@@ -126,9 +126,9 @@ if (cmd === 'export') {
   const fmt = args[1] || 'json';
   if (fmt === 'json') console.log(JSON.stringify(data, null, 2));
   else if (fmt === 'csv') { console.log('ID,Role,Model,Difficulty,Time,Tags,Tokens'); P.forEach(p=>console.log(`"${p.id}","${p.role}","${p.m}","${p.difficulty}","${p.time}","${(p.tags||[]).join(';')}",${Math.ceil(p.text.length/4)}`)); }
-  else if (fmt === 'md') { console.log(`# Agent Hub\n`); P.forEach(p=>console.log(`## ${p.icon} ${p.role}\n\`\`\`\n${p.text}\n\`\`\`\n`)); }
+  else if (fmt === 'md') { console.log(`# AIAgent-Hub\n`); P.forEach(p=>console.log(`## ${p.icon} ${p.role}\n\`\`\`\n${p.text}\n\`\`\`\n`)); }
   process.exit(0);
 }
 
-console.error(cl('red', `Unknown: ${cmd}. Use: npx agent-hub help`));
+console.error(cl('red', `Unknown: ${cmd}. Use: npx aiagent-hub help`));
 process.exit(1);

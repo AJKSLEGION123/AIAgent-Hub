@@ -1,14 +1,14 @@
 services:
-  agent-hub:
+  aiagent-hub:
     build: .
-    container_name: agent-hub
+    container_name: aiagent-hub
     restart: unless-stopped
     ports:
       - "3000:80"
     volumes:
-      - agent-hub-data:/app/data
+      - aiagent-hub-data:/app/data
     environment:
       - NODE_ENV=production
 
 volumes:
-  agent-hub-data:
+  aiagent-hub-data:

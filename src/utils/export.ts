@@ -3,7 +3,7 @@ import { htmlEscape, csvEscape } from "./helpers";
 
 /** Export prompts as Markdown */
 export function exportMarkdown(prompts: Prompt[], roleNames: Record<string, string>): string {
-  let md = `# Agent Hub v8.2\n\n> ${prompts.length} prompts\n\n`;
+  let md = `# AIAgent-Hub v8.2\n\n> ${prompts.length} prompts\n\n`;
   const grouped: Record<string, Prompt[]> = {};
   prompts.forEach(p => { (grouped[p.mk] = grouped[p.mk] || []).push(p); });
   Object.entries(grouped).forEach(([mk, grp]) => {
@@ -28,7 +28,7 @@ export function exportCSV(prompts: Prompt[], roleNames: Record<string, string>):
 
 /** Export prompts as standalone HTML */
 export function exportHTML(prompts: Prompt[], roleNames: Record<string, string>): string {
-  let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Agent Hub</title><style>body{font-family:monospace;background:#060609;color:#ddd;padding:20px;max-width:800px;margin:0 auto}h1{color:#6366f1}h3{color:#8b5cf6;margin-top:24px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap;font-size:12px;line-height:1.6;border:1px solid #222}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#1a1a28;color:#888;margin:2px}</style></head><body><h1>Agent Hub</h1><p>${prompts.length} prompts</p>`;
+  let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>AIAgent-Hub</title><style>body{font-family:monospace;background:#060609;color:#ddd;padding:20px;max-width:800px;margin:0 auto}h1{color:#6366f1}h3{color:#8b5cf6;margin-top:24px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap;font-size:12px;line-height:1.6;border:1px solid #222}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#1a1a28;color:#888;margin:2px}</style></head><body><h1>AIAgent-Hub</h1><p>${prompts.length} prompts</p>`;
   prompts.forEach(p => {
     html += `<h3>${p.icon} ${htmlEscape(roleNames[p.role] || p.role)} <small>(${htmlEscape(p.m)})</small></h3>`;
     if (p.tags.length) html += `<div>${p.tags.map(t => `<span class="tag">#${htmlEscape(t)}</span>`).join(" ")}</div>`;

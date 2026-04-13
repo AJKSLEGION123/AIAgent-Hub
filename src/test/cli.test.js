@@ -8,7 +8,7 @@ const run = (args) => execFileSync('node', [cli, ...args], { encoding: 'utf8', c
 describe('CLI', () => {
   it('help shows usage', () => {
     const out = run(['help']);
-    expect(out).toContain('Agent Hub CLI');
+    expect(out).toContain('AIAgent-Hub CLI');
     expect(out).toContain('list');
     expect(out).toContain('show');
     expect(out).toContain('search');
@@ -16,7 +16,7 @@ describe('CLI', () => {
 
   it('stats shows counts', () => {
     const out = run(['stats']);
-    expect(out).toContain('Agent Hub Stats');
+    expect(out).toContain('AIAgent-Hub Stats');
     expect(out).toMatch(/\d+/);
   });
 
@@ -68,7 +68,7 @@ describe('CLI', () => {
 
   it('export md has markdown', () => {
     const out = run(['export', 'md']);
-    expect(out).toContain('# Agent Hub');
+    expect(out).toContain('# AIAgent-Hub');
   });
 
   it('run generates bash script', () => {

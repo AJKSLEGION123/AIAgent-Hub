@@ -1,5 +1,5 @@
 /**
- * Agent Hub Telegram Bot
+ * AIAgent-Hub Telegram Bot
  *
  * Setup:
  * 1. Create bot via @BotFather → get BOT_TOKEN
@@ -64,7 +64,7 @@ const send = (chatId, text, opts = {}) => api('sendMessage', {
 // Handlers
 const handlers = {
   '/start': (chatId) => send(chatId,
-    `🤖 *Agent Hub Bot*\n\n${P.length} промтов для автономных AI-агентов.\n\n` +
+    `🤖 *AIAgent-Hub Bot*\n\n${P.length} промтов для автономных AI-агентов.\n\n` +
     `/list — список промтов\n/search <запрос> — поиск\n/show <id> — показать промт\n` +
     `/copy <id> — получить текст\n/stats — статистика\n/random — случайный`
   ),
@@ -72,7 +72,7 @@ const handlers = {
   '/stats': (chatId) => {
     const models = {};
     P.forEach(p => { models[p.mk] = (models[p.mk] || 0) + 1; });
-    let msg = `📊 *Agent Hub Stats*\n\nПромтов: ${P.length}\nКомбо: ${data.COMBOS.ru.length}\n\n`;
+    let msg = `📊 *AIAgent-Hub Stats*\n\nПромтов: ${P.length}\nКомбо: ${data.COMBOS.ru.length}\n\n`;
     Object.entries(models).forEach(([mk, n]) => {
       const name = mk === 'claude' ? 'Claude' : mk === 'gemini' ? 'Gemini' : 'Codex';
       msg += `${name}: ${n}\n`;

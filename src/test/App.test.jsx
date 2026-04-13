@@ -8,9 +8,9 @@ describe('App', () => {
     expect(container).toBeTruthy();
   });
 
-  it('shows Agent Hub title in loading/error state', () => {
+  it('shows AIAgent-Hub title in loading/error state', () => {
     render(<App />);
-    const titles = screen.getAllByText('Agent Hub');
+    const titles = screen.getAllByText('AIAgent-Hub');
     expect(titles.length).toBeGreaterThan(0);
   });
 
@@ -23,14 +23,14 @@ describe('App', () => {
 
 describe('localStorage', () => {
   it('reads saved settings without throwing', () => {
-    localStorage.setItem('agent-hub-settings', JSON.stringify({ theme: 'light', lang: 'en' }));
+    localStorage.setItem('aiagent-hub-settings', JSON.stringify({ theme: 'light', lang: 'en' }));
     expect(() => render(<App />)).not.toThrow();
-    localStorage.removeItem('agent-hub-settings');
+    localStorage.removeItem('aiagent-hub-settings');
   });
 
   it('handles corrupted localStorage gracefully', () => {
-    localStorage.setItem('agent-hub-settings', 'not-json');
+    localStorage.setItem('aiagent-hub-settings', 'not-json');
     expect(() => render(<App />)).not.toThrow();
-    localStorage.removeItem('agent-hub-settings');
+    localStorage.removeItem('aiagent-hub-settings');
   });
 });

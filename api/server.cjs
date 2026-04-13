@@ -156,5 +156,5 @@ app.get('/api/health', (c) => c.json({ status: 'ok', version: '9.0', prompts: 56
 // Start
 const PORT = process.env.PORT || 3001;
 serve({ fetch: app.fetch, port: PORT }, () => {
-  console.log(`Agent Hub API running on http://localhost:${PORT}`);
+  console.log(`AIAgent-Hub API running on http://localhost:${PORT}`);
 });

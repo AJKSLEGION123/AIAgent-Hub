@@ -1,10 +1,10 @@
 {
-  "name": "agent-hub",
+  "name": "aiagent-hub",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "bin": {
-    "agent-hub": "./cli/index.cjs"
+    "aiagent-hub": "./cli/index.cjs"
   },
   "scripts": {
     "dev": "vite",

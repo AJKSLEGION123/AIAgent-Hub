@@ -15,15 +15,15 @@ describe('Edge cases', () => {
     });
 
     it('handles corrupted JSON in localStorage', () => {
-      localStorage.setItem('agent-hub-settings', '{invalid json!!!');
+      localStorage.setItem('aiagent-hub-settings', '{invalid json!!!');
       expect(() => {
         try {
-          JSON.parse(localStorage.getItem('agent-hub-settings'));
+          JSON.parse(localStorage.getItem('aiagent-hub-settings'));
         } catch {
           // Expected - should not crash the app
         }
       }).not.toThrow();
-      localStorage.removeItem('agent-hub-settings');
+      localStorage.removeItem('aiagent-hub-settings');
     });
 
     it('handles extremely large localStorage values', () => {

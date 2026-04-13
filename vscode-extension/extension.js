@@ -15,7 +15,7 @@ function loadPrompts() {
       prompts = data.P;
     }
   } catch (e) {
-    vscode.window.showErrorMessage('Agent Hub: Failed to load prompts');
+    vscode.window.showErrorMessage('AIAgent-Hub: Failed to load prompts');
   }
 }
 
@@ -23,7 +23,7 @@ function activate(context) {
   loadPrompts();
 
   // Search prompts
-  context.subscriptions.push(vscode.commands.registerCommand('agent-hub.search', async () => {
+  context.subscriptions.push(vscode.commands.registerCommand('aiagent-hub.search', async () => {
     const items = prompts.map(p => ({
       label: `${p.icon} ${p.role}`,
       description: `${p.mk} · ${p.time} · ${p.difficulty}`,
@@ -42,7 +42,7 @@ function activate(context) {
   }));
 
   // Copy specific prompt
-  context.subscriptions.push(vscode.commands.registerCommand('agent-hub.copy', async () => {
+  context.subscriptions.push(vscode.commands.registerCommand('aiagent-hub.copy', async () => {
     const id = await vscode.window.showInputBox({ prompt: 'Enter prompt ID (e.g. c-fe)' });
     if (!id) return;
     const p = prompts.find(x => x.id === id);
@@ -52,7 +52,7 @@ function activate(context) {
   }));
 
   // List all
-  context.subscriptions.push(vscode.commands.registerCommand('agent-hub.list', async () => {
+  context.subscriptions.push(vscode.commands.registerCommand('aiagent-hub.list', async () => {
     const items = prompts.map(p => ({
       label: `${p.icon} ${p.role} (${p.mk})`,
       description: `${p.id} · ${p.time}`,
@@ -66,14 +66,14 @@ function activate(context) {
   }));
 
   // Random
-  context.subscriptions.push(vscode.commands.registerCommand('agent-hub.random', async () => {
+  context.subscriptions.push(vscode.commands.registerCommand('aiagent-hub.random', async () => {
     const p = prompts[Math.floor(Math.random() * prompts.length)];
     await vscode.env.clipboard.writeText(p.text);
     vscode.window.showInformationMessage(`Random: ${p.icon} ${p.role} (~${Math.ceil(p.text.length/4)} tokens)`);
   }));
 
   // Insert at cursor
-  context.subscriptions.push(vscode.commands.registerCommand('agent-hub.insert', async () => {
+  context.subscriptions.push(vscode.commands.registerCommand('aiagent-hub.insert', async () => {
     const items = prompts.map(p => ({
       label: `${p.icon} ${p.role}`,
       description: p.id,

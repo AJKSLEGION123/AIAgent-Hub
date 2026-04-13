@@ -1,4 +1,4 @@
-const CACHE_NAME = 'agent-hub-v8.1';
+const CACHE_NAME = 'aiagent-hub-v8.1';
 const PRECACHE_URLS = ['/', '/index.html', '/favicon.svg', '/manifest.json'];
 
 self.addEventListener('install', (e) => {

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Agent Hub', () => {
+test.describe('AIAgent-Hub', () => {
   test('loads and shows title', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('h1')).toBeVisible({ timeout: 15000 });

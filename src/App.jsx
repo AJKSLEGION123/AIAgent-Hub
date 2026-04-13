@@ -5,7 +5,7 @@ import { useState, useCallback, useMemo, useEffect, useRef, memo, Component } fr
    ═══════════════════════════════════════════════ */
 const T = {
   ru: {
-    title: "Agent Hub",
+    title: "AIAgent-Hub",
     subtitle: "Мультиагентная система разработки",
     copy: "Копировать", copied: "Скопировано ✓", show: "Развернуть", hide: "Свернуть", lines: "строк",
     search: "Поиск промтов...",
@@ -25,7 +25,7 @@ const T = {
     copyFiltered: "Копировать все отфильтрованные",
   },
   en: {
-    title: "Agent Hub",
+    title: "AIAgent-Hub",
     subtitle: "Multi-agent development system",
     copy: "Copy", copied: "Copied ✓", show: "Expand", hide: "Collapse", lines: "lines",
     search: "Search prompts...",
@@ -45,7 +45,7 @@ const T = {
     copyFiltered: "Copy all filtered",
   },
   kk: {
-    title: "Agent Hub",
+    title: "AIAgent-Hub",
     subtitle: "Мультиагентті әзірлеу жүйесі",
     copy: "Көшіру", copied: "Көшірілді ✓", show: "Ашу", hide: "Жабу", lines: "жол",
     search: "Промпттарды іздеу...",
@@ -206,7 +206,7 @@ class ErrBound extends Component {
     if(this.state.err) return (
       <div style={{minHeight:"100vh",background:"#060609",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:font,color:"#ddddef",textAlign:"center",padding:32}}>
         <div>
-          <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>Agent Hub</div>
+          <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>AIAgent-Hub</div>
           <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>Произошла ошибка</div>
           <div style={{fontSize:11,color:"#5e5e78",marginBottom:16,maxWidth:400}}>{this.state.err?.message}</div>
           {this.state.err?.stack && <details style={{marginBottom:16,textAlign:"left",maxWidth:500}}><summary style={{fontSize:10,color:"#5e5e78",cursor:"pointer"}}>Stack trace</summary><pre style={{fontSize:9,color:"#44445a",marginTop:8,padding:8,background:"#0a0a12",borderRadius:6,whiteSpace:"pre-wrap",wordBreak:"break-all",maxHeight:200,overflow:"auto"}}>{this.state.err.stack}</pre></details>}
@@ -239,7 +239,7 @@ export default function App() {
   if (err) return (
     <div style={{minHeight:"100vh",background:"#060609",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:font,color:"#ddddef",textAlign:"center",padding:32}}>
       <div>
-        <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>Agent Hub</div>
+        <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>AIAgent-Hub</div>
         <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>Ошибка загрузки данных</div>
         <div style={{fontSize:11,color:"#5e5e78",marginBottom:16}}>{err?.message}</div>
         <button onClick={()=>{setErr(null);setLoadPct(0);_d(Z,(pct)=>setLoadPct(Math.round(pct*100))).then(d=>{dataRef.current=d;setData(d)}).catch(e=>setErr(e))}} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #6366f1",borderRadius:8,background:"#6366f1",color:"#fff",cursor:"pointer"}}>Обновить</button>
@@ -252,7 +252,7 @@ export default function App() {
       <style>{CSS}</style>
       <div style={{maxWidth:860,margin:"0 auto",padding:"32px 16px"}}>
         <div style={{textAlign:"center",marginBottom:32}}>
-          <div style={{fontSize:28,fontWeight:800,color:"#ddddef",marginBottom:8}}>Agent Hub</div>
+          <div style={{fontSize:28,fontWeight:800,color:"#ddddef",marginBottom:8}}>AIAgent-Hub</div>
           <div style={{fontSize:11,color:"#5e5e78",letterSpacing:2,marginBottom:16}}>загрузка промтов...</div>
           <div style={{width:200,height:4,background:"#1a1a28",borderRadius:2,overflow:"hidden",margin:"0 auto"}}>
             <div style={{width:loadPct+"%",height:"100%",background:"linear-gradient(90deg,#6366f1,#8b5cf6)",borderRadius:2,transition:"width .3s ease"}} />
@@ -380,7 +380,7 @@ function AgentHub({ data, loadTime }) {
   // ── Persist settings (task 027) ──
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("agent-hub-settings");
+      const raw = localStorage.getItem("aiagent-hub-settings");
       if (raw) {
         const s = JSON.parse(raw);
         if (s.theme) setTheme(s.theme);
@@ -396,8 +396,8 @@ function AgentHub({ data, loadTime }) {
   useEffect(() => {
     try {
       const payload = JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist, cc:copyCounters });
-      if (payload.length > 4 * 1024 * 1024) { console.warn("Agent Hub: localStorage near limit"); }
-      localStorage.setItem("agent-hub-settings", payload);
+      if (payload.length > 4 * 1024 * 1024) { console.warn("AIAgent-Hub: localStorage near limit"); }
+      localStorage.setItem("aiagent-hub-settings", payload);
     } catch {}
   }, [theme, lang, favs, usedPrompts, searchHist, copyCounters]);
 
@@ -430,7 +430,7 @@ function AgentHub({ data, loadTime }) {
   // Cycle 2: Dynamic page title
   useEffect(() => {
     const titles = { prompts:lang==="ru"?"Промты":"Prompts", combos:lang==="ru"?"Команды":"Teams", cheat:lang==="ru"?"Шпаргалки":"Cheat", quick:"CLI", setup:"Setup" };
-    document.title = `Agent Hub — ${titles[section]||""}`;
+    document.title = `AIAgent-Hub — ${titles[section]||""}`;
   }, [section, lang]);
 
   // Task 5: Lock body scroll when overlays open
@@ -443,9 +443,9 @@ function AgentHub({ data, loadTime }) {
   // Feat 16: First visit welcome
   useEffect(() => {
     try {
-      if (!localStorage.getItem("agent-hub-visited")) {
+      if (!localStorage.getItem("aiagent-hub-visited")) {
         setIsFirstVisit(true);
-        localStorage.setItem("agent-hub-visited", "1");
+        localStorage.setItem("aiagent-hub-visited", "1");
       }
     } catch {}
   }, []);
@@ -864,7 +864,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"Часто копируемые":"Most copied"}</div>
             {Object.entries(copyCounters).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([pid,n])=>{const pp=pGet(pid);return pp?<div key={pid} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"3px 0", fontSize:10 }}><span style={{ color:pp.ac }}>{pp.icon} {t.r[pp.role]||pp.role}</span><span style={{ color:c.dim }}>×{n}</span></div>:null})}
           </div>}
-          {(() => { try { const used = localStorage.getItem("agent-hub-settings"); return used ? <div style={{ fontSize:9, color:c.dim, marginTop:8 }}>💾 localStorage: {(used.length/1024).toFixed(1)} KB</div> : null; } catch { return null; } })()}
+          {(() => { try { const used = localStorage.getItem("aiagent-hub-settings"); return used ? <div style={{ fontSize:9, color:c.dim, marginTop:8 }}>💾 localStorage: {(used.length/1024).toFixed(1)} KB</div> : null; } catch { return null; } })()}
           <button onClick={()=>setShowStats(false)} style={{ marginTop:12, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
         </div>
       </div>}
@@ -920,7 +920,7 @@ function AgentHub({ data, loadTime }) {
         {/* Feat 16: Welcome banner */}
         {isFirstVisit && <div style={{ marginBottom:16, padding:"16px 20px", borderRadius:12, border:`2px solid #6366f140`, background:"linear-gradient(135deg, #6366f10a, #8b5cf60a)", position:"relative" }}>
           <button onClick={()=>setIsFirstVisit(false)} style={{ position:"absolute", top:8, right:12, background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:16, outline:"none" }}>×</button>
-          <div style={{ fontSize:14, fontWeight:800, color:"#6366f1", marginBottom:8 }}>👋 {lang==="ru"?"Добро пожаловать в Agent Hub!":"Welcome to Agent Hub!"}</div>
+          <div style={{ fontSize:14, fontWeight:800, color:"#6366f1", marginBottom:8 }}>👋 {lang==="ru"?"Добро пожаловать в AIAgent-Hub!":"Welcome to AIAgent-Hub!"}</div>
           <div style={{ fontSize:11, color:c.mut, lineHeight:1.8 }}>
             {lang==="ru"
               ? "Здесь 132+ промтов для автономных AI-агентов. Выбери промт → скопируй → вставь в терминал агента. Нажми ? для горячих клавиш."
@@ -968,7 +968,7 @@ function AgentHub({ data, loadTime }) {
 
         {/* Feat 35: Breadcrumbs */}
         <div style={{ display:"flex", alignItems:"center", gap:4, marginBottom:12, fontSize:10, color:c.dim }}>
-          <span>Agent Hub</span>
+          <span>AIAgent-Hub</span>
           <span>›</span>
           <span style={{ color:c.text, fontWeight:600 }}>{section==="prompts"?(lang==="ru"?"Промты":"Prompts"):section==="combos"?(lang==="ru"?"Команды":"Teams"):section==="cheat"?(lang==="ru"?"Шпаргалки":"Cheat"):section==="quick"?"CLI":(lang==="ru"?"Настройка":"Setup")}</span>
           {hasFilters && <><span>›</span><span style={{ color:"#6366f1" }}>{debouncedSearch?`"${debouncedSearch}"`:fm!=="all"?(fm==="model"?(ML[fv]||fv):fm==="role"?(t.r[fv]||fv):fv):(showNew?"NEW":hideUsed?"Hide ✓":"filter")}</span></>}
@@ -1843,7 +1843,7 @@ function AgentHub({ data, loadTime }) {
           <button onClick={() => {
             const items = section==="prompts" && hasFilters ? list : P;
             const totalTokens = items.reduce((a,p)=>a+Math.round(p.text.length/4),0);
-            let md = `# Agent Hub v8.1\n\n> ${items.length} ${t.prompts} · ${stats.models} ${t.models} · ~${(totalTokens/1000).toFixed(0)}K tokens\n\n`;
+            let md = `# AIAgent-Hub v8.1\n\n> ${items.length} ${t.prompts} · ${stats.models} ${t.models} · ~${(totalTokens/1000).toFixed(0)}K tokens\n\n`;
             const grouped = {};
             items.forEach(p => { (grouped[p.mk] = grouped[p.mk]||[]).push(p); });
             Object.entries(grouped).forEach(([mk, grp]) => {
@@ -1855,7 +1855,7 @@ function AgentHub({ data, loadTime }) {
               });
             });
             const blob = new Blob([md], { type:"text/markdown" });
-            const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "agent-hub-prompts.md"; a.click(); URL.revokeObjectURL(url);
+            const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub-prompts.md"; a.click(); URL.revokeObjectURL(url);
           }} style={{
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
             border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
@@ -1870,7 +1870,7 @@ function AgentHub({ data, loadTime }) {
               csv += `"${esc(p.id)}","${esc(t.r[p.role]||p.role)}","${esc(p.m)}","${p.type}","${esc(p.difficulty)}","${esc(p.time)}","${esc((p.tags||[]).join(";"))}",${p.text.length},${Math.ceil(p.text.length/4)}\n`;
             });
             const blob = new Blob([csv], { type:"text/csv" });
-            const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "agent-hub-prompts.csv"; a.click(); URL.revokeObjectURL(url);
+            const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub-prompts.csv"; a.click(); URL.revokeObjectURL(url);
           }} style={{
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
             border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
@@ -1879,7 +1879,7 @@ function AgentHub({ data, loadTime }) {
           <button onClick={() => {
             const json = JSON.stringify(data, null, 2);
             const blob = new Blob([json], { type:"application/json" });
-            const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "agent-hub-data.json"; a.click(); URL.revokeObjectURL(url);
+            const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub-data.json"; a.click(); URL.revokeObjectURL(url);
           }} style={{
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
             border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
@@ -1888,7 +1888,7 @@ function AgentHub({ data, loadTime }) {
           {/* Export as self-contained HTML */}
           <button onClick={() => {
             const items = section==="prompts" && hasFilters ? list : P;
-            let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Agent Hub v8.1</title><style>body{font-family:monospace;background:#060609;color:#ddd;padding:20px;max-width:800px;margin:0 auto}h1{color:#6366f1}h2{color:#f97316;border-bottom:1px solid #222;padding-bottom:8px}h3{color:#8b5cf6;margin-top:24px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap;font-size:12px;line-height:1.6;overflow-x:auto;border:1px solid #222}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#1a1a28;color:#888;margin:2px}</style></head><body><h1>Agent Hub v8.1</h1><p>${items.length} prompts · ${stats.models} models · ~${stats.totalHours}h</p>`;
+            let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>AIAgent-Hub v8.1</title><style>body{font-family:monospace;background:#060609;color:#ddd;padding:20px;max-width:800px;margin:0 auto}h1{color:#6366f1}h2{color:#f97316;border-bottom:1px solid #222;padding-bottom:8px}h3{color:#8b5cf6;margin-top:24px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap;font-size:12px;line-height:1.6;overflow-x:auto;border:1px solid #222}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#1a1a28;color:#888;margin:2px}</style></head><body><h1>AIAgent-Hub v8.1</h1><p>${items.length} prompts · ${stats.models} models · ~${stats.totalHours}h</p>`;
             items.forEach(p => {
               html += `<h3>${p.icon} ${t.r[p.role]||p.role} <small>(${p.m} · ${p.time||""} · ${p.difficulty||""})</small></h3>`;
               if (p.tags) html += `<div>${p.tags.map(t2=>`<span class="tag">#${t2}</span>`).join(" ")}</div>`;
@@ -1896,7 +1896,7 @@ function AgentHub({ data, loadTime }) {
             });
             html += `</body></html>`;
             const blob = new Blob([html], { type:"text/html" });
-            const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "agent-hub.html"; a.click(); URL.revokeObjectURL(url);
+            const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub.html"; a.click(); URL.revokeObjectURL(url);
           }} style={{
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
             border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
@@ -1905,10 +1905,10 @@ function AgentHub({ data, loadTime }) {
           {/* Feat 36: Settings backup/restore */}
           <button onClick={() => {
             try {
-              const settings = localStorage.getItem("agent-hub-settings");
+              const settings = localStorage.getItem("aiagent-hub-settings");
               if (settings) {
                 const blob = new Blob([settings], { type:"application/json" });
-                const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "agent-hub-settings.json"; a.click(); URL.revokeObjectURL(url);
+                const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub-settings.json"; a.click(); URL.revokeObjectURL(url);
               }
             } catch {}
           }} style={{ padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600, border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>💾 {lang==="ru"?"Бэкап":"Backup"}</button>
@@ -1920,7 +1920,7 @@ function AgentHub({ data, loadTime }) {
               reader.onload = (ev) => {
                 try {
                   const s = JSON.parse(ev.target.result);
-                  localStorage.setItem("agent-hub-settings", JSON.stringify(s));
+                  localStorage.setItem("aiagent-hub-settings", JSON.stringify(s));
                   if (s.theme) setTheme(s.theme);
                   if (s.lang) setLang(s.lang);
                   if (s.favs) setFavs(s.favs);

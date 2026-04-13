@@ -21,7 +21,7 @@ test.describe('Advanced Features', () => {
   });
 
   test('breadcrumbs show current section', async ({ page }) => {
-    const breadcrumb = page.locator('text=/Agent Hub.*›/');
+    const breadcrumb = page.locator('text=/AIAgent-Hub.*›/');
     expect(await breadcrumb.count()).toBeGreaterThanOrEqual(0);
   });
 
