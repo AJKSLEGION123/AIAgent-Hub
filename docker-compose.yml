@@ -1,0 +1,14 @@
+services:
+  agent-hub:
+    build: .
+    container_name: agent-hub
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    volumes:
+      - agent-hub-data:/app/data
+    environment:
+      - NODE_ENV=production
+
+volumes:
+  agent-hub-data:
