@@ -951,7 +951,7 @@ function AgentHub({ data, loadTime }) {
             { k:"prompts", l:lang==="ru"?"Промты":"Prompts", n:P.length },
             { k:"combos", l:lang==="ru"?"Команды":"Teams", n:(COMBOS[lang]||COMBOS.ru).length },
             { k:"cheat", l:lang==="ru"?"Шпаргалки":"Cheat Sheets", n:Object.keys(CHEAT).length },
-            { k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru).reduce((a,c)=>a+c.cmds.length,0) },
+            { k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).reduce((a,c)=>a+c.cmds.length,0) },
             { k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length },
           ].map(s => (
             <button key={s.k} role="tab" aria-selected={section===s.k} aria-current={section===s.k?"page":undefined} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);window.scrollTo({top:0,behavior:"smooth"})}} style={{
@@ -1581,7 +1581,7 @@ function AgentHub({ data, loadTime }) {
         {/* ════════════════ SECTION: QUICK COMMANDS ════════════════ */}
         {section === "quick" && <div role="tabpanel" id="panel-quick">
         {debouncedSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{debouncedSearch}"</div>}
-        {(QUICK_CMDS[lang]||QUICK_CMDS.ru).map((cat, ci) => {
+        {(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).map((cat, ci) => {
           const filteredQC = debouncedSearch ? cat.cmds.filter(cmd => (cmd.cmd + " " + cmd.label).toLowerCase().includes(debouncedSearch.toLowerCase())) : cat.cmds;
           if (debouncedSearch && filteredQC.length === 0) return null;
           return (
