@@ -151,7 +151,7 @@ app.get('/api/stats', (c) => {
 });
 
 // ── Health ──
-app.get('/api/health', (c) => c.json({ status: 'ok', version: '9.1', prompts: 64 }));
+app.get('/api/health', (c) => c.json({ status: 'ok', version: '9.2', prompts: 80 }));
 
 // Start
 const PORT = process.env.PORT || 3001;
