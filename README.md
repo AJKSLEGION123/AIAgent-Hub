@@ -6,7 +6,7 @@
 
 ```bash
 # 1. Открой сайт
-https://desire-cabin-sponsor-das.trycloudflare.com
+https://ai-agent-hub.net
 
 # 2. Выбери промт для задачи
 # 3. Скопируй команду

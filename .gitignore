@@ -31,3 +31,5 @@ data/
 .claude/reports/
 .gemini/
 .codex/
+
+.vercel
