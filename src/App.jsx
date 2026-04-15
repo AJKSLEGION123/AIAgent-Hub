@@ -78,6 +78,8 @@ const ML = { claude:"Claude Code" };
 const MI = { claude:"C" };
 const font = "'JetBrains Mono','IBM Plex Mono','Fira Code',monospace";
 const alpha = (hex, a) => hex + Math.round(a*255).toString(16).padStart(2,'0');
+/** Russian pluralization: pl(5,"модель","модели","моделей") → "моделей" */
+const pl = (n, one, few, many) => { const m=Math.abs(n)%100, d=m%10; return d===1&&m!==11?one:d>=2&&d<=4&&(m<12||m>14)?few:many; };
 
 /* ═══════════════════════════════════════════════
    COMPRESSED DATA
@@ -934,7 +936,7 @@ function AgentHub({ data, loadTime }) {
         {/* ── HEADER ── */}
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16 }} className="stack-mobile">
           <div>
-            <div style={{ fontSize:9, letterSpacing:6, color:c.dim, textTransform:"uppercase", marginBottom:6 }}>v9.0 · {stats.total} {t.prompts} · {stats.models} {t.models}{usedCount>0?` · ✓${usedCount}`:""}</div>
+            <div style={{ fontSize:9, letterSpacing:6, color:c.dim, textTransform:"uppercase", marginBottom:6 }}>v9.1 · {stats.total} {lang==="ru"?pl(stats.total,"промт","промта","промтов"):t.prompts} · {stats.models} {lang==="ru"?pl(stats.models,"модель","модели","моделей"):t.models}{usedCount>0?` · ✓${usedCount}`:""}</div>
             <h1 style={{ fontSize:28, fontWeight:800, margin:0, lineHeight:1.1, letterSpacing:"-0.5px" }}>{t.title}</h1>
             <p style={{ fontSize:12, color:c.mut, marginTop:6, letterSpacing:0.3 }}>{t.subtitle}</p>
           </div>
@@ -1543,10 +1545,10 @@ function AgentHub({ data, loadTime }) {
         {debouncedSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{debouncedSearch}"</div>}
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(250px, 1fr))", gap:8 }}>
           {(COMBOS[lang]||COMBOS.ru).filter(cb => !debouncedSearch || (cb.name + " " + cb.desc).toLowerCase().includes(debouncedSearch.toLowerCase())).map((cb, i) => {
-            // Task 71: detect conflicts (multiple prompts for same role type)
+            // Task 71: detect conflicts (multiple prompts for same role)
             const agents = (cb.ids||[]).map(id=>pGet(id)).filter(Boolean);
-            const roleTypes = agents.map(a=>a.mk+"-"+a.type);
-            const hasConflict = roleTypes.length !== new Set(roleTypes).size;
+            const roles = agents.map(a=>a.role);
+            const hasConflict = roles.length !== new Set(roles).size;
             return (
             <div key={i} className="card-enter" style={{
               padding:"14px 16px", borderRadius:10, border:`1px solid ${c.brd}`,
@@ -1993,7 +1995,7 @@ function AgentHub({ data, loadTime }) {
               </div>
             ))}
           </div>
-          <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AIAgent-Hub v9.0 · {P.length} {t.prompts} · {(COMBOS[lang]||COMBOS.ru).length} combos · {stats.roles} {lang==="ru"?"ролей":"roles"}{loadTime ? ` · ${loadTime}ms` : ""}{copyCount > 0 ? ` · ${copyCount} ${lang==="ru"?"скопировано":"copied"}` : ""}</div>
+          <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AIAgent-Hub v9.1 · {P.length} {lang==="ru"?pl(P.length,"промт","промта","промтов"):t.prompts} · {(COMBOS[lang]||COMBOS.ru).length} {lang==="ru"?pl((COMBOS[lang]||COMBOS.ru).length,"комбо","комбо","комбо"):"combos"} · {stats.roles} {lang==="ru"?pl(stats.roles,"роль","роли","ролей"):"roles"}{loadTime ? ` · ${loadTime}ms` : ""}{copyCount > 0 ? ` · ${copyCount} ${lang==="ru"?"скопировано":"copied"}` : ""}</div>
           {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>}
         </div>
       </div>
