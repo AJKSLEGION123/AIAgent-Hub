@@ -634,6 +634,30 @@ function AgentHub({ data, loadTime }) {
   // Task 37, 81: Reset pagination and smooth scroll on filter change
   useEffect(() => { setShowCount(40); }, [fm, fv, debouncedSearch, showFavsOnly, sortBy]);
 
+  // ── Categories (auto-classified from tags) ──
+  const categories = useMemo(() => {
+    const CAT_MAP = {
+      "AI / LLM": ["rag","ai","llm","embeddings","prompt-engineering","agent","tool-use","function-calling","vector-db"],
+      "Security": ["security","audit","owasp","vulnerability","auth","2fa","rbac","jwt","login","registration"],
+      "Testing / QA": ["testing","tdd","e2e","qa","supervisor","verification","quality","quality-gate","inspection","watcher"],
+      "Performance": ["performance","optimization","caching","bundle","redis","ttl","cache"],
+      "DevOps / CI": ["ci-cd","docker","kubernetes","k8s","deploy","monitoring","github-actions","containers","scaling","devops"],
+      "Frontend / UI": ["ui","dashboard","forms","dark-mode","animation","tabs","modal","skeleton","drag","calendar","charts"],
+      "Backend / API": ["api","crud","rest","graphql","database","websocket","backend","microservices","proxy","gateway"],
+      "Data & Files": ["data","parsing","csv","registry","migration","import","export","pdf","seed","1c","erp","gap-analysis"],
+      "Integrations": ["webhooks","email","notifications","upload","smtp","sendgrid","webhook","search","map"],
+      "Architecture": ["architecture","monorepo","microservices","api-versioning","patterns","refactor","clean-code"],
+      "Documentation": ["readme","documentation","docs","markdown","api-docs","codegen","spec","openapi","swagger"],
+      "Project Setup": ["setup","init","project","boilerplate","scaffold","config","env","environment","secrets","git"],
+    };
+    const cats = {};
+    for (const [cat, tags] of Object.entries(CAT_MAP)) {
+      const matching = P.filter(p => (p.tags||[]).some(t2 => tags.includes(t2)));
+      if (matching.length > 0) cats[cat] = matching.length;
+    }
+    return { map: CAT_MAP, counts: cats };
+  }, [P]);
+
   // ── Filtered list (tasks 041, 043, 045, 046, 125) ──
   const list = useMemo(() => {
     let f = P;
@@ -683,7 +707,7 @@ function AgentHub({ data, loadTime }) {
       f = [...pinned, ...rest];
     }
     return f;
-  }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy, showNew, hideUsed, usedPrompts, pinnedIds]);
+  }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy, showNew, hideUsed, usedPrompts, pinnedIds, categories]);
 
   const roles = useMemo(() => [...new Set(P.map(p => p.role))], [P]);
   // Feat 27: Infinite scroll (must be after list declaration)
@@ -700,30 +724,6 @@ function AgentHub({ data, loadTime }) {
     const tc = {};
     P.forEach(p => (p.tags||[]).forEach(t2 => { tc[t2] = (tc[t2]||0) + 1; }));
     return Object.entries(tc).sort((a,b) => b[1]-a[1]).slice(0, 25).map(([t2]) => t2);
-  }, [P]);
-
-  // ── Categories (auto-classified from tags) ──
-  const categories = useMemo(() => {
-    const CAT_MAP = {
-      "AI / LLM": ["rag","ai","llm","embeddings","prompt-engineering","agent","tool-use","function-calling","vector-db"],
-      "Security": ["security","audit","owasp","vulnerability","auth","2fa","rbac","jwt","login","registration"],
-      "Testing / QA": ["testing","tdd","e2e","qa","supervisor","verification","quality","quality-gate","inspection","watcher"],
-      "Performance": ["performance","optimization","caching","bundle","redis","ttl","cache"],
-      "DevOps / CI": ["ci-cd","docker","kubernetes","k8s","deploy","monitoring","github-actions","containers","scaling","devops"],
-      "Frontend / UI": ["ui","dashboard","forms","dark-mode","animation","tabs","modal","skeleton","drag","calendar","charts"],
-      "Backend / API": ["api","crud","rest","graphql","database","websocket","backend","microservices","proxy","gateway"],
-      "Data & Files": ["data","parsing","csv","registry","migration","import","export","pdf","seed","1c","erp","gap-analysis"],
-      "Integrations": ["webhooks","email","notifications","upload","smtp","sendgrid","webhook","search","map"],
-      "Architecture": ["architecture","monorepo","microservices","api-versioning","patterns","refactor","clean-code"],
-      "Documentation": ["readme","documentation","docs","markdown","api-docs","codegen","spec","openapi","swagger"],
-      "Project Setup": ["setup","init","project","boilerplate","scaffold","config","env","environment","secrets","git"],
-    };
-    const cats = {};
-    for (const [cat, tags] of Object.entries(CAT_MAP)) {
-      const matching = P.filter(p => (p.tags||[]).some(t2 => tags.includes(t2)));
-      if (matching.length > 0) cats[cat] = matching.length;
-    }
-    return { map: CAT_MAP, counts: cats };
   }, [P]);
 
   const CAT_ICONS = {"AI / LLM":"\u{1F9E0}","Security":"\u{1F6E1}","Testing / QA":"\u{1F9EA}","Performance":"\u26A1","DevOps / CI":"\u2699","Frontend / UI":"\u{1F3A8}","Backend / API":"\u{1F4E6}","Data & Files":"\u{1F4CA}","Integrations":"\u{1F514}","Architecture":"\u{1F3D7}","Documentation":"\u{1F4D6}","Project Setup":"\u{1F680}"};
