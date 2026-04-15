@@ -641,6 +641,10 @@ function AgentHub({ data, loadTime }) {
     if (showNew) f = f.filter(p => p.v === "7.1");
     if (hideUsed) f = f.filter(p => !usedPrompts[p.id]);
     if (fm === "model" && fv !== "all") f = f.filter(p => p.mk === fv);
+    else if (fm === "category" && fv !== "all") {
+      const catTags = categories.map[fv] || [];
+      f = f.filter(p => (p.tags||[]).some(t2 => catTags.includes(t2)));
+    }
     else if (fm === "role" && fv !== "all") f = f.filter(p => p.role === fv);
     else if (fm === "type" && fv !== "all") f = f.filter(p => p.type === fv);
     else if (fm === "difficulty" && fv !== "all") f = f.filter(p => p.difficulty === fv);
@@ -696,6 +700,43 @@ function AgentHub({ data, loadTime }) {
     const tc = {};
     P.forEach(p => (p.tags||[]).forEach(t2 => { tc[t2] = (tc[t2]||0) + 1; }));
     return Object.entries(tc).sort((a,b) => b[1]-a[1]).slice(0, 25).map(([t2]) => t2);
+  }, [P]);
+
+  // ── Categories (auto-classified from tags) ──
+  const categories = useMemo(() => {
+    const CAT_MAP = {
+      "AI / LLM": ["rag","ai","llm","embeddings","prompt-engineering","agent","tool-use","function-calling","vector-db"],
+      "Security": ["security","audit","owasp","vulnerability","auth","2fa","rbac","jwt","login","registration"],
+      "Testing / QA": ["testing","tdd","e2e","qa","supervisor","verification","quality","quality-gate","inspection","watcher"],
+      "Performance": ["performance","optimization","caching","bundle","redis","ttl","cache"],
+      "DevOps / CI": ["ci-cd","docker","kubernetes","k8s","deploy","monitoring","github-actions","containers","scaling","devops"],
+      "Frontend / UI": ["ui","dashboard","forms","dark-mode","animation","tabs","modal","skeleton","drag","calendar","charts"],
+      "Backend / API": ["api","crud","rest","graphql","database","websocket","backend","microservices","proxy","gateway"],
+      "Data & Files": ["data","parsing","csv","registry","migration","import","export","pdf","seed","1c","erp","gap-analysis"],
+      "Integrations": ["webhooks","email","notifications","upload","smtp","sendgrid","webhook","search","map"],
+      "Architecture": ["architecture","monorepo","microservices","api-versioning","patterns","refactor","clean-code"],
+      "Documentation": ["readme","documentation","docs","markdown","api-docs","codegen","spec","openapi","swagger"],
+      "Project Setup": ["setup","init","project","boilerplate","scaffold","config","env","environment","secrets","git"],
+    };
+    const cats = {};
+    for (const [cat, tags] of Object.entries(CAT_MAP)) {
+      const matching = P.filter(p => (p.tags||[]).some(t2 => tags.includes(t2)));
+      if (matching.length > 0) cats[cat] = matching.length;
+    }
+    return { map: CAT_MAP, counts: cats };
+  }, [P]);
+
+  const CAT_ICONS = {"AI / LLM":"\u{1F9E0}","Security":"\u{1F6E1}","Testing / QA":"\u{1F9EA}","Performance":"\u26A1","DevOps / CI":"\u2699","Frontend / UI":"\u{1F3A8}","Backend / API":"\u{1F4E6}","Data & Files":"\u{1F4CA}","Integrations":"\u{1F514}","Architecture":"\u{1F3D7}","Documentation":"\u{1F4D6}","Project Setup":"\u{1F680}"};
+  const CAT_COLORS = {"AI / LLM":"#8b5cf6","Security":"#ef4444","Testing / QA":"#a855f7","Performance":"#f59e0b","DevOps / CI":"#2563eb","Frontend / UI":"#ec4899","Backend / API":"#10b981","Data & Files":"#0891b2","Integrations":"#f97316","Architecture":"#6366f1","Documentation":"#06b6d4","Project Setup":"#0ea5e9"};
+
+  const randomPrompt = useCallback(() => {
+    const r = P[Math.floor(Math.random() * P.length)];
+    if (r) {
+      setExpanded(e => ({ ...e, [r.id]: true }));
+      setSearch("");
+      setFm("all"); setFv("all");
+      setTimeout(() => document.getElementById(`card-${r.id}`)?.scrollIntoView({ behavior:"smooth", block:"center" }), 100);
+    }
   }, [P]);
   const allExpanded = list.length > 0 && list.every(p => expanded[p.id]);
 
@@ -1004,7 +1045,7 @@ function AgentHub({ data, loadTime }) {
 
           {/* Filters */}
           <div style={{ display:"flex", gap:6, marginBottom:8, flexWrap:"wrap" }}>
-            {[{k:"all",l:t.all},{k:"model",l:t.byModel},{k:"role",l:t.byRole},{k:"type",l:t.byType},{k:"difficulty",l:lang==="ru"?"Сложность":"Difficulty"},{k:"time",l:lang==="ru"?"Время":"Time"},{k:"tag",l:lang==="ru"?"Теги":"Tags"}].map(f =>
+            {[{k:"all",l:t.all},{k:"category",l:lang==="ru"?"Категории":"Categories"},{k:"model",l:t.byModel},{k:"role",l:t.byRole},{k:"type",l:t.byType},{k:"difficulty",l:lang==="ru"?"Сложность":"Difficulty"},{k:"time",l:lang==="ru"?"Время":"Time"},{k:"tag",l:lang==="ru"?"Теги":"Tags"}].map(f =>
               <Pill key={f.k} on={fm===f.k} fn={()=>{setFm(f.k);setFv("all");}} lb={f.l} c={c} />
             )}
             {hasFilters && <button onClick={clearFilters} style={{ padding:"5px 14px", fontSize:11, fontFamily:font, border:`1px solid #ef444440`, borderRadius:20, background:"#ef444408", color:"#ef4444", cursor:"pointer", outline:"none" }}>✕ {lang==="ru"?"Сброс":"Reset"}</button>}
@@ -1022,6 +1063,10 @@ function AgentHub({ data, loadTime }) {
             <Pill on={fv==="beginner"} fn={()=>setFv("beginner")} lb={lang==="ru"?"Начальный":"Beginner"} cl="#10b981" c={c} />
             <Pill on={fv==="intermediate"} fn={()=>setFv("intermediate")} lb={lang==="ru"?"Средний":"Intermediate"} cl="#f59e0b" c={c} />
             <Pill on={fv==="advanced"} fn={()=>setFv("advanced")} lb={lang==="ru"?"Продвинутый":"Advanced"} cl="#ef4444" c={c} />
+          </div>}
+          {fm==="category" && <div style={{display:"flex",gap:6,marginBottom:8,flexWrap:"wrap"}}>
+            <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
+            {Object.entries(categories.counts).map(([cat,n]) => <button key={cat} onClick={()=>setFv(cat)} style={{ display:"flex", alignItems:"center", gap:4, padding:"4px 10px", fontSize:10, fontFamily:font, fontWeight:fv===cat?700:400, border:`1px solid ${fv===cat?(CAT_COLORS[cat]||"#6366f1")+"60":c.brd}`, borderRadius:8, background:fv===cat?(CAT_COLORS[cat]||"#6366f1")+"12":"transparent", color:fv===cat?(CAT_COLORS[cat]||"#6366f1"):c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}><span>{CAT_ICONS[cat]||""}</span> {cat} <span style={{fontSize:8,opacity:.6}}>{n}</span></button>)}
           </div>}
           {fm==="time" && <div style={{display:"flex",gap:5,marginBottom:8,flexWrap:"wrap"}}>
             <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
@@ -1051,6 +1096,7 @@ function AgentHub({ data, loadTime }) {
             <span style={{ fontSize:11, color:c.dim }}>{debouncedSearch ? `${list.length} / ${P.length}` : list.length} {t.prompts} · ~{(filteredStats.tokens/1000).toFixed(0)}K</span>
             {/* Task 75: Progress tracker */}
             {usedCount > 0 && <span style={{ fontSize:10, color:"#10b981", fontWeight:600 }}>✓ {usedCount}/{P.length}</span>}
+            <button onClick={randomPrompt} title={lang==="ru"?"Случайный промпт":"Random prompt"} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:12, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>{lang==="ru"?"🎲 Случайный":"🎲 Random"}</button>
             {favCount > 0 && <button onClick={()=>setShowFavsOnly(!showFavsOnly)} aria-pressed={showFavsOnly} style={{
               padding:"3px 10px", fontSize:10, fontFamily:font, fontWeight:showFavsOnly?600:400,
               border:`1px solid ${showFavsOnly?"#eab308":c.brd}`, borderRadius:12,
@@ -1310,7 +1356,7 @@ function AgentHub({ data, loadTime }) {
                   {/* Cycle 25: Diff button */}
                   {isO && p.compact && <button onClick={(e)=>{e.stopPropagation();setShowDiff(p.id)}} title={lang==="ru"?"Сравнить original vs compact":"Diff original vs compact"} className="hide-mobile" style={{ width:30, height:30, borderRadius:7, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", fontSize:9, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s", fontFamily:font, fontWeight:700 }}>⇄</button>}
                   {/* Task 77: Share link */}
-                  <button onClick={(e)=>{e.stopPropagation();const url=location.origin+location.pathname+`#prompt-${p.id}`;navigator.clipboard?.writeText(url);setCopied("share-"+p.id);setTimeout(()=>setCopied(null),2000)}} title={lang==="ru"?"Скопировать ссылку":"Copy link"} className="hide-mobile" style={{ width:30, height:30, borderRadius:7, border:`1px solid ${copied===("share-"+p.id)?"#10b981":c.brd}`, background:copied===("share-"+p.id)?"#10b98112":"transparent", color:copied===("share-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", fontSize:11, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{copied===("share-"+p.id)?"✓":"🔗"}</button>
+                  <button onClick={(e)=>{e.stopPropagation();const url=location.origin+location.pathname+`#prompt-${p.id}`;navigator.clipboard?.writeText(url);setCopied("share-"+p.id);setTimeout(()=>setCopied(null),2000)}} title={lang==="ru"?"Скопировать ссылку":"Copy link"} style={{ width:30, height:30, borderRadius:7, border:`1px solid ${copied===("share-"+p.id)?"#10b981":c.brd}`, background:copied===("share-"+p.id)?"#10b98112":"transparent", color:copied===("share-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", fontSize:11, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{copied===("share-"+p.id)?"✓":"🔗"}</button>
                 </div>
               </div>
               {/* Body (task 084: lazy render) */}
