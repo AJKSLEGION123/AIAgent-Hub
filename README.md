@@ -1,6 +1,6 @@
-# AIAgent-Hub v10.0
+# AIAgent-Hub v11.0
 
-100 универсальных промтов для Claude Code. Каждый промт начинается с реальной команды (`/ralph-loop`, `/feature-dev`, `/review-pr`) и включает фазу полного изучения проекта.
+188 универсальных промтов для Claude Code. Каждый промт начинается с реальной команды (`/ralph-loop`, `/feature-dev`, `/review-pr`, `/code-review`, `/simplify`, `/loop`) и включает фазу полного изучения проекта.
 
 ## Quick Start
 
@@ -18,74 +18,78 @@ https://ai-agent-hub.net
 
 | Метрика | Значение |
 |---|---|
-| Промты | **100** универсальных |
-| Комбо | **23** готовых пакета |
-| Шпаргалки | **5 секций, 40 команд** |
-| CLI Commands | **5 групп, 18 команд** |
-| Config Templates | **5 шаблонов** |
+| Промты | **188** универсальных |
+| Комбо | **39** готовых пакетов |
+| Категории | **12** автоклассификация |
+| Шпаргалки | **16** технологий |
+| CLI Commands | **10** quick commands |
+| Config Templates | **13** шаблонов |
 
-## Категории промтов
+## Категории (12)
 
-| Категория | Промты |
+| Категория | Примеры |
 |---|---|
-| **Feature Dev** | Feature, Guided Dev, API, UI, DB, Auth |
-| **Code Quality** | PR Review, Code Review, Simplify, Types |
-| **Testing** | TDD, Test Suite, E2E, Strategy |
-| **Security** | Audit, Fix, Rate Limit, 2FA, OAuth |
-| **Performance** | Perf, Bundle, Cache, Images |
-| **DevOps** | CI/CD, Docker, Deploy, Backup, Multi-env |
-| **UI Components** | Modal, Toast, Tabs, Drag, Kanban, Calendar, Forms, Filters, Skeleton, Dark Mode, Animations |
-| **Full Apps** | Dashboard, Landing, Onboarding, Chat, Settings, Wizard |
-| **Data** | Seed, CSV Import, PDF, Migration, Changelog |
-| **Integrations** | AI/LLM, WebSocket, Email, Upload, Search, Map, Webhook, Notifications |
-| **Architecture** | Review, Monorepo, Microservice, API Versioning |
+| **AI / LLM** | RAG Pipeline, AI Agent, Prompt Engineering |
+| **Security** | Audit, Auth System, 2FA, RBAC, OWASP |
+| **Testing / QA** | TDD, E2E, Project Supervisor, Output QA, Auto-Polish |
+| **Performance** | Cache, Bundle, DB Optimization |
+| **DevOps / CI** | Docker, K8s, GitHub Actions, Monitoring |
+| **Frontend / UI** | Dashboard, Design System, Dark Mode, Animations |
+| **Backend / API** | CRUD, REST, GraphQL, WebSocket, API Gateway |
+| **Data & Files** | Registry Audit, CSV Import, PDF, Migration |
+| **Integrations** | Webhooks, Email, Upload, Notifications |
+| **Architecture** | Monorepo, Microservices, API Versioning |
+| **Documentation** | README Gen, OpenAPI, Docs |
+| **Project Setup** | Init, Git Workflow, Env Config, CI/CD |
 
 ## Команды Claude Code
-
-Каждый промт начинается с одной из команд:
 
 ```
 /ralph-loop "задача" --completion-promise "DONE"   # Автономный цикл
 /feature-dev                                        # Guided разработка
 /review-pr                                          # Мульти-агент PR ревью
-/code-review                                        # Ревью текущих изменений
-/simplify                                           # Упрощение кода
+/code-review                                        # Ревью кода / A11y / DB
+/simplify                                           # Рефакторинг / упрощение
 /commit                                             # Smart commit
 /commit-push-pr                                     # Commit + Push + PR
-/loop 3m                                            # Рекурсивная задача
+/loop 3m "задача"                                   # Рекурсивный мониторинг
+/supervise                                          # QA-начальник проекта
 ```
 
-## Комбо-пакеты (23)
+## Комбо-пакеты (39)
 
 ```
+Project QA Suite    — Supervisor + Output QA + Polish + Templates + Audit
+AI Application      — RAG + AI Agent + Prompt Engineering
+Project Kickstart   — Setup + Config + README + CI/CD
+Full Stack Feature  — CRUD API + Auth + Dashboard
+Mobile Sprint       — Mobile App + Auth + Chat + Monitoring
+Code Quality Blitz  — A11y + DB Review + Refactor + Security + Perf
+Continuous Ops      — Health Monitor + Tests + Deploy + Deps
 Frontend Sprint     — UI + формы + state + a11y + dark mode + бандл
 Backend Sprint      — API + БД + auth + ошибки + логи + кэш
-Full Stack Sprint   — Feature + тесты + ревью + PR
-Quality Gate        — Code review + security + simplify
-Night Worker        — Рефакторинг + cleanup + обновления
 Security Hardening  — Аудит + фиксы + auth + env
-Performance Sprint  — Performance + bundle + cache
-Project Bootstrap   — Lint + CI + Docker + docs
 Testing Blitz       — Unit + integration + E2E
-UI Kit              — Modal + toast + tabs + skeleton + theme
-Admin Panel         — Dashboard + таблицы + роли + формы
-Auth Complete       — Auth + OAuth + 2FA + RBAC
-Interactive App     — Kanban + drag&drop + calendar + chat
-SaaS Starter        — Auth + payments + email + deploy
-AI-Powered          — LLM + API + UI + deploy
-Landing + Marketing — Landing + SEO + аналитика + адаптив
-Data Operations     — Сидинг + импорт + PDF + бэкапы
+...и ещё 28 комбо
 ```
+
+## Шпаргалки (16)
+
+Claude Code, Git, npm/pnpm, Docker, Kubernetes, Testing, TypeScript, React, Prisma, Tailwind CSS, SQL, Python, Go, Rust, Redis, Nginx
+
+## Config Templates (13)
+
+CLAUDE.md, ESLint, Dockerfile, GitHub Actions CI, Docker Compose, tsconfig.json, Prettier, .gitignore, vitest.config.ts, .env.example, nginx.conf, K8s Deployment, Dockerfile Multi-stage
 
 ## Платформы
 
 | Платформа | Описание |
 |---|---|
-| **Web** | SPA на React + Vite |
-| **API** | Hono + SQLite (регистрация, CRUD, рейтинги) |
+| **Web** | SPA на React 19 + Vite |
+| **API** | Hono + SQLite |
 | **CLI** | `node cli/index.cjs list\|show\|search\|copy` |
-| **Telegram** | `node bot/telegram.cjs` (8 команд) |
-| **VS Code** | Extension с Ctrl+Shift+A поиском |
+| **Telegram** | `node bot/telegram.cjs` |
+| **VS Code** | Extension с Ctrl+Shift+A |
 
 ## Dev Setup
 
@@ -107,10 +111,10 @@ docker compose logs -f
 
 ## Stack
 
-- **Frontend**: React 19, Vite, TypeScript
+- **Frontend**: React 19, Vite 8, TypeScript
 - **API**: Hono, better-sqlite3
 - **Tests**: Vitest (220 unit) + Playwright (E2E)
-- **Deploy**: Docker + nginx + Cloudflare Tunnel
+- **Deploy**: Vercel (ai-agent-hub.net) + Docker
 
 ## License
 
