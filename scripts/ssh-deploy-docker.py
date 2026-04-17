@@ -1,40 +1,34 @@
 """Deploy AIAgent-Hub to pm.lanmaster.kz (docker-compose + Cloudflare Quick-tunnel).
 
-Server layout (discovered 2026-04-17):
-  - Host:           pm.lanmaster.kz:34221 (user: integrator)
-  - Project:        /home/integrator/agent-hub/   (plain copy, NOT git)
-  - Runtime:        Docker container 'aiagent-hub' (nginx:alpine), 3000:80
-  - Public URL:     Cloudflare Quick-tunnel -> http://127.0.0.1:3000
-                    cached in /home/integrator/.webapp_url
-  - Tunnel log:     /home/integrator/agent-hub-tunnel.log
-                    (latest URL is the most recent `*.trycloudflare.com` in the log)
+Authentication
+  Prefers SSH key `~/.ssh/aiagent-deploy` (private). Falls back to SSH_PASS env var
+  only if the key is missing or rejected. Run `scripts/ssh-deploy-docker.py setup-key`
+  once to install the public key on the server; after that no password is needed.
 
-Usage:
-  # deploy local src/App.jsx + index.html, rebuild docker image, restart container
-  SSH_PASS='xxx' python scripts/ssh-deploy-docker.py deploy
+Server layout
+  - Host:       pm.lanmaster.kz:34221 (user: integrator)
+  - Project:    /home/integrator/agent-hub   (git clone of origin/master)
+  - Runtime:    Docker container 'aiagent-hub' (nginx:alpine), 3000:80
+  - Public URL: Cloudflare Quick-tunnel -> http://127.0.0.1:3000
+                cached in /home/integrator/.webapp_url, refreshed by user cron every minute
+  - Tunnel log: /home/integrator/agent-hub-tunnel.log
 
-  # just sync /home/integrator/.webapp_url with the latest URL in the tunnel log
-  SSH_PASS='xxx' python scripts/ssh-deploy-docker.py sync-url
-
-  # print the currently live public URL (the one serving our content)
-  SSH_PASS='xxx' python scripts/ssh-deploy-docker.py url
-
-  # non-destructive: show server state (container status, URL, disk etc)
-  SSH_PASS='xxx' python scripts/ssh-deploy-docker.py status
-
-Security notes:
-  - Never commit SSH_PASS.
-  - Prefer key-based auth; put the public key in ~integrator/.ssh/authorized_keys
-    on the server and then you can drop the SSH_PASS env var.
+Commands
+  setup-key      Install ~/.ssh/aiagent-deploy.pub on the server (needs SSH_PASS).
+  setup-url-cron Install a user cron job that keeps /home/integrator/.webapp_url
+                 in sync with the latest tunnel URL every minute.
+  deploy         git pull on the server, docker compose build, docker compose up -d.
+                 Use this after `git push origin master`.
+  status         Print container status, URL, HTTP health.
+  url            Print the current public URL (reads tunnel log).
+  sync-url       One-shot: rewrite ~/.webapp_url from the current tunnel log.
 """
 import io
 import os
-import posixpath
 import sys
 
 import paramiko
 
-# Force UTF-8 on Windows stdout so Cyrillic in output doesn't crash
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
@@ -45,22 +39,28 @@ REMOTE = "/home/integrator/agent-hub"
 TUNNEL_LOG = "/home/integrator/agent-hub-tunnel.log"
 URL_FILE = "/home/integrator/.webapp_url"
 
-# Files uploaded on `deploy`. Add more paths if your edits touch them.
-FILES = [
-    "src/App.jsx",
-    "index.html",
-]
-
-LOCAL_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+KEY_PATH = os.path.expanduser("~/.ssh/aiagent-deploy")
+PUB_PATH = KEY_PATH + ".pub"
 
 
-def connect():
-    p = os.environ.get("SSH_PASS")
-    if not p:
-        sys.exit("Set SSH_PASS env var (or configure key-based auth and edit this script).")
+def connect(prefer_password=False):
     c = paramiko.SSHClient()
     c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    c.connect(HOST, port=PORT, username=USER, password=p, timeout=20,
+    # Try key first unless explicitly asked for password (setup-key only)
+    if not prefer_password and os.path.isfile(KEY_PATH):
+        try:
+            c.connect(HOST, PORT, USER, key_filename=KEY_PATH, timeout=20,
+                      allow_agent=False, look_for_keys=False)
+            return c
+        except paramiko.AuthenticationException:
+            pass  # fall through to password
+    p = os.environ.get("SSH_PASS")
+    if not p:
+        sys.exit(
+            "Key auth failed and SSH_PASS is not set. "
+            "Run `setup-key` once with SSH_PASS to install the deploy key."
+        )
+    c.connect(HOST, PORT, USER, password=p, timeout=20,
               allow_agent=False, look_for_keys=False)
     return c
 
@@ -89,30 +89,65 @@ def run(c, cmd, show=True, timeout=600):
 
 
 def _latest_tunnel_url(c):
-    """Return the most recent *.trycloudflare.com URL in the tunnel log, or None."""
     rc, out, _ = run(
         c,
         f"grep -oE 'https://[a-z0-9-]+\\.trycloudflare\\.com' {TUNNEL_LOG} | tail -1",
         show=False,
     )
-    url = out.strip()
-    return url or None
+    return out.strip() or None
 
 
-def upload(c, files):
-    sftp = c.open_sftp()
+# ---- Commands ----
+
+def cmd_setup_key():
+    if not os.path.isfile(PUB_PATH):
+        sys.exit(
+            f"No public key at {PUB_PATH}. Generate one first:\n"
+            f"  ssh-keygen -t ed25519 -f {KEY_PATH} -N ''"
+        )
+    with open(PUB_PATH) as f:
+        pub = f.read().strip()
+    print(f"Using public key: {pub.split()[-1]}")
+    c = connect(prefer_password=True)  # must be password here
     try:
-        for rel in files:
-            local = os.path.join(LOCAL_ROOT, rel.replace("/", os.sep))
-            remote = posixpath.join(REMOTE, rel)
-            if not os.path.isfile(local):
-                print(f"SKIP (missing): {local}")
-                continue
-            run(c, f"mkdir -p {posixpath.dirname(remote)}", show=False)
-            print(f"UPLOAD {rel} ({os.path.getsize(local)} bytes)")
-            sftp.put(local, remote)
+        run(c, (
+            "mkdir -p ~/.ssh && chmod 700 ~/.ssh && "
+            "touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && "
+            f"grep -qxF '{pub}' ~/.ssh/authorized_keys || echo '{pub}' >> ~/.ssh/authorized_keys && "
+            "echo 'authorized_keys updated' && wc -l ~/.ssh/authorized_keys"
+        ))
     finally:
-        sftp.close()
+        c.close()
+    # Verify key-only works
+    c2 = connect(prefer_password=False)
+    run(c2, "whoami")
+    c2.close()
+    print("\n✓ Key auth works. SSH_PASS is no longer required.")
+
+
+def cmd_setup_url_cron():
+    """Install user-level cron that refreshes URL_FILE every minute."""
+    script = (
+        '#!/bin/sh\n'
+        f'URL=$(grep -oE "https://[a-z0-9-]+\\.trycloudflare\\.com" {TUNNEL_LOG} 2>/dev/null | tail -1)\n'
+        f'[ -n "$URL" ] && echo "$URL" > {URL_FILE}\n'
+    )
+    remote_sh = "/home/integrator/bin/refresh-webapp-url.sh"
+    cron_line = f"* * * * * {remote_sh} >/dev/null 2>&1"
+    c = connect()
+    try:
+        # Write script
+        run(c, f"mkdir -p /home/integrator/bin && cat > {remote_sh} <<'EOS'\n{script}EOS\nchmod +x {remote_sh} && {remote_sh} && cat {URL_FILE}")
+        # Install cron (idempotent: remove any previous line for this script first)
+        run(c, (
+            '('
+            f'crontab -l 2>/dev/null | grep -vF "{remote_sh}"; '
+            f'echo "{cron_line}"'
+            ') | crontab - && crontab -l'
+        ))
+    finally:
+        c.close()
+    print("\n✓ URL cron installed — .webapp_url refreshes every minute.")
 
 
 def cmd_status():
@@ -124,7 +159,8 @@ def cmd_status():
         print(f"\nLatest URL in log: {url or '(none)'}")
         if url:
             run(c, f"curl -sS -o /dev/null -w 'public HTTP %{{http_code}}\\n' {url}/")
-        run(c, "curl -sS -o /dev/null -w 'local HTTP %{http_code}\\n' http://localhost:3000/")
+        run(c, "curl -sS -o /dev/null -w 'local  HTTP %{http_code}\\n' http://localhost:3000/")
+        run(c, f"cd {REMOTE} && git log --oneline -3")
     finally:
         c.close()
 
@@ -156,30 +192,22 @@ def cmd_sync_url():
 def cmd_deploy():
     c = connect()
     try:
-        print("=== 1. Pre-check ===")
-        run(c, f"cd {REMOTE} && ls -1 Dockerfile docker-compose.yml")
-        run(c, "docker ps --filter name=aiagent-hub --format '{{.Names}} {{.Status}}'")
+        print("=== 1. git pull ===")
+        rc, _, _ = run(c, f"cd {REMOTE} && git fetch --quiet origin && git log --oneline HEAD..origin/master | head -20")
+        run(c, f"cd {REMOTE} && git reset --hard origin/master && git log --oneline -1")
 
-        print("\n=== 2. Upload changed files ===")
-        upload(c, FILES)
-
-        print("\n=== 3. Quick sanity check on uploaded source ===")
-        run(c, f"grep -c 'comboSearch\\|search-row' {REMOTE}/src/App.jsx")
-        run(c, f"grep '<title>' {REMOTE}/index.html")
-
-        print("\n=== 4. Rebuild Docker image ===")
+        print("\n=== 2. Rebuild Docker image ===")
         rc, _, _ = run(
-            c, f"cd {REMOTE} && docker compose build aiagent-hub 2>&1 | tail -30", timeout=900
+            c, f"cd {REMOTE} && docker compose build aiagent-hub 2>&1 | tail -20", timeout=900
         )
         if rc != 0:
             sys.exit("BUILD FAILED")
 
-        print("\n=== 5. Recreate container ===")
-        run(c, f"cd {REMOTE} && docker compose up -d aiagent-hub 2>&1 | tail -10")
+        print("\n=== 3. Recreate container ===")
+        run(c, f"cd {REMOTE} && docker compose up -d aiagent-hub 2>&1 | tail -8")
 
-        print("\n=== 6. Post-check ===")
+        print("\n=== 4. Post-check ===")
         run(c, "docker ps --filter name=aiagent-hub --format '{{.Names}} {{.Status}} {{.Ports}}'")
-        # Wait a sec for nginx to come up, then probe local & public
         run(c, "sleep 3 && curl -sS -o /dev/null -w 'local HTTP %{http_code}\\n' http://localhost:3000/")
         url = _latest_tunnel_url(c)
         if url:
@@ -191,6 +219,8 @@ def cmd_deploy():
 
 
 COMMANDS = {
+    "setup-key": cmd_setup_key,
+    "setup-url-cron": cmd_setup_url_cron,
     "deploy": cmd_deploy,
     "status": cmd_status,
     "url": cmd_url,

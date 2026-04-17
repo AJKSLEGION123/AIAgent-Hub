@@ -5,9 +5,9 @@ AIAgent-Hub runs in two places:
 | Target | Where | Trigger |
 | --- | --- | --- |
 | **Vercel** (`https://ai-agent-hub.net`) | managed by Vercel | automatic on `git push origin master` |
-| **Self-hosted** (Docker + Cloudflare Quick-tunnel) | `pm.lanmaster.kz` | manual via [`scripts/ssh-deploy-docker.py`](scripts/ssh-deploy-docker.py) |
+| **Self-hosted** (Docker + Cloudflare Quick-tunnel) | `pm.lanmaster.kz` | `scripts/ssh-deploy-docker.py deploy` after push |
 
-Both ultimately serve the same code, but the self-hosted copy is a flat snapshot (not a git clone), so it needs an explicit file-upload + rebuild step.
+Both serve the same code. Vercel auto-builds; self-hosted needs one command after a push.
 
 ---
 
@@ -17,102 +17,102 @@ Both ultimately serve the same code, but the self-hosted copy is a flat snapshot
 git push origin master
 ```
 
-Vercel picks up the push, runs `vite build` from `vercel.json`, and promotes to production. No other action needed.
+Vercel picks up the push, runs `vite build` from `vercel.json`, promotes to production in ~30 s.
 
 ---
 
-## 2. Self-hosted (manual)
+## 2. Self-hosted
 
-### Prerequisites
+### First-time setup (already done, documented for the record)
 
-```bash
-pip install paramiko          # Python SSH client used by the deploy script
-```
+Three things were put in place so deploys don't need a password and don't risk losing custom files:
 
-Set `SSH_PASS` for the `integrator` user. Prefer a key instead of a password in the long run (see §3).
+1. **SSH key-based auth.** A dedicated ed25519 keypair lives at `~/.ssh/aiagent-deploy` on the developer machine; the public half is in `~integrator/.ssh/authorized_keys` on the server. After that, no `SSH_PASS` is needed.
 
-### One-shot deploy
+   Reproduce on a new dev machine:
 
-```bash
-# build not required locally — the Dockerfile builds with vite inside the image
-SSH_PASS='***' python scripts/ssh-deploy-docker.py deploy
-```
+   ```bash
+   ssh-keygen -t ed25519 -f ~/.ssh/aiagent-deploy -N ""
+   SSH_PASS='…' python scripts/ssh-deploy-docker.py setup-key
+   ```
 
-What the script does:
+2. **Server directory is a git clone of `origin/master`.** `/home/integrator/agent-hub/` is a real `git` checkout (was a flat copy before 2026-04-17). Deploys are now `git reset --hard origin/master` + docker build. The previous flat copy is preserved at `/home/integrator/agent-hub.backup-<ts>/` and can be removed once you are happy with the new setup.
 
-1. **SFTP-upload** the files listed in `FILES` (default: `src/App.jsx`, `index.html`) to `/home/integrator/agent-hub/`.
-2. `docker compose build aiagent-hub` — rebuilds the `agent-hub-aiagent-hub:latest` image (Node 22 → vite build → nginx:alpine).
-3. `docker compose up -d aiagent-hub` — recreates the container on port `3000:80`.
-4. Probes `localhost:3000` and the current Cloudflare Quick-tunnel URL. Prints the live URL at the end.
+3. **Cron job keeps `.webapp_url` fresh.** A user-level cron runs every minute, greps the latest `*.trycloudflare.com` URL out of the tunnel log, and writes it to `/home/integrator/.webapp_url`. Installed via:
 
-If you edit more files than `src/App.jsx` / `index.html`, extend the `FILES` list at the top of the script.
+   ```bash
+   python scripts/ssh-deploy-docker.py setup-url-cron
+   ```
 
-### Other commands
+### Everyday workflow
 
 ```bash
-SSH_PASS='***' python scripts/ssh-deploy-docker.py status
-# → prints container status, cached URL in ~/.webapp_url, latest tunnel URL, HTTP probes
+# 1. make changes, commit
+git add -A && git commit -m "your change"
 
-SSH_PASS='***' python scripts/ssh-deploy-docker.py url
-# → prints just the current public URL (scrapes the last *.trycloudflare.com from the tunnel log)
+# 2. push to GitHub (Vercel starts its own build here)
+git push origin master
 
-SSH_PASS='***' python scripts/ssh-deploy-docker.py sync-url
-# → updates /home/integrator/.webapp_url to the current tunnel URL
-#   (run this if the cloudflared process restarted and the URL in the file is stale)
+# 3. deploy to self-hosted server (key auth, ~60–90 s)
+python scripts/ssh-deploy-docker.py deploy
 ```
 
-### Server layout
+What the `deploy` command does, in order:
 
-- **Host**: `pm.lanmaster.kz:34221`, user `integrator` (member of `sudo`, `docker`)
-- **Project**: `/home/integrator/agent-hub/` — flat copy, *not* a git repo. `git pull` will not work.
-- **Container**: `aiagent-hub` (image `agent-hub-aiagent-hub:latest`), restarts `unless-stopped`
-- **Published port**: `0.0.0.0:3000 → 80/tcp`
-- **Cloudflared**: `/home/integrator/bin/cloudflared tunnel --url http://127.0.0.1:3000` as PID 1286260
-- **Tunnel log**: `/home/integrator/agent-hub-tunnel.log` — first registered URL is the permanent one *for the lifetime of this cloudflared process*
-- **URL cache**: `/home/integrator/.webapp_url`
+1. `git fetch && git reset --hard origin/master` — snap the server dir to the latest.
+2. `docker compose build aiagent-hub` — new image from updated sources.
+3. `docker compose up -d aiagent-hub` — recreate the container.
+4. Probes `localhost:3000` and the current Cloudflare Quick-tunnel URL; prints the live URL.
+
+### Helper commands
+
+```bash
+python scripts/ssh-deploy-docker.py status       # container, URL, HTTP health, last 3 commits
+python scripts/ssh-deploy-docker.py url          # just the public URL
+python scripts/ssh-deploy-docker.py sync-url     # force-refresh ~/.webapp_url
+python scripts/ssh-deploy-docker.py setup-key    # (re)install deploy key; needs SSH_PASS
+python scripts/ssh-deploy-docker.py setup-url-cron  # reinstall the URL-refresh cron
+```
+
+### Server layout reference
+
+| Item | Path |
+| --- | --- |
+| Host | `pm.lanmaster.kz:34221`, user `integrator` |
+| Project | `/home/integrator/agent-hub` — git clone of origin/master |
+| Backup (pre-git conversion) | `/home/integrator/agent-hub.backup-20260417_151337` |
+| Container | `aiagent-hub` (image `agent-hub-aiagent-hub:latest`), restart `unless-stopped` |
+| Port | `0.0.0.0:3000 → 80/tcp` |
+| Cloudflared process | `/home/integrator/bin/cloudflared tunnel --url http://127.0.0.1:3000` |
+| Tunnel log | `/home/integrator/agent-hub-tunnel.log` |
+| URL cache | `/home/integrator/.webapp_url` |
+| URL refresh script | `/home/integrator/bin/refresh-webapp-url.sh` (every minute via cron) |
 
 ---
 
-## 3. Known issues & future work
+## 3. Open items the user still has to decide on
 
-### Cloudflare Quick-tunnel URL is not stable
+### Named Cloudflare tunnel (stable subdomain)
 
-`cloudflared tunnel --url …` gives a random `*.trycloudflare.com` subdomain that changes **every time** the process restarts. The user-visible effect is "the link I had yesterday is 404 today".
+`cloudflared tunnel --url …` generates a random `*.trycloudflare.com` subdomain that rotates every time the process restarts. The URL cron hides this from scripts, but a user who bookmarked yesterday's link will still hit 404 after a restart.
 
-**Mitigation today**: `.webapp_url` is the source of truth — `sync-url` command updates it from the tunnel log.
+**Permanent fix**: migrate to a named tunnel and attach a subdomain of a domain you own (the server already has a named tunnel `ais-lvg` serving `ais-lvg.com`). Needs Cloudflare account access:
 
-**Proper fix**: migrate to a named tunnel and attach a subdomain of a domain you own (e.g. `agent.ais-lvg.com`, since there is already a named tunnel `ais-lvg` on this server). Requires Cloudflare account access. Outline:
+1. Add hostname `agent.ais-lvg.com → http://127.0.0.1:3000` in `~/.cloudflared/config.yml`.
+2. Create DNS CNAME in Cloudflare dashboard: `agent.ais-lvg.com → <tunnel-id>.cfargotunnel.com`.
+3. Kill the quick-tunnel (`pkill -f 'tunnel --url'`) and restart `cloudflared tunnel run ais-lvg`.
 
-1. `cloudflared tunnel create aiagent-hub` (or add hostname to the existing `ais-lvg` tunnel in `~/.cloudflared/config.yml`)
-2. Add a DNS CNAME record in Cloudflare dashboard: `agent.ais-lvg.com → <tunnel-id>.cfargotunnel.com`
-3. Kill the `--url` quick-tunnel, restart the named tunnel
-4. Create a systemd unit so cloudflared restarts on reboot
+### Disable SSH password auth
 
-### SSH password auth
-
-Switch to key-based auth for deployments. From this repo, on a trusted machine:
-
-```bash
-ssh-keygen -t ed25519 -f ~/.ssh/aiagent-deploy -C deploy@aiagent-hub
-ssh-copy-id -i ~/.ssh/aiagent-deploy.pub -p 34221 integrator@pm.lanmaster.kz
-# then edit ssh-deploy-docker.py to use key_filename= instead of password=
-```
-
-After the key works, disable password auth server-side:
+Key auth works. Password auth is still enabled (for recovery). To disable, on the server:
 
 ```bash
 sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
 sudo systemctl reload ssh
 ```
 
-### Making the project a git checkout
+Do this **only** after confirming your key works from a fresh shell.
 
-Right now every deploy is a file-upload + docker rebuild. If the directory on the server became a git clone, deploys would become `git pull && docker compose up -d --build`. On the server:
+### Rotate or lock down the password
 
-```bash
-cd /home/integrator/agent-hub
-git init && git remote add origin https://github.com/AJKSLEGION123/AIAgent-Hub.git
-git fetch origin && git reset --hard origin/master
-```
-
-Then `scripts/ssh-deploy-docker.py` can be simplified to just run those commands over SSH.
+The password for `integrator` has been visible in recent chat history. Even with key auth, a compromised password lets someone in over the LAN or any path that bypasses the key check. Change it with `passwd` on the server.
