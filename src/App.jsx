@@ -57,7 +57,7 @@ const T = {
     all: "Барлық", byModel: "Модельдер", byRole: "Рөлдер", byType: "Тапсырмалар",
     roles: "Рөлдер", tasks: "Арнайы тапсырмалар",
     prompts: "промпт", models: "модель", categories: "категория",
-    r: {},
+    r: { "Feature Development":"Мүмкіндік әзірлеу","Guided Feature Dev":"Мүмкіндік (guided)","API Endpoints":"API эндпоинттер","UI Components":"UI компоненттер","Database & Migration":"ДБ және миграция","Authentication":"Аутентификация","PR Review":"PR шолу","Code Review":"Код шолу","Simplification":"Жеңілдету","TDD Development":"TDD әзірлеу","Test Suite":"Тест жинағы","E2E Tests":"E2E тесттер","Bug Fix":"Қателерді түзету","Error Handling":"Қателерді өңдеу","Deep Refactoring":"Рефакторинг","Dead Code Removal":"Өлі кодты жою","Security Audit":"Қауіпсіздік аудиті","Security Fix":"Қауіпсіздік түзету","Performance":"Өнімділік","CI/CD Pipeline":"CI/CD","Docker Setup":"Docker","Architecture Review":"Архитектура","Smart Commit":"Коммит","Commit + PR":"Коммит + PR","Auto Watch & Fix":"Авто-бақылау","Overnight Work":"Түнгі жұмыс","Full Project Setup":"Жоба баптау","Multi-Agent":"Мульти-агент","i18n":"Локализация","Accessibility":"Қолжетімділік","Dependency Update":"Тәуелділіктер","Production Deploy":"Деплой","README + CLAUDE.md":"Құжаттама","State Management":"State","Dark Mode":"Қараңғы тақырып","Form System":"Формалар","Search":"Іздеу","Data Table":"Кестелер","AI/LLM Integration":"AI/LLM","WebSocket":"WebSocket","Environment Config":"Env конфиг","Framework Migration":"FW миграция","Legacy Modernization":"Модернизация","Logging & Monitoring":"Логтау","Type Safety":"Типтеу","PWA":"PWA","Payments":"Төлемдер","Caching":"Кэштеу","Bundle Optimization":"Бандл","API Docs":"API Docs","Monorepo":"Монорепо","Email System":"Email","File Upload":"Файл жүктеу","Background Jobs":"Фондық тапсырмалар","GraphQL":"GraphQL","Storybook":"Storybook","Hotfix":"Хотфикс","Responsive Design":"Адаптивті","SEO":"SEO","RBAC Permissions":"RBAC/Рөлдер","Analytics":"Аналитика","Notifications":"Хабарламалар","Data Seeding":"Деректер сидинг","Infinite Scroll":"Шексіз скролл","Project Scaffolding":"Scaffold","Error & Loading States":"Error/Loading","Rate Limiting":"Rate Limiting","Image Optimization":"Сурет оптим.","Multi-Environment":"Multi-Env","Backup & Restore":"Сақтық көшірме","Loading Skeletons":"Скелетондар","Testing Strategy":"Тест стратегия","API Client Layer":"API клиент","Data Migration":"Деректер миграция","Admin Dashboard":"Админ-панель","Landing Page":"Лендинг","User Onboarding":"Онбординг","PDF Generation":"PDF генерация","CSV/Excel Import":"CSV импорт","Changelog & Releases":"Релиздер","Modal System":"Модалдар","Toast / Snackbar":"Toast","Tabs & Navigation":"Табтар","Breadcrumbs & Navigation":"Навигация","Design Tokens & Theme":"Дизайн-токендер","Drag & Drop":"Drag & Drop","Kanban Board":"Kanban","Chat / Messaging":"Чат","Map Integration":"Карта","Calendar / Scheduler":"Күнтізбе","Advanced Filters":"Сүзгілер","Settings Page":"Баптаулар","Multi-Step Wizard":"Wizard","Animations & Transitions":"Анимациялар","OAuth / Social Login":"OAuth","API Versioning":"API нұсқалау","Microservice Setup":"Микросервис","Webhook System":"Вебхуктар","CLI Tool":"CLI құрал","Two-Factor Auth":"2FA","FastAPI App":"FastAPI","Django App":"Django","Python Package":"Python пакет","Go REST API":"Go API","Tailwind CSS Setup":"Tailwind","Next.js App Router":"Next.js","Code Review Checklist":"PR чеклист","Production Debugging":"Prod дебаг","Performance Audit":"Perf аудит","Database Optimization":"ДБ оптим.","Rust App":"Rust","Vue 3 App":"Vue 3","SvelteKit App":"SvelteKit","tRPC Setup":"tRPC","React Testing":"React тесттер","Supabase Integration":"Supabase","Docker Optimization":"Docker оптим.","Monitoring Stack":"Мониторинг","Terraform IaC":"Terraform","Kubernetes Deploy":"Kubernetes","Redis Integration":"Redis","MongoDB Setup":"MongoDB","PostgreSQL Advanced":"PostgreSQL","React Native App":"React Native","RAG Pipeline":"RAG","Multi-Tenancy":"Multi-tenant","Billing & Subscriptions":"Биллинг","Nginx Configuration":"Nginx","SSL / HTTPS Setup":"SSL/HTTPS","Message Queue":"Кезектер","Event-Driven Architecture":"Event-Driven","GraphQL Subscriptions":"GQL Subscriptions","CQRS Pattern":"CQRS","Rich Text Editor":"Редактор","Data Visualization":"Визуализация","Advanced Table Features":"Кестелер Pro","Contract Testing":"Contract тесттер","Load Testing":"Жүктеме тесті","CORS Configuration":"CORS","Content Security Policy":"CSP","Dev Container":"Dev Container","Turborepo Optimization":"Turborepo","Feature Flags":"Feature Flags","Retry & Circuit Breaker":"Retry/CB","Visual Regression Testing":"Visual Regression","API Gateway":"API Gateway","CI/CD Advanced":"CI/CD Pro","OpenAPI Spec":"OpenAPI","Error Tracking":"Error Tracking","Caching Patterns":"Кэш паттерндер","Registry & Data Audit":"Реестр аудиті","Auth System":"Auth жүйесі","Dependency Updater":"Тәуелділік жаңарту" },
     teamSetup: "Толық команда орнату", teamSetupDesc: "Бір скриптті көшіріңіз — worktree, үйлестіру қалталарын, конфигтерді жасайды",
     configs: "Конфиг файлдар", configsDesc: "CLAUDE.md, GEMINI.md, AGENTS.md үлгілері",
     combos: "Ұсынылған командалар", combosDesc: "Түрлі сценарийлерге дайын агент комбинациялары",
@@ -138,6 +138,8 @@ button:focus-visible{outline:2px solid #6366f1;outline-offset:2px}
 .skeleton{background:linear-gradient(90deg,#1a1a28 25%,#252538 50%,#1a1a28 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
 [data-theme="light"] .skeleton{background:linear-gradient(90deg,#e8e8ef 25%,#d8d8e4 50%,#e8e8ef 75%);background-size:200% 100%}
 .card-enter{animation:fadeIn .2s ease;will-change:opacity,transform}
+.combo-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.15)}
+[id^="card-"]:hover{box-shadow:0 2px 12px rgba(0,0,0,.1)}
 .body-enter{animation:slideDown .25s ease;overflow:hidden;will-change:max-height,opacity}
 .toast{position:fixed;top:12px;right:12px;z-index:999;padding:6px 14px;border-radius:6px;font-size:10px;font-weight:600;pointer-events:none;animation:toastIn .15s ease,toastOut .2s ease 1.2s forwards;will-change:transform,opacity;max-width:200px}
 .sticky-bar{position:sticky;top:0;z-index:10;padding:12px 0 8px;margin:0 -16px;padding-left:16px;padding-right:16px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
@@ -148,6 +150,11 @@ button:focus-visible{outline:2px solid #6366f1;outline-offset:2px}
   .gap-mobile{gap:4px!important}
   .text-sm-mobile{font-size:10px!important}
   .pad-mobile{padding:8px 10px!important}
+  .search-row{flex-direction:column!important;gap:8px!important}
+  .search-row>div:last-child{min-width:0!important;width:100%!important}
+  .steps-grid{grid-template-columns:1fr 1fr!important}
+  .mobile-bottom-nav{display:flex!important}
+  #main-content{padding-bottom:120px!important}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:0s!important;transition-duration:0s!important}}
 .skip-link{position:absolute;top:-40px;left:0;background:#6366f1;color:#fff;padding:8px 16px;z-index:100;border-radius:0 0 8px 0;font-size:12px;text-decoration:none}
@@ -162,7 +169,7 @@ select{-webkit-appearance:none;appearance:none;background-image:url("data:image/
   .sticky-bar,.skip-link,button,select,.toast{display:none!important}
   [data-theme]{background:#fff!important;color:#000!important}
   pre{border:1px solid #ccc!important;background:#f5f5f5!important;color:#333!important;page-break-inside:avoid}
-  [id^="card-"]{border:1px solid #ddd!important;background:#fff!important;page-break-inside:avoid;border-left:3px solid #999!important}
+  [id^="card-"]{border-top:1px solid #ddd!important;border-right:1px solid #ddd!important;border-bottom:1px solid #ddd!important;border-left:3px solid #999!important;background:#fff!important;page-break-inside:avoid}
   h1{font-size:24px!important;color:#000!important}
 }
 [id^="card-"]:focus{outline:2px solid #6366f1;outline-offset:-2px;border-radius:12px}
@@ -304,6 +311,9 @@ function AgentHub({ data, loadTime }) {
   const [fv, setFv] = useState("all");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [comboSearch, setComboSearch] = useState("");
+  const [cheatSearch, setCheatSearch] = useState("");
+  const [quickSearch, setQuickSearch] = useState("");
   const [favs, setFavs] = useState({});
   const [section, setSection] = useState(() => {
     try { const h = location.hash.slice(1); return ["prompts","combos","cheat","quick","setup"].includes(h) ? h : "prompts"; } catch { return "prompts"; }
@@ -464,12 +474,20 @@ function AgentHub({ data, loadTime }) {
   // ── Hash routing (task 026, 077) ──
   useEffect(() => {
     const h = location.hash.slice(1);
-    // Task 77: Handle prompt deep links
-    if (h.startsWith("prompt-")) {
-      const pid = h.replace("prompt-", "");
+    // Task 77: Handle prompt deep links (#prompt-ID or direct #ID)
+    const pid = h.startsWith("prompt-") ? h.replace("prompt-", "") : null;
+    const directId = !pid && h && !["prompts","combos","cheat","quick","setup"].includes(h) ? h : null;
+    const targetId = pid || directId;
+    if (targetId) {
       setSection("prompts");
-      setExpanded(e => ({ ...e, [pid]: true }));
-      setTimeout(() => document.getElementById(`card-${pid}`)?.scrollIntoView({behavior:"smooth",block:"center"}), 300);
+      setExpanded(e => ({ ...e, [targetId]: true }));
+      setShowCount(999);
+      const tryScroll = (attempts = 0) => {
+        const el = document.getElementById(`card-${targetId}`);
+        if (el) { el.scrollIntoView({behavior:"smooth",block:"center"}); el.style.outline="2px solid #6366f1"; setTimeout(()=>{el.style.outline=""},2000); }
+        else if (attempts < 8) setTimeout(() => tryScroll(attempts + 1), 200);
+      };
+      setTimeout(() => tryScroll(), 300);
     } else {
       try { history.replaceState(null, "", "#" + section); } catch {}
     }
@@ -952,7 +970,7 @@ function AgentHub({ data, loadTime }) {
             <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} title={`${theme==="dark"?"Light":"Dark"} (T)`} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:15, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>{theme==="dark"?"☀":"☾"}</button>
             <button onClick={nextLang} aria-label={`Switch language to ${langLabel}`} style={{ height:36, padding:"0 12px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, fontWeight:700, outline:"none", transition:"all .15s" }}>{langLabel}</button>
             {/* Feat 9: Font size */}
-            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" style={{ height:36, padding:"0 8px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, outline:"none" }}>
+            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" className="hide-mobile" style={{ height:36, padding:"0 8px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, outline:"none", WebkitAppearance:"none", MozAppearance:"none", appearance:"none", textAlign:"center", width:36 }}>
               <option value={85}>A-</option>
               <option value={100}>A</option>
               <option value={115}>A+</option>
@@ -966,8 +984,8 @@ function AgentHub({ data, loadTime }) {
           <div style={{ fontSize:14, fontWeight:800, color:"#6366f1", marginBottom:8 }}>👋 {lang==="ru"?"Добро пожаловать в AIAgent-Hub!":"Welcome to AIAgent-Hub!"}</div>
           <div style={{ fontSize:11, color:c.mut, lineHeight:1.8 }}>
             {lang==="ru"
-              ? "Здесь 132+ промтов для автономных AI-агентов. Выбери промт → скопируй → вставь в терминал агента. Нажми ? для горячих клавиш."
-              : "132+ prompts for autonomous AI agents. Pick a prompt → copy → paste into agent terminal. Press ? for keyboard shortcuts."}
+              ? `${stats.total} промтов для автономных AI-агентов. Выбери промт → скопируй → вставь в терминал агента. Нажми ? для горячих клавиш.`
+              : `${stats.total} prompts for autonomous AI agents. Pick a prompt → copy → paste into agent terminal. Press ? for keyboard shortcuts.`}
           </div>
         </div>}
 
@@ -1318,7 +1336,7 @@ function AgentHub({ data, loadTime }) {
             <div key={p.id} id={`card-${p.id}`} tabIndex={0} className={isO?"":"card-enter"}
               onClick={()=>{ if(quickCopy && !isO){ cp(p.id,p.text); return; } }}
               onDoubleClick={()=>cp(p.id,p.text)} style={{
-              marginBottom:8, border:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#8b5cf650":debouncedSearch?p.ac+"20":c.brd}`, borderRadius:12,
+              marginBottom:8, borderTop:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#8b5cf650":debouncedSearch?p.ac+"20":c.brd}`, borderRight:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#8b5cf650":debouncedSearch?p.ac+"20":c.brd}`, borderBottom:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#8b5cf650":debouncedSearch?p.ac+"20":c.brd}`, borderRadius:12,
               background:isO?c.cardH:c.card, overflow:"hidden", transition:"all .2s",
               boxShadow:isO?`0 0 20px ${p.ac}08`:"none",
               borderLeft:`3px solid ${MC[p.mk]}`, contain:"content",
@@ -1350,7 +1368,7 @@ function AgentHub({ data, loadTime }) {
                   {/* Task 69: Compare checkbox */}
                   {compareMode && <button onClick={(e)=>{e.stopPropagation();setCompareIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} style={{ width:24, height:24, borderRadius:6, border:`1px solid ${compareIds.includes(p.id)?"#8b5cf6":c.brd}`, background:compareIds.includes(p.id)?"#8b5cf6":"transparent", color:compareIds.includes(p.id)?"#fff":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center" }}>{compareIds.includes(p.id)?"✓":""}</button>}
                   <button onClick={(e)=>{e.stopPropagation();setPinnedIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} aria-label="Pin" title={lang==="ru"?"Закрепить наверху":"Pin to top"} className="hide-mobile" style={{ width:30, height:30, borderRadius:7, border:`1px solid ${pinnedIds.includes(p.id)?"#6366f140":c.brd}`, background:pinnedIds.includes(p.id)?"#6366f112":"transparent", color:pinnedIds.includes(p.id)?"#6366f1":c.dim, cursor:"pointer", outline:"none", fontSize:12, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{pinnedIds.includes(p.id)?"📌":"📍"}</button>
-                  <button onClick={(e)=>{e.stopPropagation();toggleFav(p.id)}} aria-label={favs[p.id]?"Убрать":"Избранное"} aria-pressed={!!favs[p.id]} style={{ width:30, height:30, borderRadius:7, border:`1px solid ${favs[p.id]?"#eab30840":c.brd}`, background:favs[p.id]?"#eab30812":"transparent", color:favs[p.id]?"#eab308":c.dim, cursor:"pointer", outline:"none", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{favs[p.id]?"★":"☆"}</button>
+                  <button onClick={(e)=>{e.stopPropagation();toggleFav(p.id)}} aria-label={favs[p.id]?(lang==="ru"?"Убрать":lang==="kk"?"Алып тастау":"Remove"):(lang==="ru"?"Избранное":lang==="kk"?"Таңдаулы":"Favorite")} aria-pressed={!!favs[p.id]} style={{ width:30, height:30, borderRadius:7, border:`1px solid ${favs[p.id]?"#eab30840":c.brd}`, background:favs[p.id]?"#eab30812":"transparent", color:favs[p.id]?"#eab308":c.dim, cursor:"pointer", outline:"none", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{favs[p.id]?"★":"☆"}</button>
                   <button onClick={(e)=>{e.stopPropagation();toggle(p.id)}} aria-expanded={isO} className="hide-mobile" style={{ padding:"5px 11px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:7, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>{isO ? t.hide : t.show}</button>
                   <CBtn id={p.id} txt={compactMode && p.compact ? p.compact : p.text} cl={p.ac} sm copied={copied} cp={cp} t={t} bg={c.bg} />
                   {/* Cycle 6: Copy as markdown */}
@@ -1448,7 +1466,13 @@ function AgentHub({ data, loadTime }) {
 
         {/* ════════════════ SECTION: COMBOS ════════════════ */}
         {section === "combos" && <div role="tabpanel" id="panel-combos">
-        <div style={{ fontSize:10, color:c.dim, marginBottom:14, paddingLeft:4 }}>{t.combosDesc}</div>
+        <div className="search-row" style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
+          <div style={{ fontSize:10, color:c.dim, flex:1 }}>{t.combosDesc}</div>
+          <div style={{ position:"relative", minWidth:200 }}>
+            <input type="search" value={comboSearch} onChange={e=>setComboSearch(e.target.value)} placeholder={lang==="ru"?"Поиск комбо...":lang==="kk"?"Комбо іздеу...":"Search combos..."} style={{ width:"100%", height:32, padding:"0 30px 0 10px", fontSize:11, fontFamily:font, borderRadius:8, border:`1px solid ${c.brd}`, background:c.surf, color:c.text, outline:"none", transition:"border .15s" }} />
+            {comboSearch && <button onClick={()=>setComboSearch("")} style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:12, padding:0, lineHeight:1 }}>×</button>}
+          </div>
+        </div>
         
         {/* Task 70: Workflow Sequencer */}
         <details style={{ marginBottom:16 }}>
@@ -1542,16 +1566,17 @@ function AgentHub({ data, loadTime }) {
           })}
         </div>
 
-        {debouncedSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{debouncedSearch}"</div>}
+        {comboSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{comboSearch}" — {(COMBOS[lang]||COMBOS.ru).filter(cb => (cb.name + " " + cb.desc + " " + (cb.ids||[]).map(id=>{const p=pGet(id);return p?(t.r[p.role]||p.role):""}).join(" ")).toLowerCase().includes(comboSearch.toLowerCase())).length} / {(COMBOS[lang]||COMBOS.ru).length}</div>}
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(250px, 1fr))", gap:8 }}>
-          {(COMBOS[lang]||COMBOS.ru).filter(cb => !debouncedSearch || (cb.name + " " + cb.desc).toLowerCase().includes(debouncedSearch.toLowerCase())).map((cb, i) => {
+          {(COMBOS[lang]||COMBOS.ru).filter(cb => !comboSearch || (cb.name + " " + cb.desc + " " + (cb.ids||[]).map(id=>{const p=pGet(id);return p?(t.r[p.role]||p.role):""}).join(" ")).toLowerCase().includes(comboSearch.toLowerCase())).map((cb, i) => {
             // Task 71: detect conflicts (multiple prompts for same role)
             const agents = (cb.ids||[]).map(id=>pGet(id)).filter(Boolean);
             const roles = agents.map(a=>a.role);
             const hasConflict = roles.length !== new Set(roles).size;
             return (
-            <div key={i} className="card-enter" style={{
-              padding:"14px 16px", borderRadius:10, border:`1px solid ${c.brd}`,
+            <div key={i} className="card-enter combo-card" style={{
+              padding:"14px 16px", borderRadius:10, borderTop:`1px solid ${c.brd}`,
+              borderRight:`1px solid ${c.brd}`, borderBottom:`1px solid ${c.brd}`,
               background:c.card, cursor:"pointer", transition:"all .15s",
               borderLeft:`3px solid ${cb.color}`, animationDelay:`${i*30}ms`,
             }}>
@@ -1596,10 +1621,17 @@ function AgentHub({ data, loadTime }) {
         {/* ════════════════ SECTION: CHEAT SHEETS ════════════════ */}
         {section === "cheat" && <div role="tabpanel" id="panel-cheat">
         {/* Cycle 20: Search in cheat sheets */}
-        {debouncedSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{debouncedSearch}"</div>}
+        <div className="search-row" style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
+          <div style={{ fontSize:10, color:c.dim, flex:1 }}>{lang==="ru"?"Быстрые команды и сниппеты":"Quick commands and snippets"}</div>
+          <div style={{ position:"relative", minWidth:200 }}>
+            <input type="search" value={cheatSearch} onChange={e=>setCheatSearch(e.target.value)} placeholder={lang==="ru"?"Поиск команд...":lang==="kk"?"Команда іздеу...":"Search commands..."} style={{ width:"100%", height:32, padding:"0 30px 0 10px", fontSize:11, fontFamily:font, borderRadius:8, border:`1px solid ${c.brd}`, background:c.surf, color:c.text, outline:"none", transition:"border .15s" }} />
+            {cheatSearch && <button onClick={()=>setCheatSearch("")} style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:12, padding:0, lineHeight:1 }}>×</button>}
+          </div>
+        </div>
+        {cheatSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{cheatSearch}"</div>}
         {Object.entries(CHEAT).map(([key, sheet]) => {
-          const filteredCmds = debouncedSearch ? sheet.cmds.filter(c2 => (c2.cmd + " " + c2.desc).toLowerCase().includes(debouncedSearch.toLowerCase())) : sheet.cmds;
-          if (debouncedSearch && filteredCmds.length === 0) return null;
+          const filteredCmds = cheatSearch ? sheet.cmds.filter(c2 => (c2.cmd + " " + c2.desc).toLowerCase().includes(cheatSearch.toLowerCase())) : sheet.cmds;
+          if (cheatSearch && filteredCmds.length === 0) return null;
           return (
           <div key={key} style={{ marginBottom:16 }}>
             <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
@@ -1628,11 +1660,18 @@ function AgentHub({ data, loadTime }) {
 
         {/* ════════════════ SECTION: QUICK COMMANDS ════════════════ */}
         {section === "quick" && <div role="tabpanel" id="panel-quick">
-        {debouncedSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{debouncedSearch}"</div>}
+        <div className="search-row" style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
+          <div style={{ flex:1 }} />
+          <div style={{ position:"relative", minWidth:200 }}>
+            <input type="search" value={quickSearch} onChange={e=>setQuickSearch(e.target.value)} placeholder={lang==="ru"?"Поиск CLI команд...":lang==="kk"?"CLI команда іздеу...":"Search CLI commands..."} style={{ width:"100%", height:32, padding:"0 30px 0 10px", fontSize:11, fontFamily:font, borderRadius:8, border:`1px solid ${c.brd}`, background:c.surf, color:c.text, outline:"none", transition:"border .15s" }} />
+            {quickSearch && <button onClick={()=>setQuickSearch("")} style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:12, padding:0, lineHeight:1 }}>×</button>}
+          </div>
+        </div>
+        {quickSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{quickSearch}"</div>}
         {(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).map((cat, ci) => {
           const cmds = cat.cmds || [];
-          const filteredQC = debouncedSearch ? cmds.filter(cmd => (cmd.cmd + " " + cmd.label).toLowerCase().includes(debouncedSearch.toLowerCase())) : cmds;
-          if (debouncedSearch && filteredQC.length === 0) return null;
+          const filteredQC = quickSearch ? cmds.filter(cmd => (cmd.cmd + " " + cmd.label).toLowerCase().includes(quickSearch.toLowerCase())) : cmds;
+          if (quickSearch && filteredQC.length === 0) return null;
           return (
           <div key={ci} style={{ marginBottom:20 }}>
             <div style={{ fontSize:11, fontWeight:700, color:c.text, marginBottom:8, paddingLeft:4, letterSpacing:1 }}>{cat.cat} <span style={{ fontSize:9, color:c.dim, fontWeight:400 }}>({filteredQC.length})</span></div>
@@ -1677,7 +1716,7 @@ function AgentHub({ data, loadTime }) {
 
         {/* Setup commands */}
         <div style={{ marginBottom:6 }}>
-          <div style={{ fontSize:9, letterSpacing:4, color:c.dim, textTransform:"uppercase", marginBottom:10, paddingLeft:4 }}>{lang==="ru"?"Настройка и запуск":"Setup & Launch"}</div>
+          <div style={{ fontSize:10, letterSpacing:3, color:c.mut, textTransform:"uppercase", marginBottom:10, paddingLeft:4, fontWeight:600, borderBottom:`1px solid ${c.brd}`, paddingBottom:8 }}>{lang==="ru"?"Настройка и запуск":"Setup & Launch"}</div>
         </div>
         {[
           { id:"git", icon:"📂", title:t.setup, desc:t.setupDesc, text:GIT_SETUP },
@@ -1726,7 +1765,7 @@ function AgentHub({ data, loadTime }) {
 
         {/* Config files */}
         <div style={{ marginTop:20, marginBottom:6 }}>
-          <div style={{ fontSize:9, letterSpacing:4, color:c.dim, textTransform:"uppercase", marginBottom:10, paddingLeft:4 }}>{t.configs}</div>
+          <div style={{ fontSize:10, letterSpacing:3, color:c.mut, textTransform:"uppercase", marginBottom:10, paddingLeft:4, fontWeight:600, borderBottom:`1px solid ${c.brd}`, paddingBottom:8 }}>{t.configs}</div>
         </div>
         <div style={{ fontSize:10, color:c.dim, marginBottom:10, paddingLeft:4 }}>{t.configsDesc}</div>
         {CONFIGS.map(cfg => {
@@ -1798,8 +1837,25 @@ function AgentHub({ data, loadTime }) {
             </div>
           </div>
           
-          <div style={{ fontSize:10, fontWeight:700, color:c.mut, marginBottom:6, letterSpacing:1, textTransform:"uppercase" }}>{t.tipTitle}</div>
-          <div style={{ fontSize:11, color:c.dim, lineHeight:1.8, marginBottom:12 }}>{t.tip}</div>
+          <div style={{ fontSize:10, fontWeight:700, color:c.mut, marginBottom:8, letterSpacing:1, textTransform:"uppercase" }}>{t.tipTitle}</div>
+          <div className="steps-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px, 1fr))", gap:6, marginBottom:12 }}>
+            {(lang==="ru"?[
+              {n:"1", t:"Выбери промт", d:"для своей задачи"},
+              {n:"2", t:"Скопируй команду", d:"/ralph-loop, /feature-dev..."},
+              {n:"3", t:"Вставь в CLI", d:"Claude Code терминал"},
+              {n:"4", t:"Агент работает", d:"автономно изучит проект"},
+            ]:[
+              {n:"1", t:"Pick a prompt", d:"for your task"},
+              {n:"2", t:"Copy command", d:"/ralph-loop, /feature-dev..."},
+              {n:"3", t:"Paste in CLI", d:"Claude Code terminal"},
+              {n:"4", t:"Agent works", d:"autonomously explores project"},
+            ]).map(s => (
+              <div key={s.n} style={{ display:"flex", gap:8, alignItems:"flex-start", padding:"8px 10px", borderRadius:8, background:c.surf, border:`1px solid ${c.brd}` }}>
+                <div style={{ width:20, height:20, borderRadius:6, background:"#6366f115", color:"#6366f1", fontSize:10, fontWeight:800, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{s.n}</div>
+                <div><div style={{ fontSize:10, fontWeight:700, color:c.text }}>{s.t}</div><div style={{ fontSize:9, color:c.dim }}>{s.d}</div></div>
+              </div>
+            ))}
+          </div>
           
           {/* Task 068: Changelog */}
           <details style={{ marginTop:8 }}>
@@ -1835,7 +1891,8 @@ function AgentHub({ data, loadTime }) {
                   { x:120, v:"v3", n:34, d:"Jan 2025" },
                   { x:230, v:"v5", n:100, d:"Feb 2025" },
                   { x:340, v:"v6", n:127, d:"Mar 2025" },
-                  { x:480, v:"v7", n:132, d:"Mar 2025" },
+                  { x:400, v:"v7", n:132, d:"Mar 2025" },
+                  { x:520, v:"v9.1", n:188, d:"Apr 2025" },
                 ].map((p,i,a) => (
                   <g key={i}>
                     {i > 0 && <line x1={a[i-1].x+24} y1={40} x2={p.x} y2={40} stroke={c.brd} strokeWidth={2} />}
