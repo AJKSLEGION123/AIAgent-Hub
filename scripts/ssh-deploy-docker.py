@@ -14,14 +14,16 @@ Server layout
   - Tunnel log: /home/integrator/agent-hub-tunnel.log
 
 Commands
-  setup-key      Install ~/.ssh/aiagent-deploy.pub on the server (needs SSH_PASS).
-  setup-url-cron Install a user cron job that keeps /home/integrator/.webapp_url
-                 in sync with the latest tunnel URL every minute.
-  deploy         git pull on the server, docker compose build, docker compose up -d.
-                 Use this after `git push origin master`.
-  status         Print container status, URL, HTTP health.
-  url            Print the current public URL (reads tunnel log).
-  sync-url       One-shot: rewrite ~/.webapp_url from the current tunnel log.
+  setup-key       Install ~/.ssh/aiagent-deploy.pub on the server (needs SSH_PASS).
+  setup-url-cron  Install a user cron that syncs /home/integrator/.webapp_url
+                  with the latest tunnel URL every minute.
+  deploy          git pull on the server, docker compose build, up -d, smoke test.
+                  Auto-rolls back if build or smoke test fails. Use after `git push`.
+                  Pass --no-rollback to disable auto-rollback for debugging.
+  rollback [SHA]  Roll server HEAD back to SHA (or HEAD~1 if omitted), rebuild.
+  status          Print container status, URL, HTTP health.
+  url             Print the current public URL (reads tunnel log).
+  sync-url        One-shot: rewrite ~/.webapp_url from the current tunnel log.
 """
 import io
 import os
@@ -189,11 +191,42 @@ def cmd_sync_url():
         c.close()
 
 
+def _smoke_test(c):
+    """Return (ok, summary). Fails if local HTTP != 200, no <title>, or no JS asset link.
+
+    Runs against localhost:3000 so it's not affected by a flaky tunnel."""
+    rc, out, _ = run(
+        c,
+        "curl -sS --max-time 10 -w '\\n---HTTP %{http_code}' http://localhost:3000/ | tail -30",
+        show=False,
+    )
+    html = out
+    problems = []
+    if "---HTTP 200" not in html:
+        problems.append("non-200 response")
+    if "<title>" not in html:
+        problems.append("no <title>")
+    if "/assets/index-" not in html:
+        problems.append("no JS asset link")
+    if "AIAgent-Hub" not in html:
+        problems.append("title does not contain AIAgent-Hub")
+    ok = not problems
+    summary = "OK" if ok else f"FAILED: {', '.join(problems)}"
+    print(f"\n[smoke] {summary}")
+    return ok, summary
+
+
 def cmd_deploy():
     c = connect()
+    auto_rollback = "--no-rollback" not in sys.argv
     try:
         print("=== 1. git pull ===")
-        rc, _, _ = run(c, f"cd {REMOTE} && git fetch --quiet origin && git log --oneline HEAD..origin/master | head -20")
+        run(c, f"cd {REMOTE} && git fetch --quiet origin && git log --oneline HEAD..origin/master | head -20")
+        # Remember current HEAD so we can roll back
+        _, prev_head, _ = run(c, f"cd {REMOTE} && git rev-parse HEAD", show=False)
+        prev_head = prev_head.strip()
+        print(f"[rollback target] HEAD before deploy: {prev_head[:10]}")
+
         run(c, f"cd {REMOTE} && git reset --hard origin/master && git log --oneline -1")
 
         print("\n=== 2. Rebuild Docker image ===")
@@ -201,14 +234,28 @@ def cmd_deploy():
             c, f"cd {REMOTE} && docker compose build aiagent-hub 2>&1 | tail -20", timeout=900
         )
         if rc != 0:
+            if auto_rollback and prev_head:
+                print("\n[auto-rollback] Build failed, resetting git to previous HEAD.")
+                run(c, f"cd {REMOTE} && git reset --hard {prev_head}")
             sys.exit("BUILD FAILED")
 
         print("\n=== 3. Recreate container ===")
         run(c, f"cd {REMOTE} && docker compose up -d aiagent-hub 2>&1 | tail -8")
 
-        print("\n=== 4. Post-check ===")
+        print("\n=== 4. Post-check + smoke test ===")
         run(c, "docker ps --filter name=aiagent-hub --format '{{.Names}} {{.Status}} {{.Ports}}'")
         run(c, "sleep 3 && curl -sS -o /dev/null -w 'local HTTP %{http_code}\\n' http://localhost:3000/")
+        ok, summary = _smoke_test(c)
+        if not ok:
+            if auto_rollback and prev_head:
+                print("\n[auto-rollback] Smoke test failed, rolling back…")
+                run(c, f"cd {REMOTE} && git reset --hard {prev_head}")
+                run(c, f"cd {REMOTE} && docker compose build aiagent-hub 2>&1 | tail -10", timeout=600)
+                run(c, f"cd {REMOTE} && docker compose up -d aiagent-hub 2>&1 | tail -6")
+                ok2, summary2 = _smoke_test(c)
+                sys.exit(f"Deploy failed smoke test ({summary}); rolled back: {summary2}")
+            sys.exit(f"Deploy failed smoke test ({summary}); auto-rollback disabled")
+
         url = _latest_tunnel_url(c)
         if url:
             run(c, f"curl -sS -o /dev/null -w 'public HTTP %{{http_code}}\\n' {url}/")
@@ -218,10 +265,44 @@ def cmd_deploy():
         c.close()
 
 
+def cmd_rollback():
+    """Roll server git HEAD back one commit (or to explicit SHA passed as arg), rebuild."""
+    target = sys.argv[2] if len(sys.argv) > 2 else None
+    c = connect()
+    try:
+        print("=== Current state ===")
+        run(c, f"cd {REMOTE} && git log --oneline -5")
+
+        if not target:
+            _, out, _ = run(c, f"cd {REMOTE} && git rev-parse HEAD~1", show=False)
+            target = out.strip()
+            if not target:
+                sys.exit("Could not determine previous commit")
+
+        print(f"\n=== Rolling back to {target} ===")
+        run(c, f"cd {REMOTE} && git reset --hard {target} && git log --oneline -1")
+
+        print("\n=== Rebuild + restart ===")
+        rc, _, _ = run(c, f"cd {REMOTE} && docker compose build aiagent-hub 2>&1 | tail -15", timeout=900)
+        if rc != 0:
+            sys.exit("ROLLBACK BUILD FAILED")
+        run(c, f"cd {REMOTE} && docker compose up -d aiagent-hub 2>&1 | tail -6")
+
+        print("\n=== Post-check ===")
+        run(c, "sleep 3 && curl -sS -o /dev/null -w 'local HTTP %{http_code}\\n' http://localhost:3000/")
+        ok, summary = _smoke_test(c)
+        if not ok:
+            sys.exit(f"Rollback smoke test failed: {summary}")
+        print("\n✓ Rolled back successfully.")
+    finally:
+        c.close()
+
+
 COMMANDS = {
     "setup-key": cmd_setup_key,
     "setup-url-cron": cmd_setup_url_cron,
     "deploy": cmd_deploy,
+    "rollback": cmd_rollback,
     "status": cmd_status,
     "url": cmd_url,
     "sync-url": cmd_sync_url,
