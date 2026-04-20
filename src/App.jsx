@@ -135,7 +135,10 @@ const CSS = `
 .masthead::before,.masthead::after{content:"";display:block;height:3px}
 .masthead::before{border-top:1px solid currentColor;border-bottom:1px solid currentColor;opacity:.35;margin-bottom:28px}
 .masthead::after{border-top:1px solid currentColor;border-bottom:1px solid currentColor;opacity:.35;margin-top:24px}
-.icon-btn{width:36px;height:36px;border-radius:0;border:1px solid;background:transparent;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;outline:none;transition:all .2s;font-family:'JetBrains Mono',monospace}
+.nav-btn{height:32px;min-width:32px;padding:0 10px;border-radius:0;border:1px solid;background:transparent;cursor:pointer;font-size:10px;letter-spacing:1.8px;text-transform:uppercase;font-weight:600;display:inline-flex;align-items:center;justify-content:center;outline:none;transition:background .18s ease,border-color .18s ease,color .18s ease;font-family:'JetBrains Mono',monospace;white-space:nowrap;position:relative}
+.nav-btn:hover{background:rgba(232,106,42,.08)}
+.nav-btn .kbd-hint{position:absolute;top:-7px;right:4px;font-size:7px;letter-spacing:1px;opacity:.55;font-weight:500}
+.nav-btn .dot{position:absolute;top:-4px;right:-4px;min-width:14px;height:14px;padding:0 4px;border-radius:0;font-size:8px;font-weight:700;letter-spacing:0;display:flex;align-items:center;justify-content:center;line-height:1}
 .card-editorial{position:relative;padding:18px 20px 16px;border:0;border-top:1px solid;transition:background .2s ease,border-color .2s ease}
 .card-editorial::before{content:attr(data-idx);position:absolute;top:12px;right:16px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;opacity:.35}
 .card-editorial:hover{background:rgba(232,106,42,.03)}
@@ -1039,14 +1042,28 @@ function AgentHub({ data, loadTime }) {
           <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6, marginTop:2 }} />
 
           {/* Control row */}
-          <div style={{ display:"flex", justifyContent:"flex-end", gap:0, marginTop:14, flexWrap:"wrap" }}>
-            <button onClick={()=>setShowStats(true)} aria-label="Stats" title={lang==="ru"?"Статистика":"Statistics"} className="icon-btn" style={{ borderColor:c.brd, color:c.text, borderRightWidth:0 }}>◈</button>
-            <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История":"History"} className="icon-btn" style={{ borderColor:c.brd, color:c.text, borderRightWidth:0, position:"relative" }}>≣{copyCount>0 && <span style={{ position:"absolute", top:-1, right:-1, background:c.accent, color:c.bg, fontSize:8, fontWeight:700, padding:"0 4px", minWidth:13, textAlign:"center", fontFamily:font }}>{copyCount}</span>}</button>
-            <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":"Glossary"} className="icon-btn" style={{ borderColor:c.brd, color:c.text, borderRightWidth:0 }}>¶</button>
-            <button onClick={()=>setShowShortcuts(true)} aria-label="Shortcuts" title={lang==="ru"?"Горячие клавиши":"Shortcuts"} className="icon-btn" style={{ borderColor:c.brd, color:c.text, borderRightWidth:0, position:"relative" }}>⌨<span style={{ position:"absolute", bottom:-1, right:2, fontSize:7, color:c.dim, fontFamily:font, fontWeight:700 }}>?</span></button>
-            <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} title={`${theme==="dark"?"Light":"Dark"} (T)`} className="icon-btn" style={{ borderColor:c.brd, color:c.text, borderRightWidth:0, fontSize:15 }}>{theme==="dark"?"☾":"☀"}</button>
-            <button onClick={nextLang} aria-label={`Switch language`} className="icon-btn" style={{ borderColor:c.brd, color:c.text, width:"auto", padding:"0 14px", fontSize:10, fontWeight:700, letterSpacing:2, borderRightWidth:0 }}>{langLabel}</button>
-            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" className="hide-mobile" style={{ height:36, padding:"0 8px", border:`1px solid ${c.brd}`, background:"transparent", color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, outline:"none", WebkitAppearance:"none", MozAppearance:"none", appearance:"none", textAlign:"center", width:36 }}>
+          <div style={{ display:"flex", justifyContent:"flex-end", gap:6, marginTop:14, flexWrap:"wrap" }}>
+            <button onClick={()=>setShowStats(true)} aria-label="Statistics" title={lang==="ru"?"Статистика":"Statistics"} className="nav-btn" style={{ borderColor:c.brd, color:c.text }}>
+              {lang==="ru"?"Стат":lang==="kk"?"Стат":"Stats"}
+            </button>
+            <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":"Copy history"} className="nav-btn" style={{ borderColor:c.brd, color:c.text }}>
+              {lang==="ru"?"Лог":lang==="kk"?"Лог":"Log"}
+              {copyCount>0 && <span className="dot" style={{ background:c.accent, color:c.bg }}>{copyCount}</span>}
+            </button>
+            <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":"Glossary"} className="nav-btn" style={{ borderColor:c.brd, color:c.text }}>
+              {lang==="ru"?"Терм":lang==="kk"?"Терм":"Ref"}
+            </button>
+            <button onClick={()=>setShowShortcuts(true)} aria-label="Keyboard shortcuts" title={lang==="ru"?"Горячие клавиши (?)":"Keyboard shortcuts (?)"} className="nav-btn" style={{ borderColor:c.brd, color:c.text }}>
+              {lang==="ru"?"Клавиши":lang==="kk"?"Клавиша":"Keys"}
+              <span className="kbd-hint" style={{ color:c.dim }}>?</span>
+            </button>
+            <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} title={`${theme==="dark"?"Light":"Dark"} (T)`} className="nav-btn" style={{ borderColor:c.brd, color:c.text }}>
+              {theme==="dark" ? (lang==="ru"?"Свет":"Light") : (lang==="ru"?"Тьма":"Dark")}
+            </button>
+            <button onClick={nextLang} aria-label="Switch language" title="Switch language" className="nav-btn" style={{ borderColor:c.brd, color:c.accent, fontWeight:700 }}>
+              {langLabel}
+            </button>
+            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" className="hide-mobile nav-btn" style={{ borderColor:c.brd, color:c.text, padding:"0 8px 0 10px", WebkitAppearance:"none", MozAppearance:"none", appearance:"none", backgroundImage:"none" }}>
               <option value={85}>A-</option>
               <option value={100}>A</option>
               <option value={115}>A+</option>
