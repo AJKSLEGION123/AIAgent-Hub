@@ -3,7 +3,7 @@ import { execFileSync } from 'child_process';
 import path from 'path';
 
 const cli = path.join(process.cwd(), 'cli', 'index.cjs');
-const run = (args) => execFileSync('node', [cli, ...args], { encoding: 'utf8', cwd: process.cwd() });
+const run = (args) => execFileSync('node', [cli, ...args], { encoding: 'utf8', cwd: process.cwd(), maxBuffer: 50 * 1024 * 1024 });
 
 describe('CLI', () => {
   it('help shows usage', () => {
