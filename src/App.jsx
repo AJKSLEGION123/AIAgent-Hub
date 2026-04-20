@@ -70,13 +70,14 @@ const T = {
    THEME & CONSTANTS (task 2,5: style consolidation)
    ═══════════════════════════════════════════════ */
 const TH = {
-  dark: { bg:"#060609", bg2:"#0c0c12", card:"#0e0e16", cardH:"#12121c", brd:"#1a1a28", brdH:"#252538", text:"#ddddef", mut:"#9d9dbb", dim:"#6a6a88", surf:"#0a0a10", glow:"rgba(99,102,241,0.04)", meta:"#060609" },
-  light: { bg:"#f0f0f5", bg2:"#e8e8ef", card:"#ffffff", cardH:"#f8f8fc", brd:"#d8d8e4", brdH:"#c0c0d4", text:"#12122a", mut:"#555570", dim:"#8888a8", surf:"#eaeaf0", glow:"rgba(99,102,241,0.06)", meta:"#f0f0f5" },
+  dark: { bg:"#0a0806", bg2:"#120e09", card:"#15110b", cardH:"#1c1811", brd:"#221d15", brdH:"#2e281e", text:"#ece3ce", mut:"#a09584", dim:"#6e6656", surf:"#120e09", glow:"rgba(232,106,42,0.05)", meta:"#0a0806", accent:"#e86a2a", ink:"#f5efdd" },
+  light: { bg:"#f5f0e6", bg2:"#ebe5d6", card:"#fffcf4", cardH:"#f8f3e6", brd:"#d9cfb8", brdH:"#b8ab90", text:"#1a140a", mut:"#57503e", dim:"#8a826c", surf:"#f0e9d6", glow:"rgba(232,106,42,0.08)", meta:"#f5f0e6", accent:"#a84a12", ink:"#0a0806" },
 };
 const MC = { claude:"#f97316" };
 const ML = { claude:"Claude Code" };
 const MI = { claude:"C" };
 const font = "'JetBrains Mono','IBM Plex Mono','Fira Code',monospace";
+const fontDisplay = "'Fraunces','Cormorant Garamond','Times New Roman',serif";
 const alpha = (hex, a) => hex + Math.round(a*255).toString(16).padStart(2,'0');
 /** Russian pluralization: pl(5,"модель","модели","моделей") → "моделей" */
 const pl = (n, one, few, many) => { const m=Math.abs(n)%100, d=m%10; return d===1&&m!==11?one:d>=2&&d<=4&&(m<12||m>14)?few:many; };
@@ -118,8 +119,28 @@ async function _d(b, onProgress) {
    GLOBAL CSS (tasks: 003, 011, 013, 014, 015, 022, 025, 104)
    ═══════════════════════════════════════════════ */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
+.display-serif{font-family:'Fraunces','Cormorant Garamond','Times New Roman',serif;font-variation-settings:'SOFT' 60,'opsz' 144;font-feature-settings:'ss01','ss02'}
+.display-italic{font-style:italic;font-variation-settings:'SOFT' 100,'opsz' 144,'wonk' 1}
+.label-tech{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:5px;text-transform:uppercase;font-weight:500}
+.label-tech-sm{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;font-weight:500}
+.rule-double{border:0;border-top:1px solid currentColor;border-bottom:1px solid currentColor;height:3px;opacity:.35}
+.ornament::before{content:"§";font-family:'Fraunces',serif;font-style:italic;opacity:.35;margin-right:6px}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.04;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.tab-editorial{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;font-weight:500;padding:14px 2px;background:transparent;border:0;border-bottom:1px solid transparent;cursor:pointer;outline:none;transition:color .2s ease,border-color .2s ease;white-space:nowrap;position:relative}
+.tab-editorial .count{opacity:.45;margin-left:8px;font-size:9px;letter-spacing:1px}
+.tab-editorial[aria-selected="true"] .count{opacity:1}
+.masthead{position:relative;padding:32px 0 28px;margin-bottom:32px}
+.masthead::before,.masthead::after{content:"";display:block;height:3px}
+.masthead::before{border-top:1px solid currentColor;border-bottom:1px solid currentColor;opacity:.35;margin-bottom:28px}
+.masthead::after{border-top:1px solid currentColor;border-bottom:1px solid currentColor;opacity:.35;margin-top:24px}
+.icon-btn{width:36px;height:36px;border-radius:0;border:1px solid;background:transparent;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;outline:none;transition:all .2s;font-family:'JetBrains Mono',monospace}
+.card-editorial{position:relative;padding:18px 20px 16px;border:0;border-top:1px solid;transition:background .2s ease,border-color .2s ease}
+.card-editorial::before{content:attr(data-idx);position:absolute;top:12px;right:16px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;opacity:.35}
+.card-editorial:hover{background:rgba(232,106,42,.03)}
+@media(max-width:640px){.masthead-stat-num{font-size:56px!important}.masthead-title{font-size:38px!important}}
+
 :root{color-scheme:dark}
 [data-theme="light"]{color-scheme:light}
 ::selection{background:#6366f140;color:inherit}
@@ -956,83 +977,112 @@ function AgentHub({ data, loadTime }) {
       {/* Skip link (task 100) */}
       <a href="#main-content" className="skip-link">{lang==="ru"?"К содержимому":"Skip to content"}</a>
       
-      {/* Glow */}
-      <div style={{ position:"fixed", top:0, left:"50%", transform:"translateX(-50%)", width:600, height:300, background:"radial-gradient(ellipse, rgba(99,102,241,0.06) 0%, transparent 70%)", pointerEvents:"none", zIndex:0 }} />
+      {/* Grain texture */}
+      <div className="grain" />
+      {/* Warm glow */}
+      <div style={{ position:"fixed", top:-40, left:"50%", transform:"translateX(-50%)", width:720, height:340, background:`radial-gradient(ellipse, ${c.glow} 0%, transparent 65%)`, pointerEvents:"none", zIndex:0 }} />
 
-      <div id="main-content" style={{ maxWidth:860, margin:"0 auto", padding:"32px 16px 80px", position:"relative", zIndex:1 }}>
+      <div id="main-content" style={{ maxWidth:880, margin:"0 auto", padding:"32px 20px 80px", position:"relative", zIndex:1 }}>
 
-        {/* ── HEADER ── */}
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16 }} className="stack-mobile">
-          <div>
-            <div style={{ fontSize:9, letterSpacing:6, color:c.dim, textTransform:"uppercase", marginBottom:6 }}>v9.1 · {stats.total} {lang==="ru"?pl(stats.total,"промт","промта","промтов"):t.prompts} · {stats.models} {lang==="ru"?pl(stats.models,"модель","модели","моделей"):t.models}{usedCount>0?` · ✓${usedCount}`:""}</div>
-            <h1 style={{ fontSize:28, fontWeight:800, margin:0, lineHeight:1.1, letterSpacing:"-0.5px" }}>{t.title}</h1>
-            <p style={{ fontSize:12, color:c.mut, marginTop:6, letterSpacing:0.3 }}>{t.subtitle}</p>
+        {/* ══════════════════ EDITORIAL MASTHEAD ══════════════════ */}
+        <header style={{ position:"relative", paddingTop:32, paddingBottom:28, marginBottom:36, color:c.text }}>
+          {/* Double-rule top */}
+          <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6 }} />
+          <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6, marginTop:2 }} />
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 0" }}>
+            <span className="label-tech-sm" style={{ color:c.mut }}>№ v9.1 · {new Date().toLocaleDateString(lang==="ru"?"ru-RU":"en-US",{month:"short",year:"numeric"}).toUpperCase()}</span>
+            <span className="label-tech-sm" style={{ color:c.mut }}>An Almanac of Autonomous Development</span>
           </div>
-          <div style={{ display:"flex", gap:6, marginTop:4, flexWrap:"wrap" }}>
-            {/* Feat 24: Stats */}
-            <button onClick={()=>setShowStats(true)} aria-label="Stats" title={lang==="ru"?"Статистика":"Statistics"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>📊</button>
-            {/* Feat 17: Copy history */}
-            <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":"Copy history"} style={{ position:"relative", width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>📋{copyCount>0 && <span style={{ position:"absolute", top:-4, right:-4, background:"#6366f1", color:"#fff", fontSize:8, fontWeight:700, borderRadius:8, padding:"1px 4px", minWidth:14, textAlign:"center" }}>{copyCount}</span>}</button>
-            {/* Cycle 9: Glossary */}
-            <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":"Glossary"} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>📖</button>
-            {/* Feat 4: Shortcuts */}
-            <button onClick={()=>setShowShortcuts(true)} aria-label="Shortcuts" title={lang==="ru"?"Горячие клавиши (?)":"Keyboard shortcuts (?)"} style={{ position:"relative", width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>⌨<span style={{ position:"absolute", bottom:-2, right:-2, fontSize:8, color:c.dim, fontFamily:font, fontWeight:700 }}>?</span></button>
-            <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} title={`${theme==="dark"?"Light":"Dark"} (T)`} style={{ width:36, height:36, borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:15, display:"flex", alignItems:"center", justifyContent:"center", outline:"none", transition:"all .15s" }}>{theme==="dark"?"☀":"☾"}</button>
-            <button onClick={nextLang} aria-label={`Switch language to ${langLabel}`} style={{ height:36, padding:"0 12px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, fontWeight:700, outline:"none", transition:"all .15s" }}>{langLabel}</button>
-            {/* Feat 9: Font size */}
-            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" className="hide-mobile" style={{ height:36, padding:"0 8px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.card, color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, outline:"none", WebkitAppearance:"none", MozAppearance:"none", appearance:"none", textAlign:"center", width:36 }}>
+          <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6 }} />
+          <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6, marginTop:2 }} />
+
+          {/* Main heading row */}
+          <div style={{ display:"grid", gridTemplateColumns:"1fr auto", gap:32, alignItems:"end", padding:"32px 0 8px" }} className="stack-mobile">
+            <div className="full-mobile">
+              <h1 className="display-serif masthead-title" style={{ fontSize:64, lineHeight:.95, letterSpacing:"-2.5px", fontWeight:400, margin:0, color:c.ink, fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>
+                <span style={{ color:c.accent, fontStyle:"italic", fontWeight:300 }}>AI</span>Agent<span style={{ color:c.mut }}>·</span>Hub
+              </h1>
+              <p className="display-serif display-italic" style={{ fontSize:17, lineHeight:1.55, color:c.mut, marginTop:14, maxWidth:460, fontWeight:300, fontStyle:"italic" }}>
+                {lang==="ru" ? "Полевой справочник автономной разработки c Claude Code — промты, комбо, шпаргалки." : lang==="kk" ? "Claude Code көмегімен автономды әзірлеудің далалық нұсқаулығы." : "A field guide to autonomous development with Claude Code — prompts, combos, cheat sheets."}
+              </p>
+            </div>
+            {/* Statistical display */}
+            <div style={{ textAlign:"right", minWidth:130 }} className="full-mobile">
+              <div className="display-serif masthead-stat-num" style={{ fontSize:88, lineHeight:.85, fontWeight:300, letterSpacing:"-4px", color:c.accent, fontVariationSettings:"'SOFT' 30,'opsz' 144" }}>
+                {stats.total}
+              </div>
+              <div className="label-tech" style={{ color:c.mut, marginTop:10 }}>{lang==="ru"?"промтов":"prompts"}</div>
+              <div className="label-tech-sm" style={{ color:c.dim, marginTop:8 }}>~{Math.round(stats.totalTokens/1000)}K tok · {stats.roles} roles{usedCount>0?` · ✓${usedCount}`:""}</div>
+            </div>
+          </div>
+
+          {/* Double-rule bottom */}
+          <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6, marginTop:8 }} />
+          <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6, marginTop:2 }} />
+
+          {/* Control row */}
+          <div style={{ display:"flex", justifyContent:"flex-end", gap:0, marginTop:14, flexWrap:"wrap" }}>
+            <button onClick={()=>setShowStats(true)} aria-label="Stats" title={lang==="ru"?"Статистика":"Statistics"} className="icon-btn" style={{ borderColor:c.brd, color:c.text, borderRightWidth:0 }}>◈</button>
+            <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История":"History"} className="icon-btn" style={{ borderColor:c.brd, color:c.text, borderRightWidth:0, position:"relative" }}>≣{copyCount>0 && <span style={{ position:"absolute", top:-1, right:-1, background:c.accent, color:c.bg, fontSize:8, fontWeight:700, padding:"0 4px", minWidth:13, textAlign:"center", fontFamily:font }}>{copyCount}</span>}</button>
+            <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":"Glossary"} className="icon-btn" style={{ borderColor:c.brd, color:c.text, borderRightWidth:0 }}>¶</button>
+            <button onClick={()=>setShowShortcuts(true)} aria-label="Shortcuts" title={lang==="ru"?"Горячие клавиши":"Shortcuts"} className="icon-btn" style={{ borderColor:c.brd, color:c.text, borderRightWidth:0, position:"relative" }}>⌨<span style={{ position:"absolute", bottom:-1, right:2, fontSize:7, color:c.dim, fontFamily:font, fontWeight:700 }}>?</span></button>
+            <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} title={`${theme==="dark"?"Light":"Dark"} (T)`} className="icon-btn" style={{ borderColor:c.brd, color:c.text, borderRightWidth:0, fontSize:15 }}>{theme==="dark"?"☾":"☀"}</button>
+            <button onClick={nextLang} aria-label={`Switch language`} className="icon-btn" style={{ borderColor:c.brd, color:c.text, width:"auto", padding:"0 14px", fontSize:10, fontWeight:700, letterSpacing:2, borderRightWidth:0 }}>{langLabel}</button>
+            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" className="hide-mobile" style={{ height:36, padding:"0 8px", border:`1px solid ${c.brd}`, background:"transparent", color:c.text, cursor:"pointer", fontSize:10, fontFamily:font, outline:"none", WebkitAppearance:"none", MozAppearance:"none", appearance:"none", textAlign:"center", width:36 }}>
               <option value={85}>A-</option>
               <option value={100}>A</option>
               <option value={115}>A+</option>
             </select>
           </div>
-        </div>
+        </header>
 
-        {/* Feat 16: Welcome banner */}
-        {isFirstVisit && <div style={{ marginBottom:16, padding:"16px 20px", borderRadius:12, border:`2px solid #6366f140`, background:"linear-gradient(135deg, #6366f10a, #8b5cf60a)", position:"relative" }}>
-          <button onClick={()=>setIsFirstVisit(false)} style={{ position:"absolute", top:8, right:12, background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:16, outline:"none" }}>×</button>
-          <div style={{ fontSize:14, fontWeight:800, color:"#6366f1", marginBottom:8 }}>👋 {lang==="ru"?"Добро пожаловать в AIAgent-Hub!":"Welcome to AIAgent-Hub!"}</div>
-          <div style={{ fontSize:11, color:c.mut, lineHeight:1.8 }}>
+        {/* Feat 16: Welcome banner — editorial style */}
+        {isFirstVisit && <div style={{ marginBottom:24, padding:"20px 24px", border:`1px solid ${c.accent}40`, borderLeft:`3px solid ${c.accent}`, background:`${c.accent}06`, position:"relative" }}>
+          <button onClick={()=>setIsFirstVisit(false)} aria-label="Close" style={{ position:"absolute", top:10, right:14, background:"none", border:"none", color:c.mut, cursor:"pointer", fontSize:18, outline:"none", fontFamily:font }}>×</button>
+          <div className="label-tech-sm" style={{ color:c.accent, marginBottom:10 }}>Ed. Note · {lang==="ru"?"Добро пожаловать":"Welcome"}</div>
+          <div className="display-serif" style={{ fontSize:20, fontWeight:400, color:c.ink, marginBottom:10, lineHeight:1.25, fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>
+            {lang==="ru"?"Полевой справочник":"A Field Guide"}
+          </div>
+          <div style={{ fontSize:12, color:c.mut, lineHeight:1.7, fontFamily:fontDisplay, fontStyle:"italic" }}>
             {lang==="ru"
-              ? `${stats.total} промтов для автономных AI-агентов. Выбери промт → скопируй → вставь в терминал агента. Нажми ? для горячих клавиш.`
-              : `${stats.total} prompts for autonomous AI agents. Pick a prompt → copy → paste into agent terminal. Press ? for keyboard shortcuts.`}
+              ? `${stats.total} промтов для автономных AI-агентов. Выбери → скопируй → вставь в терминал. Нажми ? для горячих клавиш.`
+              : `${stats.total} prompts for autonomous AI agents. Pick → copy → paste into terminal. Press ? for shortcuts.`}
           </div>
         </div>}
 
-        {/* ── STATS BAR ── */}
-        <div style={{ display:"flex", gap:6, marginBottom:20, flexWrap:"wrap" }} className="gap-mobile">
+        {/* ── MODEL READOUT STRIP ── */}
+        <div style={{ display:"flex", gap:24, marginBottom:28, paddingBottom:14, borderBottom:`1px solid ${c.brd}`, flexWrap:"wrap" }} className="gap-mobile">
           {stats.byModel.map(([mk, count]) => (
-            <div key={mk} title={`${ML[mk]}: ${count} ${t.prompts} (${Math.round(count/stats.total*100)}%)`} style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 12px", borderRadius:8, background:alpha(MC[mk],.04), border:`1px solid ${alpha(MC[mk],.12)}`, cursor:"default" }} className="pad-mobile">
-              <div style={{ width:6, height:6, borderRadius:"50%", background:MC[mk] }} />
-              <span style={{ fontSize:10, color:MC[mk], fontWeight:600 }} className="text-sm-mobile">{ML[mk]}</span>
-              <span style={{ fontSize:10, color:c.mut }}>{count}</span>
+            <div key={mk} title={`${ML[mk]}: ${count} ${t.prompts} (${Math.round(count/stats.total*100)}%)`} style={{ display:"flex", alignItems:"baseline", gap:8, cursor:"default" }}>
+              <span style={{ fontSize:22, fontWeight:300, color:MC[mk], fontFamily:fontDisplay, lineHeight:1 }}>{count}</span>
+              <span className="label-tech-sm" style={{ color:c.mut }}>{ML[mk]}</span>
             </div>
           ))}
-          <div style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 12px", borderRadius:8, background:c.card, border:`1px solid ${c.brd}` }} className="pad-mobile hide-mobile">
-            <span style={{ fontSize:10, color:c.dim }}>~{(stats.totalTokens/1000).toFixed(0)}K tokens</span>
-          </div>
-          <div style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 12px", borderRadius:8, background:c.card, border:`1px solid ${c.brd}` }} className="pad-mobile hide-mobile">
-            <span style={{ fontSize:10, color:c.dim }}>{stats.roles} {lang==="ru"?"ролей":"roles"}</span>
+          <div style={{ flex:1, minWidth:20 }} />
+          <div style={{ display:"flex", alignItems:"baseline", gap:8 }} className="hide-mobile">
+            <span className="label-tech-sm" style={{ color:c.dim }}>{lang==="ru"?"ролей":"roles"}</span>
+            <span style={{ fontSize:16, fontWeight:400, color:c.text, fontFamily:fontDisplay }}>{stats.roles}</span>
           </div>
         </div>
 
-        {/* ── SECTION TABS (task 097: aria roles) ── */}
-        <div role="tablist" aria-label="Sections" style={{ display:"flex", gap:4, marginBottom:20, overflowX:"auto", paddingBottom:4 }}>
+        {/* ══════════════ EDITORIAL TAB BAR ══════════════ */}
+        <nav role="tablist" aria-label="Sections" style={{ display:"flex", gap:28, marginBottom:28, overflowX:"auto", borderBottom:`1px solid ${c.brd}`, paddingBottom:0 }}>
           {[
             { k:"prompts", l:lang==="ru"?"Промты":"Prompts", n:P.length },
             { k:"combos", l:lang==="ru"?"Комбо":"Combos", n:(COMBOS[lang]||COMBOS.ru).length },
-            { k:"cheat", l:lang==="ru"?"Шпаргалки":"Cheat Sheets", n:Object.keys(CHEAT).length },
-            { k:"quick", l:lang==="ru"?"Команды CLI":"CLI Commands", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).reduce((a,c)=>a+(c.cmds||[]).length,0) },
+            { k:"cheat", l:lang==="ru"?"Шпаргалки":"Cheat", n:Object.keys(CHEAT).length },
+            { k:"quick", l:"CLI", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).reduce((a,c)=>a+(c.cmds||[]).length,0) },
             { k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length },
           ].map(s => (
-            <button key={s.k} role="tab" aria-selected={section===s.k} aria-current={section===s.k?"page":undefined} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);window.scrollTo({top:0,behavior:"smooth"})}} style={{
-              padding:"8px 16px", fontSize:11, fontFamily:font, fontWeight:section===s.k?700:400,
-              border:`1px solid ${section===s.k?c.text+"30":c.brd}`, borderRadius:8,
-              background:section===s.k?c.text+"0a":"transparent", color:section===s.k?c.text:c.mut,
-              cursor:"pointer", transition:"all .15s", outline:"none", whiteSpace:"nowrap",
-            }} className="text-sm-mobile">{s.l}{s.n ? ` (${s.n})` : ""}</button>
+            <button key={s.k} role="tab" aria-selected={section===s.k} aria-current={section===s.k?"page":undefined} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);window.scrollTo({top:0,behavior:"smooth"})}} className="tab-editorial" style={{
+              color: section===s.k ? c.ink : c.mut,
+              borderBottomColor: section===s.k ? c.accent : "transparent",
+              borderBottomWidth: section===s.k ? "2px" : "1px",
+              marginBottom: section===s.k ? "-1px" : "0",
+              fontWeight: section===s.k ? 700 : 500,
+            }}>{s.l}{s.n ? <span className="count" style={{color: section===s.k ? c.accent : c.dim}}>{String(s.n).padStart(3,"0")}</span> : null}</button>
           ))}
-        </div>
+        </nav>
 
         {/* ════════════════ SECTION: PROMPTS ════════════════ */}
         {section === "prompts" && <div role="tabpanel" id="panel-prompts">
