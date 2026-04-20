@@ -253,8 +253,8 @@ class ErrBound extends Component {
           <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>AIAgent-Hub</div>
           <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>Произошла ошибка</div>
           <div style={{fontSize:11,color:"#5e5e78",marginBottom:16,maxWidth:400}}>{this.state.err?.message}</div>
-          {this.state.err?.stack && <details style={{marginBottom:16,textAlign:"left",maxWidth:500}}><summary style={{fontSize:10,color:"#5e5e78",cursor:"pointer"}}>Stack trace</summary><pre style={{fontSize:9,color:"#44445a",marginTop:8,padding:8,background:"#0a0a12",borderRadius:6,whiteSpace:"pre-wrap",wordBreak:"break-all",maxHeight:200,overflow:"auto"}}>{this.state.err.stack}</pre></details>}
-          <button onClick={()=>this.setState({err:null})} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:8,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>Перезагрузить</button>
+          {this.state.err?.stack && <details style={{marginBottom:16,textAlign:"left",maxWidth:500}}><summary style={{fontSize:10,color:"#5e5e78",cursor:"pointer"}}>Stack trace</summary><pre style={{fontSize:9,color:"#44445a",marginTop:8,padding:8,background:"#0a0a12",borderRadius:0,whiteSpace:"pre-wrap",wordBreak:"break-all",maxHeight:200,overflow:"auto"}}>{this.state.err.stack}</pre></details>}
+          <button onClick={()=>this.setState({err:null})} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:0,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>Перезагрузить</button>
         </div>
       </div>
     );
@@ -286,7 +286,7 @@ export default function App() {
         <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>AIAgent-Hub</div>
         <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>Ошибка загрузки данных</div>
         <div style={{fontSize:11,color:"#5e5e78",marginBottom:16}}>{err?.message}</div>
-        <button onClick={()=>{setErr(null);setLoadPct(0);_d(Z,(pct)=>setLoadPct(Math.round(pct*100))).then(d=>{dataRef.current=d;setData(d)}).catch(e=>setErr(e))}} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:8,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>Обновить</button>
+        <button onClick={()=>{setErr(null);setLoadPct(0);_d(Z,(pct)=>setLoadPct(Math.round(pct*100))).then(d=>{dataRef.current=d;setData(d)}).catch(e=>setErr(e))}} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:0,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>Обновить</button>
       </div>
     </div>
   );
@@ -305,8 +305,8 @@ export default function App() {
         </div>
         {/* Task 19: Skeleton cards */}
         {[1,2,3,4,5].map(i => (
-          <div key={i} style={{marginBottom:8,padding:"12px 16px",borderRadius:12,border:"1px solid #1a1a28",background:"#0e0e16",display:"flex",gap:10,alignItems:"center"}}>
-            <div className="skeleton" style={{width:36,height:36,borderRadius:9,flexShrink:0}} />
+          <div key={i} style={{marginBottom:8,padding:"12px 16px",borderRadius:0,border:"1px solid #1a1a28",background:"#0e0e16",display:"flex",gap:10,alignItems:"center"}}>
+            <div className="skeleton" style={{width:36,height:36,borderRadius:0,flexShrink:0}} />
             <div style={{flex:1}}>
               <div className="skeleton" style={{width:`${40+i*8}%`,height:12,marginBottom:6}} />
               <div className="skeleton" style={{width:`${60+i*4}%`,height:8}} />
@@ -847,27 +847,30 @@ function AgentHub({ data, loadTime }) {
         const dp = pGet(showDiff);
         if (!dp || !dp.compact) return null;
         return <div onClick={()=>setShowDiff(null)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.8)", zIndex:9992, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-          <div role="dialog" aria-modal="true" aria-label="Diff" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:16, padding:"24px 28px", maxWidth:900, width:"100%", maxHeight:"90vh", overflowY:"auto", fontFamily:font }}>
+          <div role="dialog" aria-modal="true" aria-label="Diff" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:900, width:"100%", maxHeight:"90vh", overflowY:"auto", fontFamily:font }}>
             <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{dp.icon} {t.r[dp.role]||dp.role} — {lang==="ru"?"Сравнение":"Diff"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
               <div>
                 <div style={{ fontSize:10, fontWeight:700, color:"#e86a2a", marginBottom:8 }}>Original ({dp.text.length} chars)</div>
-                <pre style={{ fontSize:9, lineHeight:1.6, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", padding:12, background:c.surf, borderRadius:8, border:`1px solid ${c.brd}`, maxHeight:400, overflowY:"auto" }}>{dp.text}</pre>
+                <pre style={{ fontSize:9, lineHeight:1.6, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", padding:12, background:c.surf, borderRadius:0, border:`1px solid ${c.brd}`, maxHeight:400, overflowY:"auto" }}>{dp.text}</pre>
               </div>
               <div>
                 <div style={{ fontSize:10, fontWeight:700, color:"#10b981", marginBottom:8 }}>Compact ({dp.compact.length} chars, {Math.round((1-dp.compact.length/dp.text.length)*100)}% smaller)</div>
-                <pre style={{ fontSize:9, lineHeight:1.6, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", padding:12, background:c.surf, borderRadius:8, border:`1px solid #10b98120`, maxHeight:400, overflowY:"auto" }}>{dp.compact}</pre>
+                <pre style={{ fontSize:9, lineHeight:1.6, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", padding:12, background:c.surf, borderRadius:0, border:`1px solid #10b98120`, maxHeight:400, overflowY:"auto" }}>{dp.compact}</pre>
               </div>
             </div>
-            <button onClick={()=>setShowDiff(null)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+            <button onClick={()=>setShowDiff(null)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:0, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
           </div>
         </div>;
       })()}
 
       {/* Cycle 9: Glossary overlay */}
       {showGlossary && <div onClick={()=>setShowGlossary(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-        <div role="dialog" aria-modal="true" aria-label="Glossary" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:16, padding:"24px 28px", maxWidth:480, width:"100%", maxHeight:"80vh", overflowY:"auto", fontFamily:font }}>
-          <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{lang==="ru"?"Глоссарий":"Glossary"}</div>
+        <div role="dialog" aria-modal="true" aria-label="Glossary" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:480, width:"100%", maxHeight:"80vh", overflowY:"auto", fontFamily:font }}>
+          <div style={{ marginBottom:18, paddingBottom:12, borderBottom:`1px solid ${c.brd}` }}>
+            <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>§ Reference</div>
+            <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Глоссарий":"Glossary"}</div>
+          </div>
           {[
             ["АНТИ-ЛУП",lang==="ru"?"Защита от зацикливания: 3 похожих действия = смена подхода":"Loop protection: 3 similar actions = change approach"],
             ["АНТИ-ГАЛЛЮЦИНАЦИЯ",lang==="ru"?"Правило: прочитай файл перед изменением, не придумывай API":"Rule: read file before changing, don't invent APIs"],
@@ -877,17 +880,20 @@ function AgentHub({ data, loadTime }) {
             ["Story Points",lang==="ru"?"Оценка сложности: 1=5мин, 2=15мин, 3=30мин, 5=1ч":"Complexity estimate: 1=5min, 2=15min, 3=30min, 5=1hr"],
             ["♾️ Бесконечный",lang==="ru"?"Агент который не останавливается — самогенерирует задачи":"Agent that never stops — self-generates tasks"],
           ].map(([term,desc])=><div key={term} style={{ padding:"8px 0", borderBottom:`1px solid ${c.brd}` }}>
-            <div style={{ fontSize:11, fontWeight:700, color:"#e86a2a" }}>{term}</div>
+            <div style={{ fontSize:10, letterSpacing:2, textTransform:"uppercase", fontWeight:700, color:"#e86a2a", fontFamily:font }}>{term}</div>
             <div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{desc}</div>
           </div>)}
-          <button onClick={()=>setShowGlossary(false)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+          <button onClick={()=>setShowGlossary(false)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:0, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
         </div>
       </div>}
 
       {/* Feat 4: Keyboard shortcuts overlay */}
       {showShortcuts && <div onClick={()=>setShowShortcuts(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-        <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Горячие клавиши":"Keyboard Shortcuts"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:16, padding:"24px 32px", maxWidth:420, width:"100%", fontFamily:font }}>
-          <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{lang==="ru"?"Горячие клавиши":"Keyboard Shortcuts"}</div>
+        <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Горячие клавиши":"Keyboard Shortcuts"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 32px", maxWidth:420, width:"100%", fontFamily:font }}>
+          <div style={{ marginBottom:18, paddingBottom:12, borderBottom:`1px solid ${c.brd}` }}>
+            <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>⌨ Keyboard</div>
+            <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Горячие клавиши":"Shortcuts"}</div>
+          </div>
           {[
             ["Ctrl+K",lang==="ru"?"Фокус на поиск":"Focus search"],
             ["Escape",lang==="ru"?"Закрыть / очистить":"Close / clear"],
@@ -901,13 +907,13 @@ function AgentHub({ data, loadTime }) {
             ["Ctrl+/",lang==="ru"?"Compact mode":"Compact mode"],
             ["?",lang==="ru"?"Показать/скрыть подсказки":"Toggle this overlay"],
           ].map(([k,d])=><div key={k} style={{ display:"flex", justifyContent:"space-between", padding:"6px 0", borderBottom:`1px solid ${c.brd}` }}><kbd style={{ padding:"2px 8px", borderRadius:4, background:c.surf, border:`1px solid ${c.brd}`, fontSize:11, color:c.text, fontFamily:font }}>{k}</kbd><span style={{ fontSize:11, color:c.mut }}>{d}</span></div>)}
-          <button onClick={()=>setShowShortcuts(false)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+          <button onClick={()=>setShowShortcuts(false)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:0, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
         </div>
       </div>}
 
       {/* Feat 18: Focus mode */}
       {focusPrompt && <div onClick={()=>setFocusPrompt(null)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.85)", zIndex:9991, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-        <div role="dialog" aria-modal="true" aria-label="Focus mode" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${focusPrompt.ac}40`, borderRadius:16, padding:"24px 28px", maxWidth:720, width:"100%", maxHeight:"90vh", overflowY:"auto", fontFamily:font }}>
+        <div role="dialog" aria-modal="true" aria-label="Focus mode" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${focusPrompt.ac}40`, borderRadius:0, padding:"24px 28px", maxWidth:720, width:"100%", maxHeight:"90vh", overflowY:"auto", fontFamily:font }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:16 }}>
             <div style={{ display:"flex", alignItems:"center", gap:10 }}>
               <span style={{ fontSize:24 }}>{focusPrompt.icon}</span>
@@ -918,17 +924,20 @@ function AgentHub({ data, loadTime }) {
             </div>
             <div style={{ display:"flex", gap:6 }}>
               <CBtn id={"focus-"+focusPrompt.id} txt={focusPrompt.text} cl={focusPrompt.ac} copied={copied} cp={cp} t={t} bg={c.bg} />
-              <button onClick={()=>setFocusPrompt(null)} style={{ width:32, height:32, borderRadius:8, border:`1px solid ${c.brd}`, background:"transparent", color:c.mut, cursor:"pointer", fontSize:16, outline:"none" }}>×</button>
+              <button onClick={()=>setFocusPrompt(null)} style={{ width:32, height:32, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.mut, cursor:"pointer", fontSize:16, outline:"none" }}>×</button>
             </div>
           </div>
-          <pre style={{ fontSize:11, lineHeight:1.7, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", margin:0, fontFamily:font, padding:16, background:c.surf, borderRadius:10, border:`1px solid ${c.brd}` }}>{focusPrompt.text}</pre>
+          <pre style={{ fontSize:11, lineHeight:1.7, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", margin:0, fontFamily:font, padding:16, background:c.surf, borderRadius:0, border:`1px solid ${c.brd}` }}>{focusPrompt.text}</pre>
         </div>
       </div>}
 
       {/* Feat 24: Stats modal */}
       {showStats && <div onClick={()=>setShowStats(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-        <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Статистика":"Statistics"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:16, padding:"24px 28px", maxWidth:500, width:"100%", fontFamily:font }}>
-          <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{lang==="ru"?"Статистика":"Statistics"}</div>
+        <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Статистика":"Statistics"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:500, width:"100%", fontFamily:font }}>
+          <div style={{ marginBottom:18, paddingBottom:12, borderBottom:`1px solid ${c.brd}` }}>
+            <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>◈ Index</div>
+            <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Статистика":"Statistics"}</div>
+          </div>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
             {[
               [stats.total, lang==="ru"?"Промтов":"Prompts", "#e86a2a"],
@@ -939,7 +948,7 @@ function AgentHub({ data, loadTime }) {
               [copyCount, lang==="ru"?"Скопировано":"Copied", "#eab308"],
               [usedCount, lang==="ru"?"Использовано":"Used", "#10b981"],
               [favCount, lang==="ru"?"Избранных":"Favorites", "#eab308"],
-            ].map(([v,l,cl])=><div key={l} style={{ padding:12, borderRadius:10, background:c.surf, border:`1px solid ${c.brd}`, textAlign:"center" }}><div style={{ fontSize:20, fontWeight:800, color:cl }}>{v}</div><div style={{ fontSize:9, color:c.mut, marginTop:2 }}>{l}</div></div>)}
+            ].map(([v,l,cl])=><div key={l} style={{ padding:"14px 12px 10px", borderRadius:0, background:"transparent", border:`1px solid ${c.brd}`, textAlign:"left" }}><div className="display-serif" style={{ fontSize:32, fontWeight:300, color:cl, lineHeight:.9, letterSpacing:"-1px", fontVariationSettings:"'SOFT' 30,'opsz' 144" }}>{v}</div><div className="label-tech-sm" style={{ color:c.mut, marginTop:6 }}>{l}</div></div>)}
           </div>
           <div style={{ marginBottom:12 }}>
             <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"По моделям":"By model"}</div>
@@ -954,7 +963,7 @@ function AgentHub({ data, loadTime }) {
           <div style={{ marginBottom:12 }}>
             <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"Популярные теги":"Popular tags"}</div>
             <div style={{ display:"flex", gap:3, flexWrap:"wrap" }}>
-              {(() => { const tc = {}; P.forEach(p=>(p.tags||[]).forEach(tg=>{tc[tg]=(tc[tg]||0)+1})); return Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,15).map(([tg,n])=><span key={tg} style={{ fontSize:Math.max(8,Math.min(12,7+n/3)), padding:"2px 6px", borderRadius:6, background:"#e86a2a10", color:"#e86a2a", border:"1px solid #e86a2a20", cursor:"pointer", fontFamily:font }} onClick={()=>{setFm("tag");setFv(tg);setSection("prompts");setShowStats(false)}}>{tg} <span style={{fontSize:8,color:c.dim}}>{n}</span></span>); })()}
+              {(() => { const tc = {}; P.forEach(p=>(p.tags||[]).forEach(tg=>{tc[tg]=(tc[tg]||0)+1})); return Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,15).map(([tg,n])=><span key={tg} style={{ fontSize:Math.max(8,Math.min(12,7+n/3)), padding:"2px 6px", borderRadius:0, background:"#e86a2a10", color:"#e86a2a", border:"1px solid #e86a2a20", cursor:"pointer", fontFamily:font }} onClick={()=>{setFm("tag");setFv(tg);setSection("prompts");setShowStats(false)}}>{tg} <span style={{fontSize:8,color:c.dim}}>{n}</span></span>); })()}
             </div>
           </div>
           {/* Cycle 26: Most copied prompts */}
@@ -962,21 +971,24 @@ function AgentHub({ data, loadTime }) {
             <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"Часто копируемые":"Most copied"}</div>
             {Object.entries(copyCounters).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([pid,n])=>{const pp=pGet(pid);return pp?<div key={pid} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"3px 0", fontSize:10 }}><span style={{ color:pp.ac }}>{pp.icon} {t.r[pp.role]||pp.role}</span><span style={{ color:c.dim }}>×{n}</span></div>:null})}
           </div>}
-          {(() => { try { const used = localStorage.getItem("aiagent-hub-settings"); return used ? <div style={{ fontSize:9, color:c.dim, marginTop:8 }}>💾 localStorage: {(used.length/1024).toFixed(1)} KB</div> : null; } catch { return null; } })()}
-          <button onClick={()=>setShowStats(false)} style={{ marginTop:12, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+          {(() => { try { const used = localStorage.getItem("aiagent-hub-settings"); return used ? <div className="label-tech-sm" style={{ color:c.dim, marginTop:10 }}>⇩ localStorage · {(used.length/1024).toFixed(1)} KB</div> : null; } catch { return null; } })()}
+          <button onClick={()=>setShowStats(false)} style={{ marginTop:12, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:0, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
         </div>
       </div>}
 
       {/* Feat 17: Copy history sidebar */}
       {showCopyHistory && <div onClick={()=>setShowCopyHistory(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.5)", zIndex:9989 }}>
         <div onClick={e=>e.stopPropagation()} style={{ position:"fixed", right:0, top:0, bottom:0, width:280, background:c.card, borderLeft:`1px solid ${c.brd}`, padding:"20px 16px", fontFamily:font, overflowY:"auto" }}>
-          <div style={{ fontSize:14, fontWeight:800, marginBottom:16, color:c.text }}>{lang==="ru"?"История копирования":"Copy History"}</div>
+          <div style={{ marginBottom:18, paddingBottom:10, borderBottom:`1px solid ${c.brd}` }}>
+            <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>≣ Log</div>
+            <div className="display-serif" style={{ fontSize:22, fontWeight:400, color:c.ink, lineHeight:1.1, letterSpacing:"-.3px" }}>{lang==="ru"?"История копирования":"Copy History"}</div>
+          </div>
           {copyHistory.length===0 && <div style={{ fontSize:11, color:c.dim }}>{lang==="ru"?"Ещё ничего не скопировано":"Nothing copied yet"}</div>}
-          {copyHistory.map((h,i)=><div key={i} style={{ padding:"8px 10px", borderRadius:8, border:`1px solid ${c.brd}`, marginBottom:6, background:c.surf }}>
+          {copyHistory.map((h,i)=><div key={i} style={{ padding:"8px 10px", borderRadius:0, border:`1px solid ${c.brd}`, marginBottom:6, background:c.surf }}>
             <div style={{ fontSize:11, fontWeight:600, color:c.text }}>{h.icon} {h.name}</div>
             <div style={{ fontSize:9, color:c.dim, marginTop:2 }}>{h.time}</div>
           </div>)}
-          <button onClick={()=>setShowCopyHistory(false)} style={{ marginTop:12, width:"100%", padding:"8px", fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+          <button onClick={()=>setShowCopyHistory(false)} style={{ marginTop:12, width:"100%", padding:"8px", fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
         </div>
       </div>}
 
@@ -1106,8 +1118,8 @@ function AgentHub({ data, loadTime }) {
           {Object.entries(ML).map(([k,v]) => {
             const active = fm==="model"&&fv===k;
             return (
-            <div key={k} onClick={()=>{if(active){setFm("all");setFv("all")}else{setFm("model");setFv(k)}}} style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 16px", borderRadius:10, border:`1px solid ${active?MC[k]+"50":c.brd}`, background:active?MC[k]+"0a":c.card, cursor:"pointer", transition:"all .15s" }} className="full-mobile pad-mobile" role="button" aria-pressed={active}>
-              <div style={{ width:24, height:24, borderRadius:6, background:MC[k]+"20", color:MC[k], display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:800 }}>{MI[k]}</div>
+            <div key={k} onClick={()=>{if(active){setFm("all");setFv("all")}else{setFm("model");setFv(k)}}} style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 16px", borderRadius:0, border:`1px solid ${active?MC[k]+"50":c.brd}`, background:active?MC[k]+"0a":c.card, cursor:"pointer", transition:"all .15s" }} className="full-mobile pad-mobile" role="button" aria-pressed={active}>
+              <div style={{ width:24, height:24, borderRadius:0, background:MC[k]+"20", color:MC[k], display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:800 }}>{MI[k]}</div>
               <div>
                 <div style={{ fontSize:11, fontWeight:600, color:active?MC[k]:c.text }} className="text-sm-mobile">{v}</div>
                 <div style={{ fontSize:9, color:c.mut }}>{P.filter(p=>p.mk===k).length} {t.prompts}</div>
@@ -1152,7 +1164,7 @@ function AgentHub({ data, loadTime }) {
           </div>}
           {fm==="category" && <div style={{display:"flex",gap:6,marginBottom:8,flexWrap:"wrap"}}>
             <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
-            {Object.entries(categories.counts).map(([cat,n]) => <button key={cat} onClick={()=>setFv(cat)} style={{ display:"flex", alignItems:"center", gap:4, padding:"4px 10px", fontSize:10, fontFamily:font, fontWeight:fv===cat?700:400, border:`1px solid ${fv===cat?(CAT_COLORS[cat]||"#e86a2a")+"60":c.brd}`, borderRadius:8, background:fv===cat?(CAT_COLORS[cat]||"#e86a2a")+"12":"transparent", color:fv===cat?(CAT_COLORS[cat]||"#e86a2a"):c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}><span>{CAT_ICONS[cat]||""}</span> {cat} <span style={{fontSize:8,opacity:.6}}>{n}</span></button>)}
+            {Object.entries(categories.counts).map(([cat,n]) => <button key={cat} onClick={()=>setFv(cat)} style={{ display:"flex", alignItems:"center", gap:4, padding:"4px 10px", fontSize:10, fontFamily:font, fontWeight:fv===cat?700:400, border:`1px solid ${fv===cat?(CAT_COLORS[cat]||"#e86a2a")+"60":c.brd}`, borderRadius:0, background:fv===cat?(CAT_COLORS[cat]||"#e86a2a")+"12":"transparent", color:fv===cat?(CAT_COLORS[cat]||"#e86a2a"):c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}><span>{CAT_ICONS[cat]||""}</span> {cat} <span style={{fontSize:8,opacity:.6}}>{n}</span></button>)}
           </div>}
           {fm==="time" && <div style={{display:"flex",gap:5,marginBottom:8,flexWrap:"wrap"}}>
             <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
@@ -1182,15 +1194,15 @@ function AgentHub({ data, loadTime }) {
             <span style={{ fontSize:11, color:c.dim }}>{debouncedSearch ? `${list.length} / ${P.length}` : list.length} {t.prompts} · ~{(filteredStats.tokens/1000).toFixed(0)}K</span>
             {/* Task 75: Progress tracker */}
             {usedCount > 0 && <span style={{ fontSize:10, color:"#10b981", fontWeight:600 }}>✓ {usedCount}/{P.length}</span>}
-            <button onClick={randomPrompt} title={lang==="ru"?"Случайный промпт":"Random prompt"} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:12, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>{lang==="ru"?"🎲 Случайный":"🎲 Random"}</button>
+            <button onClick={randomPrompt} title={lang==="ru"?"Случайный промпт":"Random prompt"} style={{ padding:"4px 10px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:600, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>⟲ {lang==="ru"?"Случайный":"Random"}</button>
             {favCount > 0 && <button onClick={()=>setShowFavsOnly(!showFavsOnly)} aria-pressed={showFavsOnly} style={{
-              padding:"3px 10px", fontSize:10, fontFamily:font, fontWeight:showFavsOnly?600:400,
-              border:`1px solid ${showFavsOnly?"#eab308":c.brd}`, borderRadius:12,
+              padding:"4px 10px", fontSize:9, letterSpacing:1.5, fontFamily:font, fontWeight:showFavsOnly?700:500,
+              border:`1px solid ${showFavsOnly?"#eab308":c.brd}`, borderRadius:0,
               background:showFavsOnly?"#eab30812":"transparent", color:showFavsOnly?"#eab308":c.mut,
               cursor:"pointer", outline:"none",
             }}>★ {favCount}</button>}
             {/* Sort (task 045) */}
-            <select value={sortBy} onChange={e=>setSortBy(e.target.value)} aria-label={lang==="ru"?"Сортировка":"Sort"} style={{ padding:"3px 8px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>
+            <select value={sortBy} onChange={e=>setSortBy(e.target.value)} aria-label={lang==="ru"?"Сортировка":"Sort"} style={{ padding:"3px 8px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>
               <option value="default">{lang==="ru"?"По умолчанию":"Default"}</option>
               <option value="name">{lang==="ru"?"По имени":"By name"}</option>
               <option value="length">{lang==="ru"?"По длине":"By length"}</option>
@@ -1200,39 +1212,39 @@ function AgentHub({ data, loadTime }) {
           </div>
           <div style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap" }}>
             {/* Task 74: Quick copy mode */}
-            <button onClick={()=>setQuickCopy(!quickCopy)} aria-pressed={quickCopy} title={lang==="ru"?"Быстрое копирование: клик = copy":"Quick copy: click = copy"} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${quickCopy?"#06b6d4":c.brd}`, borderRadius:8, background:quickCopy?"#06b6d412":"transparent", color:quickCopy?"#06b6d4":c.mut, cursor:"pointer", outline:"none" }}>⚡</button>
+            <button onClick={()=>setQuickCopy(!quickCopy)} aria-pressed={quickCopy} title={lang==="ru"?"Быстрое копирование: клик = copy":"Quick copy: click = copy"} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:700, border:`1px solid ${quickCopy?"#06b6d4":c.brd}`, borderRadius:0, background:quickCopy?"#06b6d412":"transparent", color:quickCopy?"#06b6d4":c.mut, cursor:"pointer", outline:"none" }}>⌁</button>
             {/* Task 69: Compare mode */}
-            <button onClick={()=>{setCompareMode(!compareMode);if(compareMode)setCompareIds([]);}} aria-pressed={compareMode} title={lang==="ru"?"Выбрать промты (сравнение/экспорт)":"Select prompts (compare/export)"} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${compareMode?"#c4541d":c.brd}`, borderRadius:8, background:compareMode?"#c4541d12":"transparent", color:compareMode?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}>{compareMode ? `⊞ ${compareIds.length}` : "⊞"}</button>
+            <button onClick={()=>{setCompareMode(!compareMode);if(compareMode)setCompareIds([]);}} aria-pressed={compareMode} title={lang==="ru"?"Выбрать промты (сравнение/экспорт)":"Select prompts (compare/export)"} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:700, border:`1px solid ${compareMode?"#c4541d":c.brd}`, borderRadius:0, background:compareMode?"#c4541d12":"transparent", color:compareMode?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}>{compareMode ? `▦ ${compareIds.length}` : "▦"}</button>
             {/* Random (task 047) */}
             <button onClick={() => {
               const r = P[Math.floor(Math.random()*P.length)];
               setExpanded(e=>({...e,[r.id]:true}));
               setFm("all"); setFv("all"); setSearch(""); setShowFavsOnly(false);
               setTimeout(()=>{document.getElementById(`card-${r.id}`)?.scrollIntoView({behavior:"smooth",block:"center"})},100);
-            }} aria-label={lang==="ru"?"Случайный промт":"Random"} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>🎲</button>
+            }} aria-label={lang==="ru"?"Случайный промт":"Random"} style={{ padding:"4px 12px", fontSize:11, fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>⟲</button>
             {list.length > 0 && hasFilters && <button onClick={() => {
               const allText = list.map(p => `═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${compactMode && p.compact ? p.compact : p.text}`).join('\n\n\n');
               cp("copy-filtered", allText, true);
-            }} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${copied==="copy-filtered"?"#10b981":c.brd}`, borderRadius:8, background:copied==="copy-filtered"?"#10b98112":"transparent", color:copied==="copy-filtered"?"#10b981":c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>
+            }} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${copied==="copy-filtered"?"#10b981":c.brd}`, borderRadius:0, background:copied==="copy-filtered"?"#10b98112":"transparent", color:copied==="copy-filtered"?"#10b981":c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>
               {copied==="copy-filtered" ? t.copied : t.copyFiltered} ({list.length})
             </button>}
             <button onClick={toggleAll} style={{ fontSize:10, fontFamily:font, color:c.mut, background:"none", border:"none", cursor:"pointer", padding:"4px 8px", outline:"none" }}>{allExpanded ? t.collapseAll : t.expandAll}</button>
             {/* Feat 26: View mode toggle */}
-            <div style={{ display:"flex", border:`1px solid ${c.brd}`, borderRadius:6, overflow:"hidden" }}>
-              {[{k:"card",l:"▤"},{k:"table",l:"☰"}].map(v=><button key={v.k} onClick={()=>setViewMode(v.k)} style={{ padding:"3px 8px", fontSize:10, background:viewMode===v.k?c.text+"10":"transparent", color:viewMode===v.k?c.text:c.dim, border:"none", cursor:"pointer", fontFamily:font, outline:"none" }}>{v.l}</button>)}
+            <div style={{ display:"flex", border:`1px solid ${c.brd}`, borderRadius:0, overflow:"hidden" }}>
+              {[{k:"card",l:"▤",t:lang==="ru"?"Карточки":"Cards"},{k:"table",l:"≡",t:lang==="ru"?"Таблица":"Table"}].map(v=><button key={v.k} onClick={()=>setViewMode(v.k)} title={v.t} style={{ padding:"4px 10px", fontSize:12, fontWeight:700, background:viewMode===v.k?c.accent+"15":"transparent", color:viewMode===v.k?c.accent:c.dim, border:"none", cursor:"pointer", fontFamily:font, outline:"none" }}>{v.l}</button>)}
             </div>
           </div>
         </div>
 
         {/* Task 69: Compare panel */}
         {compareMode && compareIds.length >= 2 && (
-          <div style={{ marginBottom:12, padding:12, borderRadius:10, border:`2px solid #c4541d40`, background:"#c4541d08" }}>
+          <div style={{ marginBottom:12, padding:12, borderRadius:0, border:`2px solid #c4541d40`, background:"#c4541d08" }}>
             <div style={{ fontSize:10, fontWeight:700, color:"#c4541d", marginBottom:8 }}>{lang==="ru"?"Сравнение":"Compare"} ({compareIds.length})</div>
             <div style={{ display:"grid", gridTemplateColumns:`repeat(${Math.min(compareIds.length, 3)}, 1fr)`, gap:8 }}>
               {compareIds.map(id => {
                 const p = pGet(id);
                 return p ? (
-                  <div key={id} style={{ padding:10, borderRadius:8, border:`1px solid ${p.ac}30`, background:c.surf, fontSize:10 }}>
+                  <div key={id} style={{ padding:10, borderRadius:0, border:`1px solid ${p.ac}30`, background:c.surf, fontSize:10 }}>
                     <div style={{ fontWeight:700, color:p.ac, marginBottom:4 }}>{p.icon} {t.r[p.role]||p.role}</div>
                     <div style={{ color:c.dim, fontSize:9, marginBottom:4 }}>{ML[p.mk]} · {p.time} · {p.difficulty}</div>
                     <div style={{ color:c.mut, maxHeight:200, overflowY:"auto", fontSize:9, lineHeight:1.5, whiteSpace:"pre-wrap" }}>{p.text.slice(0,500)}...</div>
@@ -1245,25 +1257,25 @@ function AgentHub({ data, loadTime }) {
               <button onClick={()=>{
                 const allText = buildPromptBundle(compareIds);
                 cp("bulk-export", allText, true);
-              }} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid #e86a2a`, borderRadius:6, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
+              }} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid #e86a2a`, borderRadius:0, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
                 {copied==="bulk-export"?t.copied:(lang==="ru"?"Скопировать все":"Copy all")} ({compareIds.length})
               </button>
-              <button onClick={()=>setCompareIds(list.map(p=>p.id))} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:6, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Выбрать все":"Select all"}</button>
-              <button onClick={()=>setCompareIds([])} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:6, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Снять все":"Deselect"}</button>
-              <button onClick={()=>{setCompareIds([]);setCompareMode(false)}} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:6, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+              <button onClick={()=>setCompareIds(list.map(p=>p.id))} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Выбрать все":"Select all"}</button>
+              <button onClick={()=>setCompareIds([])} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Снять все":"Deselect"}</button>
+              <button onClick={()=>{setCompareIds([]);setCompareMode(false)}} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
             </div>
           </div>
         )}
 
         {/* Task 78: Prompt of the day */}
         {!hasFilters && !showFavsOnly && potd && (
-          <div style={{ marginBottom:12, padding:"10px 14px", borderRadius:10, border:`1px solid ${potd.ac}30`, background:`linear-gradient(135deg, ${potd.ac}06, ${potd.ac}02)` }}>
-            <div style={{ fontSize:9, fontWeight:700, color:potd.ac, letterSpacing:2, textTransform:"uppercase", marginBottom:4 }}>💡 {lang==="ru"?"Промт дня":"Prompt of the day"}</div>
+          <div style={{ marginBottom:12, padding:"10px 14px", borderRadius:0, border:`1px solid ${potd.ac}30`, background:`linear-gradient(135deg, ${potd.ac}06, ${potd.ac}02)` }}>
+            <div style={{ fontSize:9, fontWeight:700, color:potd.ac, letterSpacing:4, textTransform:"uppercase", marginBottom:4, fontFamily:font }}>⊛ {lang==="ru"?"Промт дня":"Prompt of the day"}</div>
             <div style={{ display:"flex", alignItems:"center", gap:8, justifyContent:"space-between" }}>
               <div style={{ fontSize:11, fontWeight:600, color:c.text }}>{potd.icon} {t.r[potd.role]||potd.role} <span style={{ fontSize:9, color:c.mut, fontWeight:400 }}>({ML[potd.mk]})</span></div>
               <div style={{ display:"flex", gap:4 }}>
-                <button onClick={()=>{setExpanded(e=>({...e,[potd.id]:true}));setTimeout(()=>document.getElementById("card-"+potd.id)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${potd.ac}40`, borderRadius:6, background:"transparent", color:potd.ac, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Открыть":"Open"}</button>
-                <button onClick={()=>cp(potd.id,potd.text)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${potd.ac}`, borderRadius:6, background:potd.ac, color:c.bg, cursor:"pointer", outline:"none" }}>{copied===potd.id?t.copied:t.copy}</button>
+                <button onClick={()=>{setExpanded(e=>({...e,[potd.id]:true}));setTimeout(()=>document.getElementById("card-"+potd.id)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${potd.ac}40`, borderRadius:0, background:"transparent", color:potd.ac, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Открыть":"Open"}</button>
+                <button onClick={()=>cp(potd.id,potd.text)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${potd.ac}`, borderRadius:0, background:potd.ac, color:c.bg, cursor:"pointer", outline:"none" }}>{copied===potd.id?t.copied:t.copy}</button>
               </div>
             </div>
           </div>
@@ -1271,12 +1283,12 @@ function AgentHub({ data, loadTime }) {
 
         {/* Task 66: Prompt Constructor */}
         {showConstructor && (
-          <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:12, border:`2px solid #e86a2a40`, background:"#e86a2a06" }}>
-            <div style={{ fontSize:12, fontWeight:700, color:"#e86a2a", marginBottom:12 }}>🔧 {lang==="ru"?"Конструктор промта":"Prompt Constructor"}</div>
+          <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:0, border:`2px solid #e86a2a40`, background:"#e86a2a06" }}>
+            <div style={{ fontSize:10, letterSpacing:4, textTransform:"uppercase", fontWeight:700, color:"#e86a2a", marginBottom:12, fontFamily:font }}>✎ {lang==="ru"?"Конструктор промта":"Prompt Constructor"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }} className="stack-mobile">
               <div>
                 <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:6 }}>{lang==="ru"?"Роль":"Role"}</div>
-                <select value={constructorRole} onChange={e=>setConstructorRole(e.target.value)} style={{ width:"100%", padding:"6px 10px", fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.text, outline:"none" }}>
+                <select value={constructorRole} onChange={e=>setConstructorRole(e.target.value)} style={{ width:"100%", padding:"6px 10px", fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.text, outline:"none" }}>
                   <option value="">{lang==="ru"?"Выбери роль...":"Choose role..."}</option>
                   {["frontend","backend","fullstack","tester","designer","devops","reviewer"].map(r => (
                     <option key={r} value={r}>{t.r[r]||r}</option>
@@ -1285,7 +1297,7 @@ function AgentHub({ data, loadTime }) {
               </div>
               <div>
                 <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:6 }}>{lang==="ru"?"Стек":"Stack"}</div>
-                <select value={constructorStack} onChange={e=>setConstructorStack(e.target.value)} style={{ width:"100%", padding:"6px 10px", fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.text, outline:"none" }}>
+                <select value={constructorStack} onChange={e=>setConstructorStack(e.target.value)} style={{ width:"100%", padding:"6px 10px", fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.text, outline:"none" }}>
                   <option value="">---</option>
                   {["React + Next.js + TypeScript","Vue + Nuxt + TypeScript","Svelte + SvelteKit","Python + Django","Python + FastAPI","Go + Gin","Rust + Axum","Node.js + Express"].map(s => (
                     <option key={s} value={s}>{s}</option>
@@ -1297,7 +1309,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:12 }}>
               {["TypeScript strict","Тесты","Безопасность","Производительность","A11Y","SEO","Docker","CI/CD","Документация","Рефакторинг","Error handling","Мониторинг"].map(task => {
                 const sel = constructorTasks.includes(task);
-                return <button key={task} onClick={()=>setConstructorTasks(ts=>sel?ts.filter(x=>x!==task):[...ts,task])} style={{ fontSize:9, padding:"4px 10px", borderRadius:8, background:sel?"#e86a2a20":"transparent", color:sel?"#e86a2a":c.mut, border:`1px solid ${sel?"#e86a2a40":c.brd}`, cursor:"pointer", fontFamily:font, outline:"none" }}>{task}</button>;
+                return <button key={task} onClick={()=>setConstructorTasks(ts=>sel?ts.filter(x=>x!==task):[...ts,task])} style={{ fontSize:9, padding:"4px 10px", borderRadius:0, background:sel?"#e86a2a20":"transparent", color:sel?"#e86a2a":c.mut, border:`1px solid ${sel?"#e86a2a40":c.brd}`, cursor:"pointer", fontFamily:font, outline:"none" }}>{task}</button>;
               })}
             </div>
             {constructorRole && (
@@ -1312,47 +1324,47 @@ function AgentHub({ data, loadTime }) {
                   }
                   prompt += `\nРЕЗУЛЬТАТ: .claude/reports/${constructorRole}.md\n\nАНТИ-ЛУП: 3 = смена подхода. 5 max.\n\nПЕРВЫЙ ШАГ: Прочитай проект → план → реализация.`;
                   cp("constructor", prompt);
-                }} style={{ padding:"8px 20px", fontSize:11, fontFamily:font, fontWeight:600, border:"1.5px solid #e86a2a", borderRadius:8, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
+                }} style={{ padding:"8px 20px", fontSize:11, fontFamily:font, fontWeight:600, border:"1.5px solid #e86a2a", borderRadius:0, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
                   {copied==="constructor" ? t.copied : (lang==="ru"?"Сгенерировать и скопировать":"Generate & Copy")}
                 </button>
               </div>
             )}
-            <button onClick={()=>setShowConstructor(false)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:6, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+            <button onClick={()=>setShowConstructor(false)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
           </div>
         )}
 
         {/* Task 76: Import Custom Prompt */}
         {showImport && (
-          <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:12, border:`2px dashed ${c.brd}`, background:c.bg2 }}>
+          <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:0, border:`2px dashed ${c.brd}`, background:c.bg2 }}>
             <div style={{ fontSize:12, fontWeight:700, color:c.text, marginBottom:8 }}>📥 {lang==="ru"?"Импорт промта":"Import Prompt"}</div>
-            <textarea value={importText} onChange={e=>setImportText(e.target.value)} placeholder={lang==="ru"?"Вставь текст промта здесь...":"Paste prompt text here..."} style={{ width:"100%", height:120, padding:12, fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.text, outline:"none", resize:"vertical", boxSizing:"border-box" }} />
+            <textarea value={importText} onChange={e=>setImportText(e.target.value)} placeholder={lang==="ru"?"Вставь текст промта здесь...":"Paste prompt text here..."} style={{ width:"100%", height:120, padding:12, fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.text, outline:"none", resize:"vertical", boxSizing:"border-box" }} />
             {importText.trim().length > 50 && (
               <div style={{ marginTop:8, display:"flex", gap:8 }}>
-                <button onClick={()=>{cp("imported", importText); setToast(lang==="ru"?"Промт скопирован":"Prompt copied"); setShowImport(false); setImportText("");}} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #10b981", borderRadius:6, background:"#10b981", color:"#fff", cursor:"pointer", outline:"none" }}>{lang==="ru"?"Скопировать":"Copy"} ({Math.round(importText.length/4)} tokens)</button>
+                <button onClick={()=>{cp("imported", importText); setToast(lang==="ru"?"Промт скопирован":"Prompt copied"); setShowImport(false); setImportText("");}} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #10b981", borderRadius:0, background:"#10b981", color:"#fff", cursor:"pointer", outline:"none" }}>{lang==="ru"?"Скопировать":"Copy"} ({Math.round(importText.length/4)} tokens)</button>
               </div>
             )}
-            <button onClick={()=>{setShowImport(false);setImportText("")}} style={{ marginTop:8, padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:6, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+            <button onClick={()=>{setShowImport(false);setImportText("")}} style={{ marginTop:8, padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
           </div>
         )}
 
         {/* Task 66,76: Constructor & Import buttons + Task 58,93,94: Stack & PromptLang */}
         {!showConstructor && !showImport && (
           <div style={{ display:"flex", gap:6, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
-            <button onClick={()=>setShowConstructor(true)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px dashed #e86a2a40`, borderRadius:8, background:"transparent", color:"#e86a2a", cursor:"pointer", outline:"none" }}>🔧 {lang==="ru"?"Конструктор":lang==="kk"?"Конструктор":"Constructor"}</button>
-            <button onClick={()=>setShowImport(true)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px dashed ${c.brd}`, borderRadius:8, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>📥 {lang==="ru"?"Импорт":lang==="kk"?"Импорт":"Import"}</button>
+            <button onClick={()=>setShowConstructor(true)} style={{ padding:"5px 14px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:700, fontFamily:font, border:`1px dashed #e86a2a60`, borderRadius:0, background:"transparent", color:"#e86a2a", cursor:"pointer", outline:"none" }}>✎ {lang==="ru"?"Конструктор":lang==="kk"?"Конструктор":"Constructor"}</button>
+            <button onClick={()=>setShowImport(true)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px dashed ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>📥 {lang==="ru"?"Импорт":lang==="kk"?"Импорт":"Import"}</button>
             <div style={{ width:1, height:16, background:c.brd, margin:"0 2px" }} className="hide-mobile" />
             {/* Task 93+94: Prompt language */}
-            <select value={promptLang} onChange={e=>setPromptLang(e.target.value)} aria-label="Prompt language" style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${promptLang!=="original"?"#f97316":c.brd}`, borderRadius:8, background:promptLang!=="original"?"#f9731608":c.card, color:promptLang!=="original"?"#f97316":c.mut, cursor:"pointer", outline:"none" }}>
+            <select value={promptLang} onChange={e=>setPromptLang(e.target.value)} aria-label="Prompt language" style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${promptLang!=="original"?"#f97316":c.brd}`, borderRadius:0, background:promptLang!=="original"?"#f9731608":c.card, color:promptLang!=="original"?"#f97316":c.mut, cursor:"pointer", outline:"none" }}>
               <option value="original">🌐 Original</option>
               <option value="en">🇬🇧 English output</option>
             </select>
             {/* Compact mode for Claude Code */}
-            <button onClick={()=>setCompactMode(!compactMode)} aria-pressed={compactMode} title={lang==="ru"?"Компактные промты для Claude Code (~700 символов)":"Compact prompts for Claude Code (~700 chars)"} style={{ padding:"3px 10px", fontSize:9, fontFamily:font, border:`1px solid ${compactMode?"#10b981":c.brd}`, borderRadius:8, background:compactMode?"#10b98110":"transparent", color:compactMode?"#10b981":c.mut, cursor:"pointer", outline:"none", fontWeight:compactMode?700:400 }}>
-              {compactMode ? "⚡ Compact" : "📄 Full"}
+            <button onClick={()=>setCompactMode(!compactMode)} aria-pressed={compactMode} title={lang==="ru"?"Компактные промты для Claude Code (~700 символов)":"Compact prompts for Claude Code (~700 chars)"} style={{ padding:"3px 10px", fontSize:9, fontFamily:font, border:`1px solid ${compactMode?"#10b981":c.brd}`, borderRadius:0, background:compactMode?"#10b98110":"transparent", color:compactMode?"#10b981":c.mut, cursor:"pointer", outline:"none", fontWeight:compactMode?700:400 }}>
+              {compactMode ? "⇣ Compact" : "≡ Full"}
             </button>
             {/* Task 58: Stack override */}
-            <select value={stackOverride} onChange={e=>setStackOverride(e.target.value)} aria-label="Stack override" style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${stackOverride?"#c4541d":c.brd}`, borderRadius:8, background:stackOverride?"#c4541d08":c.card, color:stackOverride?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}>
-              <option value="">⚙ {lang==="ru"?"Стек":"Stack"}: Auto</option>
+            <select value={stackOverride} onChange={e=>setStackOverride(e.target.value)} aria-label="Stack override" style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${stackOverride?"#c4541d":c.brd}`, borderRadius:0, background:stackOverride?"#c4541d08":c.card, color:stackOverride?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}>
+              <option value="">◎ {lang==="ru"?"Стек":"Stack"}: Auto</option>
               <option value="React + Next.js + TypeScript">React + Next.js</option>
               <option value="Vue + Nuxt + TypeScript">Vue + Nuxt</option>
               <option value="Svelte + SvelteKit">SvelteKit</option>
@@ -1383,9 +1395,9 @@ function AgentHub({ data, loadTime }) {
                   <td style={{ padding:"6px 8px" }}><span style={{ color:p.ac, fontWeight:600 }}>{p.icon} {t.r[p.role]||p.role}</span></td>
                   <td style={{ padding:"6px 8px" }}><span style={{ display:"inline-flex", alignItems:"center", gap:4 }}><span style={{ width:6, height:6, borderRadius:"50%", background:MC[p.mk], flexShrink:0 }} /><span style={{ color:MC[p.mk], fontSize:9 }}>{ML[p.mk]}</span></span></td>
                   <td style={{ padding:"6px 8px", color:c.mut }} className="hide-mobile">{p.time}</td>
-                  <td style={{ padding:"6px 8px" }} className="hide-mobile">{p.difficulty && <span style={{ fontSize:8, padding:"1px 5px", borderRadius:6, background:({beginner:"#10b981",intermediate:"#f59e0b",advanced:"#ef4444"})[p.difficulty]+"15", color:({beginner:"#10b981",intermediate:"#f59e0b",advanced:"#ef4444"})[p.difficulty] }}>{p.difficulty}</span>}</td>
+                  <td style={{ padding:"6px 8px" }} className="hide-mobile">{p.difficulty && <span style={{ fontSize:8, padding:"1px 5px", borderRadius:0, background:({beginner:"#10b981",intermediate:"#f59e0b",advanced:"#ef4444"})[p.difficulty]+"15", color:({beginner:"#10b981",intermediate:"#f59e0b",advanced:"#ef4444"})[p.difficulty] }}>{p.difficulty}</span>}</td>
                   <td style={{ padding:"6px 8px", color:c.dim }} className="hide-mobile">~{Math.ceil(p.text.length/4)}</td>
-                  <td style={{ padding:"6px 8px" }}><button onClick={(e)=>{e.stopPropagation();cp(p.id,p.text)}} style={{ padding:"3px 10px", fontSize:9, fontFamily:font, fontWeight:600, border:`1px solid ${p.ac}`, borderRadius:6, background:copied===p.id?"transparent":p.ac, color:copied===p.id?p.ac:c.bg, cursor:"pointer", outline:"none" }}>{copied===p.id?"✓":t.copy}</button></td>
+                  <td style={{ padding:"6px 8px" }}><button onClick={(e)=>{e.stopPropagation();cp(p.id,p.text)}} style={{ padding:"3px 10px", fontSize:9, fontFamily:font, fontWeight:600, border:`1px solid ${p.ac}`, borderRadius:0, background:copied===p.id?"transparent":p.ac, color:copied===p.id?p.ac:c.bg, cursor:"pointer", outline:"none" }}>{copied===p.id?"✓":t.copy}</button></td>
                 </tr>
               ))}</tbody>
             </table>
@@ -1432,7 +1444,7 @@ function AgentHub({ data, loadTime }) {
                   {copyCounters[p.id] > 0 && <span style={{ fontSize:8, color:c.dim, fontWeight:600 }} title={lang==="ru"?`Скопировано ${copyCounters[p.id]}x`:`Copied ${copyCounters[p.id]}x`}>×{copyCounters[p.id]}</span>}
                   {isUsed && <span style={{ fontSize:10, color:"#10b981" }} title={lang==="ru"?"Использован":"Used"}>✓</span>}
                   {/* Task 69: Compare checkbox */}
-                  {compareMode && <button onClick={(e)=>{e.stopPropagation();setCompareIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} style={{ width:24, height:24, borderRadius:6, border:`1px solid ${compareIds.includes(p.id)?"#c4541d":c.brd}`, background:compareIds.includes(p.id)?"#c4541d":"transparent", color:compareIds.includes(p.id)?"#fff":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center" }}>{compareIds.includes(p.id)?"✓":""}</button>}
+                  {compareMode && <button onClick={(e)=>{e.stopPropagation();setCompareIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} style={{ width:24, height:24, borderRadius:0, border:`1px solid ${compareIds.includes(p.id)?"#c4541d":c.brd}`, background:compareIds.includes(p.id)?"#c4541d":"transparent", color:compareIds.includes(p.id)?"#fff":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center" }}>{compareIds.includes(p.id)?"✓":""}</button>}
                   <button onClick={(e)=>{e.stopPropagation();setPinnedIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} aria-label="Pin" title={lang==="ru"?"Закрепить наверху":"Pin to top"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${pinnedIds.includes(p.id)?"#e86a2a40":c.brd}`, background:pinnedIds.includes(p.id)?"#e86a2a12":"transparent", color:pinnedIds.includes(p.id)?"#e86a2a":c.dim, cursor:"pointer", outline:"none", fontSize:11, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{pinnedIds.includes(p.id)?"◆":"◇"}</button>
                   <button onClick={(e)=>{e.stopPropagation();toggleFav(p.id)}} aria-label={favs[p.id]?(lang==="ru"?"Убрать":lang==="kk"?"Алып тастау":"Remove"):(lang==="ru"?"Избранное":lang==="kk"?"Таңдаулы":"Favorite")} aria-pressed={!!favs[p.id]} style={{ width:28, height:28, borderRadius:0, border:`1px solid ${favs[p.id]?"#eab30840":c.brd}`, background:favs[p.id]?"#eab30812":"transparent", color:favs[p.id]?"#eab308":c.dim, cursor:"pointer", outline:"none", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{favs[p.id]?"★":"☆"}</button>
                   <button onClick={(e)=>{e.stopPropagation();toggle(p.id)}} aria-expanded={isO} className="hide-mobile" style={{ padding:"4px 12px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:600, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>{isO ? t.hide : t.show}</button>
@@ -1447,7 +1459,7 @@ function AgentHub({ data, loadTime }) {
               {isO && (
                 <div id={`body-${p.id}`} className="body-enter" style={{ padding:"0 16px 14px" }}>
                   <div style={{ maxHeight:420, overflowY:"auto", padding:16, background:c.surf, borderRadius:0, border:`1px solid ${c.brd}`, borderLeft:`2px solid ${p.ac}40` }}>
-                    {compactMode && <div style={{ marginBottom:8, padding:"4px 10px", borderRadius:6, background:"#10b98110", border:"1px solid #10b98120", fontSize:9, color:"#10b981", fontWeight:600 }}>⚡ COMPACT MODE — {lang==="ru"?"оптимизировано для Claude Code (~700 символов)":"optimized for Claude Code (~700 chars)"}</div>}
+                    {compactMode && <div style={{ marginBottom:8, padding:"4px 10px", borderRadius:0, background:"#10b98110", border:"1px solid #10b98120", fontSize:9, color:"#10b981", fontWeight:600 }}>⚡ COMPACT MODE — {lang==="ru"?"оптимизировано для Claude Code (~700 символов)":"optimized for Claude Code (~700 chars)"}</div>}
                     <pre style={{ fontSize:10.5, lineHeight:1.65, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", margin:0, fontFamily:font }}>{debouncedSearch ? <HL text={compactMode && p.compact ? p.compact : p.text} q={debouncedSearch} color={p.ac}/> : (compactMode && p.compact ? p.compact : p.text)}</pre>
                   </div>
                   {/* Task 033: Related prompts */}
@@ -1456,7 +1468,7 @@ function AgentHub({ data, loadTime }) {
                       <span style={{ fontSize:9, color:c.dim, marginRight:4 }}>{lang==="ru"?"Похожие:":"Related:"}</span>
                       {p.related.slice(0,4).map(rid => {
                         const rp = pGet(rid);
-                        return rp ? <button key={rid} onClick={()=>{toggle(p.id);setExpanded(e=>({...e,[rid]:true}));setTimeout(()=>document.getElementById(`card-${rid}`)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"2px 8px", borderRadius:8, background:rp.ac+"10", color:rp.ac, border:`1px solid ${rp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{rp.icon} {t.r[rp.role]||rp.role}</button> : null;
+                        return rp ? <button key={rid} onClick={()=>{toggle(p.id);setExpanded(e=>({...e,[rid]:true}));setTimeout(()=>document.getElementById(`card-${rid}`)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"2px 8px", borderRadius:0, background:rp.ac+"10", color:rp.ac, border:`1px solid ${rp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{rp.icon} {t.r[rp.role]||rp.role}</button> : null;
                       })}
                     </div>
                   )}
@@ -1466,7 +1478,7 @@ function AgentHub({ data, loadTime }) {
                   {p.prereqs && p.prereqs.length > 0 && (
                     <div style={{ marginTop:6, display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
                       <span style={{ fontSize:9, color:c.dim }}>⚙ {lang==="ru"?"Требуется:":"Requires:"}</span>
-                      {p.prereqs.map(pr => <span key={pr} style={{ fontSize:8, padding:"1px 6px", borderRadius:6, background:c.surf, color:c.mut, border:`1px solid ${c.brd}` }}>{pr}</span>)}
+                      {p.prereqs.map(pr => <span key={pr} style={{ fontSize:8, padding:"1px 6px", borderRadius:0, background:c.surf, color:c.mut, border:`1px solid ${c.brd}` }}>{pr}</span>)}
                     </div>
                   )}
                   {/* Feat 22: Similar by tags (only if no related defined) */}
@@ -1475,14 +1487,14 @@ function AgentHub({ data, loadTime }) {
                     return similar.length > 0 ? (
                       <div style={{ marginTop:6, display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
                         <span style={{ fontSize:9, color:c.dim, marginRight:4 }}>{lang==="ru"?"Похожие:":"Similar:"}</span>
-                        {similar.map(sp => <button key={sp.id} onClick={()=>{setExpanded(e=>({...e,[sp.id]:true}));setTimeout(()=>document.getElementById(`card-${sp.id}`)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"2px 8px", borderRadius:8, background:sp.ac+"10", color:sp.ac, border:`1px solid ${sp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{sp.icon} {t.r[sp.role]||sp.role}</button>)}
+                        {similar.map(sp => <button key={sp.id} onClick={()=>{setExpanded(e=>({...e,[sp.id]:true}));setTimeout(()=>document.getElementById(`card-${sp.id}`)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"2px 8px", borderRadius:0, background:sp.ac+"10", color:sp.ac, border:`1px solid ${sp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{sp.icon} {t.r[sp.role]||sp.role}</button>)}
                       </div>
                     ) : null;
                   })()}
                   {/* Tags display */}
                   {p.tags && p.tags.length > 0 && (
                     <div style={{ marginTop:6, display:"flex", gap:3, flexWrap:"wrap" }}>
-                      {p.tags.map(tag => <button key={tag} onClick={()=>{setFm("tag");setFv(tag)}} style={{ fontSize:8, padding:"1px 6px", borderRadius:6, background:"#e86a2a08", color:"#e86a2a", border:`1px solid #e86a2a20`, cursor:"pointer", fontFamily:font, outline:"none" }}>#{tag}</button>)}
+                      {p.tags.map(tag => <button key={tag} onClick={()=>{setFm("tag");setFv(tag)}} style={{ fontSize:8, padding:"1px 6px", borderRadius:0, background:"#e86a2a08", color:"#e86a2a", border:`1px solid #e86a2a20`, cursor:"pointer", fontFamily:font, outline:"none" }}>#{tag}</button>)}
                     </div>
                   )}
                 </div>
@@ -1493,10 +1505,10 @@ function AgentHub({ data, loadTime }) {
 
         {/* Feat 30: Recently viewed */}
         {!hasFilters && recentViewed.length > 0 && viewMode === "card" && (
-          <div style={{ marginBottom:12, padding:"8px 12px", borderRadius:8, border:`1px solid ${c.brd}`, background:c.bg2 }}>
+          <div style={{ marginBottom:12, padding:"8px 12px", borderRadius:0, border:`1px solid ${c.brd}`, background:c.bg2 }}>
             <div style={{ fontSize:9, color:c.dim, marginBottom:4, fontWeight:600 }}>{lang==="ru"?"Недавно просмотренные":"Recently viewed"}</div>
             <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
-              {recentViewed.map(rid => { const rp = pGet(rid); return rp ? <button key={rid} onClick={()=>{setExpanded(e=>({...e,[rid]:true}));setTimeout(()=>document.getElementById("card-"+rid)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"3px 8px", borderRadius:6, background:rp.ac+"10", color:rp.ac, border:`1px solid ${rp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{rp.icon} {t.r[rp.role]||rp.role}</button> : null; })}
+              {recentViewed.map(rid => { const rp = pGet(rid); return rp ? <button key={rid} onClick={()=>{setExpanded(e=>({...e,[rid]:true}));setTimeout(()=>document.getElementById("card-"+rid)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"3px 8px", borderRadius:0, background:rp.ac+"10", color:rp.ac, border:`1px solid ${rp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{rp.icon} {t.r[rp.role]||rp.role}</button> : null; })}
             </div>
           </div>
         )}
@@ -1504,7 +1516,7 @@ function AgentHub({ data, loadTime }) {
         {list.length === 0 && (
           <div style={{ textAlign:"center", padding:"40px 0", color:c.dim, fontSize:12 }}>
             {lang==="ru" ? "Ничего не найдено" : "Nothing found"}
-            {hasFilters && <div style={{marginTop:8}}><button onClick={clearFilters} style={{padding:"6px 16px",fontSize:11,fontFamily:font,border:`1px solid ${c.brd}`,borderRadius:8,background:c.card,color:c.text,cursor:"pointer",outline:"none"}}>{lang==="ru"?"Очистить фильтры":"Clear filters"}</button></div>}
+            {hasFilters && <div style={{marginTop:8}}><button onClick={clearFilters} style={{padding:"6px 16px",fontSize:11,fontFamily:font,border:`1px solid ${c.brd}`,borderRadius:0,background:c.card,color:c.text,cursor:"pointer",outline:"none"}}>{lang==="ru"?"Очистить фильтры":"Clear filters"}</button></div>}
           </div>
         )}
 
@@ -1521,7 +1533,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ fontSize:9, color:c.dim, marginBottom:4, letterSpacing:1 }}>{lang==="ru"?"НЕДАВНИЕ":"RECENT"}</div>
             <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
               {searchHist.map((h,i) => (
-                <button key={i} onClick={()=>setSearch(h)} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:12, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{h}</button>
+                <button key={i} onClick={()=>setSearch(h)} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{h}</button>
               ))}
             </div>
           </div>
@@ -1533,19 +1545,19 @@ function AgentHub({ data, loadTime }) {
         <div className="search-row" style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
           <div style={{ fontSize:10, color:c.dim, flex:1 }}>{t.combosDesc}</div>
           <div style={{ position:"relative", minWidth:200 }}>
-            <input type="search" value={comboSearch} onChange={e=>setComboSearch(e.target.value)} placeholder={lang==="ru"?"Поиск комбо...":lang==="kk"?"Комбо іздеу...":"Search combos..."} style={{ width:"100%", height:32, padding:"0 30px 0 10px", fontSize:11, fontFamily:font, borderRadius:8, border:`1px solid ${c.brd}`, background:c.surf, color:c.text, outline:"none", transition:"border .15s" }} />
+            <input type="search" value={comboSearch} onChange={e=>setComboSearch(e.target.value)} placeholder={lang==="ru"?"Поиск комбо...":lang==="kk"?"Комбо іздеу...":"Search combos..."} style={{ width:"100%", height:32, padding:"0 30px 0 10px", fontSize:11, fontFamily:font, letterSpacing:0.3, borderRadius:0, border:0, borderBottom:`1px solid ${c.brd}`, background:"transparent", color:c.text, outline:"none", transition:"border-color .15s" }} />
             {comboSearch && <button onClick={()=>setComboSearch("")} style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:12, padding:0, lineHeight:1 }}>×</button>}
           </div>
         </div>
         
         {/* Task 70: Workflow Sequencer */}
         <details style={{ marginBottom:16 }}>
-          <summary style={{ fontSize:11, fontWeight:700, color:"#c4541d", cursor:"pointer", padding:"8px 0" }}>🔀 {lang==="ru"?"Конструктор workflow":"Workflow Builder"}</summary>
-          <div style={{ marginTop:8, padding:"14px 16px", borderRadius:10, border:`2px solid #c4541d30`, background:"#c4541d06" }}>
+          <summary style={{ fontSize:10, letterSpacing:3, textTransform:"uppercase", fontWeight:700, color:"#c4541d", cursor:"pointer", padding:"10px 0", fontFamily:font }}>⇄ {lang==="ru"?"Конструктор workflow":"Workflow Builder"}</summary>
+          <div style={{ marginTop:8, padding:"14px 16px", borderRadius:0, border:`2px solid #c4541d30`, background:"#c4541d06" }}>
             <div style={{ fontSize:10, color:c.dim, marginBottom:10 }}>{lang==="ru"?"Перетаскивай промты для создания последовательности выполнения:":"Drag prompts to create execution sequence:"}</div>
             <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:12 }}>
               {P.filter(p=>!workflow.includes(p.id)).slice(0,30).map(p => (
-                <button key={p.id} onClick={()=>setWorkflow(w=>[...w,p.id])} style={{ fontSize:9, padding:"3px 8px", borderRadius:6, background:c.surf, color:p.ac, border:`1px solid ${p.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{p.icon} {(t.r[p.role]||p.role).slice(0,12)}</button>
+                <button key={p.id} onClick={()=>setWorkflow(w=>[...w,p.id])} style={{ fontSize:9, padding:"3px 8px", borderRadius:0, background:c.surf, color:p.ac, border:`1px solid ${p.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{p.icon} {(t.r[p.role]||p.role).slice(0,12)}</button>
               ))}
             </div>
             {workflow.length > 0 && (
@@ -1557,7 +1569,7 @@ function AgentHub({ data, loadTime }) {
                     return wp ? (
                       <div key={wi} style={{ display:"flex", alignItems:"center", gap:4 }}>
                         {wi > 0 && <span style={{ color:c.dim, fontSize:14 }}>→</span>}
-                        <div style={{ display:"flex", alignItems:"center", gap:4, padding:"4px 10px", borderRadius:8, background:wp.ac+"15", border:`1px solid ${wp.ac}30` }}>
+                        <div style={{ display:"flex", alignItems:"center", gap:4, padding:"4px 10px", borderRadius:0, background:wp.ac+"15", border:`1px solid ${wp.ac}30` }}>
                           <span style={{ fontSize:10, fontWeight:600, color:wp.ac }}>{wi+1}. {wp.icon} {(t.r[wp.role]||wp.role).slice(0,10)}</span>
                           <button onClick={()=>setWorkflow(w=>w.filter((_,i)=>i!==wi))} style={{ background:"none", border:"none", color:"#ef4444", cursor:"pointer", fontSize:12, padding:0, lineHeight:1 }}>×</button>
                         </div>
@@ -1572,10 +1584,10 @@ function AgentHub({ data, loadTime }) {
                       return wp ? `═══ ШАГ ${i+1}: ${(t.r[wp.role]||wp.role).toUpperCase()} (${wp.m}) ═══\n\n${wp.text}` : null;
                     }).filter(Boolean).join("\n\n\n");
                     cp("workflow", wfText, true);
-                  }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #c4541d", borderRadius:6, background:"#c4541d", color:"#fff", cursor:"pointer", outline:"none" }}>
+                  }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #c4541d", borderRadius:0, background:"#c4541d", color:"#fff", cursor:"pointer", outline:"none" }}>
                     {copied==="workflow"?t.copied:(lang==="ru"?"Скопировать workflow":"Copy workflow")} ({workflow.length})
                   </button>
-                  <button onClick={()=>setWorkflow([])} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:6, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Очистить":"Clear"}</button>
+                  <button onClick={()=>setWorkflow([])} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Очистить":"Clear"}</button>
                 </div>
               </div>
             )}
@@ -1583,25 +1595,25 @@ function AgentHub({ data, loadTime }) {
         </details>
         
         {/* Task 114: Custom combo builder */}
-        <div style={{ marginBottom:16, padding:"12px 16px", borderRadius:10, border:`1px dashed ${buildingCombo?'#e86a2a':c.brd}`, background:buildingCombo?'#e86a2a08':c.card }}>
+        <div style={{ marginBottom:16, padding:"12px 16px", borderRadius:0, border:`1px dashed ${buildingCombo?'#e86a2a':c.brd}`, background:buildingCombo?'#e86a2a08':c.card }}>
           {!buildingCombo ? (
-            <button onClick={()=>setBuildingCombo(true)} style={{ width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:"none", background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>
+            <button onClick={()=>setBuildingCombo(true)} style={{ width:"100%", padding:"10px", fontSize:10, letterSpacing:3, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:"none", background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>
               + {lang==="ru"?"Создать свою команду":"Build custom team"}
             </button>
           ) : (
             <div>
-              <div style={{ fontSize:11, fontWeight:700, color:"#e86a2a", marginBottom:8 }}>{lang==="ru"?"Выбери промты для команды":"Select prompts for team"}</div>
+              <div style={{ fontSize:10, letterSpacing:3, textTransform:"uppercase", fontWeight:700, color:"#e86a2a", marginBottom:10, fontFamily:font }}>{lang==="ru"?"Выбери промты для команды":"Select prompts for team"}</div>
               <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8 }}>
                 {P.filter(p=>p.type==="role"||customCombo.includes(p.id)).map(p => {
                   const sel = customCombo.includes(p.id);
-                  return <button key={p.id} onClick={()=>setCustomCombo(cc=>sel?cc.filter(x=>x!==p.id):[...cc,p.id])} style={{ fontSize:9, padding:"4px 10px", borderRadius:8, background:sel?p.ac+"20":c.surf, color:sel?p.ac:c.mut, border:`1px solid ${sel?p.ac+"40":c.brd}`, cursor:"pointer", fontFamily:font, outline:"none", fontWeight:sel?600:400 }}>{p.icon} {t.r[p.role]||p.role}</button>;
+                  return <button key={p.id} onClick={()=>setCustomCombo(cc=>sel?cc.filter(x=>x!==p.id):[...cc,p.id])} style={{ fontSize:9, padding:"4px 10px", borderRadius:0, background:sel?p.ac+"20":c.surf, color:sel?p.ac:c.mut, border:`1px solid ${sel?p.ac+"40":c.brd}`, cursor:"pointer", fontFamily:font, outline:"none", fontWeight:sel?600:400 }}>{p.icon} {t.r[p.role]||p.role}</button>;
                 })}
               </div>
               {customCombo.length > 0 && (
                 <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:8 }}>
                   <div style={{ fontSize:9, color:c.dim }}>{lang==="ru"?"Можно добавить задачи:":"Add tasks:"}</div>
                   {P.filter(p=>p.type==="task"&&!customCombo.includes(p.id)).slice(0,20).map(p => (
-                    <button key={p.id} onClick={()=>setCustomCombo(cc=>[...cc,p.id])} style={{ fontSize:8, padding:"2px 6px", borderRadius:6, background:c.surf, color:c.dim, border:`1px solid ${c.brd}`, cursor:"pointer", fontFamily:font, outline:"none" }}>{p.icon} {t.r[p.role]||p.role}</button>
+                    <button key={p.id} onClick={()=>setCustomCombo(cc=>[...cc,p.id])} style={{ fontSize:8, padding:"2px 6px", borderRadius:0, background:c.surf, color:c.dim, border:`1px solid ${c.brd}`, cursor:"pointer", fontFamily:font, outline:"none" }}>{p.icon} {t.r[p.role]||p.role}</button>
                   ))}
                 </div>
               )}
@@ -1609,10 +1621,10 @@ function AgentHub({ data, loadTime }) {
                 {customCombo.length >= 2 && <button onClick={()=>{
                   const allText = buildPromptBundle(customCombo);
                   cp("custom-combo", allText);
-                }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #e86a2a", borderRadius:6, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
+                }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #e86a2a", borderRadius:0, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
                   {copied==="custom-combo" ? t.copied : (lang==="ru"?"Скопировать":"Copy")} ({customCombo.length})
                 </button>}
-                <button onClick={()=>{setBuildingCombo(false);setCustomCombo([])}} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:6, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Отмена":"Cancel"}</button>
+                <button onClick={()=>{setBuildingCombo(false);setCustomCombo([])}} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Отмена":"Cancel"}</button>
               </div>
             </div>
           )}
@@ -1640,21 +1652,21 @@ function AgentHub({ data, loadTime }) {
             const hasConflict = roles.length !== new Set(roles).size;
             return (
             <div key={i} className="card-enter combo-card" style={{
-              padding:"14px 16px", borderRadius:10, borderTop:`1px solid ${c.brd}`,
+              padding:"14px 16px", borderRadius:0, borderTop:`1px solid ${c.brd}`,
               borderRight:`1px solid ${c.brd}`, borderBottom:`1px solid ${c.brd}`,
               background:c.card, cursor:"pointer", transition:"all .15s",
               borderLeft:`3px solid ${cb.color}`, animationDelay:`${i*30}ms`,
             }}>
               <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }}>
                 <div style={{ fontSize:12, fontWeight:700, color:c.text }}>{cb.name}</div>
-                {hasConflict && <span style={{ fontSize:8, padding:"1px 6px", borderRadius:6, background:"#f59e0b18", color:"#f59e0b", border:"1px solid #f59e0b30" }}>⚠</span>}
+                {hasConflict && <span style={{ fontSize:8, padding:"1px 6px", borderRadius:0, background:"#f59e0b18", color:"#f59e0b", border:"1px solid #f59e0b30" }}>⚠</span>}
                 <span style={{ fontSize:9, color:c.dim }}>{(cb.ids||[]).length} {lang==="ru"?"агентов":"agents"}</span>
               </div>
               <div style={{ fontSize:10, color:c.dim, lineHeight:1.5, marginBottom:8 }}>{cb.desc}</div>
               <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8 }}>
                 {(cb.ids||[]).map(id => {
                   const p = pGet(id);
-                  return p ? <span key={id} style={{ fontSize:8, padding:"2px 6px", borderRadius:8, background:p.ac+"12", color:p.ac, border:`1px solid ${p.ac}20` }}>{p.icon} {t.r[p.role]||p.role}</span> : null;
+                  return p ? <span key={id} style={{ fontSize:8, padding:"2px 6px", borderRadius:0, background:p.ac+"12", color:p.ac, border:`1px solid ${p.ac}20` }}>{p.icon} {t.r[p.role]||p.role}</span> : null;
                 })}
               </div>
               <div style={{ display:"flex", gap:6 }}>
@@ -1662,7 +1674,7 @@ function AgentHub({ data, loadTime }) {
                   e.stopPropagation();
                   const allText = buildPromptBundle(cb.ids);
                   cp("combo-"+i, allText);
-                }} style={{ flex:1, fontSize:9, padding:"6px 10px", borderRadius:6, border:`1px solid ${c.brd}`, background:c.surf, color:copied===("combo-"+i)?"#10b981":c.mut, cursor:"pointer", textAlign:"center", fontWeight:600, fontFamily:font, transition:"all .15s" }}>
+                }} style={{ flex:1, fontSize:9, padding:"6px 10px", borderRadius:0, border:`1px solid ${c.brd}`, background:c.surf, color:copied===("combo-"+i)?"#10b981":c.mut, cursor:"pointer", textAlign:"center", fontWeight:600, fontFamily:font, transition:"all .15s" }}>
                   {copied===("combo-"+i) ? t.copied : (lang==="ru"?"Скопировать":"Copy prompts")}
                 </div>
                 <div onClick={(e)=>{
@@ -1674,7 +1686,7 @@ function AgentHub({ data, loadTime }) {
                     script += `# ${(t.r[a.role]||a.role)} (${a.m})\n# ${launcher}\n\n`;
                   });
                   cp("launch-"+i, script);
-                }} style={{ flex:1, fontSize:9, padding:"6px 10px", borderRadius:6, border:`1px solid ${c.brd}`, background:c.surf, color:copied===("launch-"+i)?"#10b981":c.mut, cursor:"pointer", textAlign:"center", fontWeight:600, fontFamily:font, transition:"all .15s" }}>
+                }} style={{ flex:1, fontSize:9, padding:"6px 10px", borderRadius:0, border:`1px solid ${c.brd}`, background:c.surf, color:copied===("launch-"+i)?"#10b981":c.mut, cursor:"pointer", textAlign:"center", fontWeight:600, fontFamily:font, transition:"all .15s" }}>
                   {copied===("launch-"+i) ? t.copied : (lang==="ru"?"Скрипт":"Script")}
                 </div>
               </div>
@@ -1689,7 +1701,7 @@ function AgentHub({ data, loadTime }) {
         <div className="search-row" style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
           <div style={{ fontSize:10, color:c.dim, flex:1 }}>{lang==="ru"?"Быстрые команды и сниппеты":"Quick commands and snippets"}</div>
           <div style={{ position:"relative", minWidth:200 }}>
-            <input type="search" value={cheatSearch} onChange={e=>setCheatSearch(e.target.value)} placeholder={lang==="ru"?"Поиск команд...":lang==="kk"?"Команда іздеу...":"Search commands..."} style={{ width:"100%", height:32, padding:"0 30px 0 10px", fontSize:11, fontFamily:font, borderRadius:8, border:`1px solid ${c.brd}`, background:c.surf, color:c.text, outline:"none", transition:"border .15s" }} />
+            <input type="search" value={cheatSearch} onChange={e=>setCheatSearch(e.target.value)} placeholder={lang==="ru"?"Поиск команд...":lang==="kk"?"Команда іздеу...":"Search commands..."} style={{ width:"100%", height:32, padding:"0 30px 0 10px", fontSize:11, fontFamily:font, letterSpacing:0.3, borderRadius:0, border:0, borderBottom:`1px solid ${c.brd}`, background:"transparent", color:c.text, outline:"none", transition:"border-color .15s" }} />
             {cheatSearch && <button onClick={()=>setCheatSearch("")} style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:12, padding:0, lineHeight:1 }}>×</button>}
           </div>
         </div>
@@ -1701,14 +1713,14 @@ function AgentHub({ data, loadTime }) {
           return (
           <div key={key} style={{ marginBottom:16 }}>
             <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
-              <div style={{ width:24, height:24, borderRadius:6, background:sheet.color+"20", color:sheet.color, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:800 }}>{MI[key]||key[0].toUpperCase()}</div>
+              <div style={{ width:24, height:24, borderRadius:0, background:sheet.color+"20", color:sheet.color, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:800 }}>{MI[key]||key[0].toUpperCase()}</div>
               <span style={{ fontSize:14, fontWeight:700, color:sheet.color }}>{sheet.name}</span>
               <span style={{ fontSize:9, color:c.dim }}>{filteredCmds.length}</span>
             </div>
             {filteredCmds.map((c2, i) => (
               <div key={i} onClick={()=>cp(`cheat-${key}-${i}`, c2.cmd)} className="card-enter" style={{
                 display:"flex", alignItems:"center", justifyContent:"space-between", gap:12,
-                padding:"8px 14px", marginBottom:4, borderRadius:8,
+                padding:"8px 14px", marginBottom:4, borderRadius:0,
                 border:`1px solid ${c.brd}`, background:c.card, cursor:"pointer", transition:"all .15s",
               }}>
                 <div style={{ flex:1, minWidth:0 }}>
@@ -1729,7 +1741,7 @@ function AgentHub({ data, loadTime }) {
         <div className="search-row" style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
           <div style={{ flex:1 }} />
           <div style={{ position:"relative", minWidth:200 }}>
-            <input type="search" value={quickSearch} onChange={e=>setQuickSearch(e.target.value)} placeholder={lang==="ru"?"Поиск CLI команд...":lang==="kk"?"CLI команда іздеу...":"Search CLI commands..."} style={{ width:"100%", height:32, padding:"0 30px 0 10px", fontSize:11, fontFamily:font, borderRadius:8, border:`1px solid ${c.brd}`, background:c.surf, color:c.text, outline:"none", transition:"border .15s" }} />
+            <input type="search" value={quickSearch} onChange={e=>setQuickSearch(e.target.value)} placeholder={lang==="ru"?"Поиск CLI команд...":lang==="kk"?"CLI команда іздеу...":"Search CLI commands..."} style={{ width:"100%", height:32, padding:"0 30px 0 10px", fontSize:11, fontFamily:font, letterSpacing:0.3, borderRadius:0, border:0, borderBottom:`1px solid ${c.brd}`, background:"transparent", color:c.text, outline:"none", transition:"border-color .15s" }} />
             {quickSearch && <button onClick={()=>setQuickSearch("")} style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:12, padding:0, lineHeight:1 }}>×</button>}
           </div>
         </div>
@@ -1745,7 +1757,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(260px, 1fr))", gap:6 }}>
               {filteredQC.map((cmd, i) => (
                 <div key={i} onClick={()=>cp(`qc-${ci}-${i}`, cmd.cmd)} className="card-enter" style={{
-                  padding:"10px 14px", borderRadius:8, border:`1px solid ${c.brd}`,
+                  padding:"10px 14px", borderRadius:0, border:`1px solid ${c.brd}`,
                   background:c.card, cursor:"pointer", transition:"all .15s",
                 }}>
                   <div style={{ fontSize:10, color:c.mut, marginBottom:4 }}>{cmd.label}</div>
@@ -1761,10 +1773,10 @@ function AgentHub({ data, loadTime }) {
         {/* ════════════════ SECTION: SETUP ════════════════ */}
         {section === "setup" && <div role="tabpanel" id="panel-setup">
         {/* Full team setup */}
-        <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:12, border:`2px solid #e86a2a40`, background:"linear-gradient(135deg, #e86a2a08, #c4541d08)", position:"relative", overflow:"hidden" }}>
+        <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:0, border:`2px solid #e86a2a40`, background:"linear-gradient(135deg, #e86a2a08, #c4541d08)", position:"relative", overflow:"hidden" }}>
           <div style={{ position:"absolute", top:0, right:0, width:120, height:120, background:"radial-gradient(circle, #e86a2a10, transparent 70%)", pointerEvents:"none" }} />
           <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:10 }} className="stack-mobile">
-            <div style={{ width:40, height:40, borderRadius:10, background:"#e86a2a20", border:"1px solid #e86a2a30", display:"flex", alignItems:"center", justifyContent:"center", fontSize:20 }}>🚀</div>
+            <div style={{ width:40, height:40, borderRadius:0, background:"#e86a2a20", border:"1px solid #e86a2a30", display:"flex", alignItems:"center", justifyContent:"center", fontSize:20 }}>🚀</div>
             <div>
               <div style={{ fontSize:14, fontWeight:800, color:c.text }}>{t.teamSetup}</div>
               <div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{t.teamSetupDesc}</div>
@@ -1773,7 +1785,7 @@ function AgentHub({ data, loadTime }) {
           <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
             <button onClick={()=>cp("team-setup", TEAM_SETUP)} style={{
               padding:"9px 22px", fontSize:12, fontFamily:font, fontWeight:700,
-              border:"1.5px solid #e86a2a", borderRadius:8,
+              border:"1.5px solid #e86a2a", borderRadius:0,
               background:copied==="team-setup"?"transparent":"#e86a2a",
               color:copied==="team-setup"?"#e86a2a":"#fff",
               cursor:"pointer", transition:"all .15s", outline:"none",
@@ -1789,10 +1801,10 @@ function AgentHub({ data, loadTime }) {
           { id:"git", icon:"📂", title:t.setup, desc:t.setupDesc, text:GIT_SETUP },
           { id:"launch", icon:"▶", title:t.launch, desc:t.launchDesc, text:LAUNCH },
         ].map(s => (
-          <div key={s.id} style={{ marginBottom:8, border:`1px solid ${c.brd}`, borderRadius:12, background:c.card }}>
+          <div key={s.id} style={{ marginBottom:8, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card }}>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px" }}>
               <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                <div style={{ width:36, height:36, borderRadius:9, background:c.surf, border:`1px solid ${c.brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17 }}>{s.icon}</div>
+                <div style={{ width:36, height:36, borderRadius:0, background:c.surf, border:`1px solid ${c.brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17 }}>{s.icon}</div>
                 <div><div style={{ fontSize:13, fontWeight:600 }}>{s.title}</div><div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{s.desc}</div></div>
               </div>
               <CBtn id={s.id} txt={s.text} copied={copied} cp={cp} t={t} bg={c.bg} skip />
@@ -1801,10 +1813,10 @@ function AgentHub({ data, loadTime }) {
         ))}
 
         {/* Structure */}
-        <div style={{ marginTop:16, marginBottom:8, border:`1px solid ${c.brd}`, borderRadius:12, background:c.card }}>
+        <div style={{ marginTop:16, marginBottom:8, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px" }}>
             <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-              <div style={{ width:36, height:36, borderRadius:9, background:c.surf, border:`1px solid ${c.brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17 }}>🗂</div>
+              <div style={{ width:36, height:36, borderRadius:0, background:c.surf, border:`1px solid ${c.brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17 }}>🗂</div>
               <div>
                 <div style={{ fontSize:13, fontWeight:600 }}>{t.structure}</div>
                 <div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{t.structureDesc}</div>
@@ -1815,7 +1827,7 @@ function AgentHub({ data, loadTime }) {
         </div>
 
         {/* Feat 25: Quick launch generator */}
-        <div style={{ marginBottom:16, padding:"14px 18px", borderRadius:12, border:`1px dashed ${c.brd}`, background:c.bg2 }}>
+        <div style={{ marginBottom:16, padding:"14px 18px", borderRadius:0, border:`1px dashed ${c.brd}`, background:c.bg2 }}>
           <div style={{ fontSize:12, fontWeight:700, color:c.mut, marginBottom:10 }}>⚡ {lang==="ru"?"Быстрый запуск одного агента":"Quick Launch Single Agent"}</div>
           <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
             {P.filter(p=>p.type==="role").slice(0,12).map(p => (
@@ -1823,7 +1835,7 @@ function AgentHub({ data, loadTime }) {
                 const launcher = p.mk==="claude"?"claude --dangerously-skip-permissions":p.mk==="gemini"?"gemini --model gemini-3.1-pro-preview --yolo":"codex --full-auto";
                 const script = `#!/bin/bash\n# ${t.r[p.role]||p.role} (${p.m})\n${launcher}\n\n# Промт (вставь при первом запросе):\n# ${(t.r[p.role]||p.role)}`;
                 cp("ql-"+p.id, script, true);
-              }} style={{ fontSize:9, padding:"5px 10px", borderRadius:8, background:p.ac+"10", color:p.ac, border:`1px solid ${p.ac}20`, cursor:"pointer", fontFamily:font, outline:"none", fontWeight:600 }}>
+              }} style={{ fontSize:9, padding:"5px 10px", borderRadius:0, background:p.ac+"10", color:p.ac, border:`1px solid ${p.ac}20`, cursor:"pointer", fontFamily:font, outline:"none", fontWeight:600 }}>
                 {p.icon} {(t.r[p.role]||p.role).slice(0,15)} {copied===("ql-"+p.id) ? "✓" : ""}
               </button>
             ))}
@@ -1838,26 +1850,26 @@ function AgentHub({ data, loadTime }) {
         {CONFIGS.map(cfg => {
           const isO = expanded[cfg.id];
           return (
-            <div key={cfg.id} style={{ marginBottom:8, border:`1px solid ${isO?cfg.accent+"35":c.brd}`, borderRadius:12, background:c.card, overflow:"hidden", transition:"all .2s" }}>
+            <div key={cfg.id} style={{ marginBottom:8, border:`1px solid ${isO?cfg.accent+"35":c.brd}`, borderRadius:0, background:c.card, overflow:"hidden", transition:"all .2s" }}>
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px", gap:8 }}>
                 <div onClick={()=>toggle(cfg.id)} style={{ display:"flex", alignItems:"center", gap:10, flex:1, cursor:"pointer" }} role="button" aria-expanded={isO}>
-                  <div style={{ width:36, height:36, borderRadius:9, background:cfg.accent+"12", border:`1px solid ${cfg.accent}25`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17 }}>{cfg.icon}</div>
+                  <div style={{ width:36, height:36, borderRadius:0, background:cfg.accent+"12", border:`1px solid ${cfg.accent}25`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17 }}>{cfg.icon}</div>
                   <div>
                     <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                       <span style={{ fontSize:13, fontWeight:700, color:cfg.accent }}>{cfg.name}</span>
-                      <span style={{ fontSize:9, padding:"2px 7px", borderRadius:10, background:cfg.accent+"12", color:cfg.accent, border:`1px solid ${cfg.accent}25`, fontWeight:600 }}>config</span>
+                      <span style={{ fontSize:9, padding:"2px 7px", borderRadius:0, background:cfg.accent+"12", color:cfg.accent, border:`1px solid ${cfg.accent}25`, fontWeight:600 }}>config</span>
                     </div>
                     <div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{cfg.desc}</div>
                   </div>
                 </div>
                 <div style={{ display:"flex", gap:6, flexShrink:0 }}>
-                  <button onClick={()=>toggle(cfg.id)} style={{ padding:"5px 11px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:7, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{isO?t.hide:t.show}</button>
+                  <button onClick={()=>toggle(cfg.id)} style={{ padding:"5px 11px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{isO?t.hide:t.show}</button>
                   <CBtn id={cfg.id} txt={cfg.text} cl={cfg.accent} sm copied={copied} cp={cp} t={t} bg={c.bg} skip />
                 </div>
               </div>
               {isO && (
                 <div className="body-enter" style={{ padding:"0 16px 14px" }}>
-                  <div style={{ maxHeight:380, overflowY:"auto", padding:14, background:c.surf, borderRadius:9, border:`1px solid ${c.brd}` }}>
+                  <div style={{ maxHeight:380, overflowY:"auto", padding:14, background:c.surf, borderRadius:0, border:`1px solid ${c.brd}` }}>
                     <pre style={{ fontSize:10.5, lineHeight:1.65, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", margin:0, fontFamily:font }}>{cfg.text}</pre>
                   </div>
                 </div>
@@ -1868,7 +1880,7 @@ function AgentHub({ data, loadTime }) {
         </div>}
 
         {/* ── TIP + STATS + FAQ ── */}
-        <div style={{ marginTop:20, padding:"16px 18px", background:c.bg2, borderRadius:10, border:`1px solid ${c.brd}` }}>
+        <div style={{ marginTop:20, padding:"16px 18px", background:c.bg2, borderRadius:0, border:`1px solid ${c.brd}` }}>
           {/* Stats visualization (task 121) */}
           <div style={{ display:"flex", gap:16, alignItems:"center", marginBottom:14, flexWrap:"wrap" }}>
             <svg width="48" height="48" viewBox="0 0 48 48">
@@ -1917,8 +1929,8 @@ function AgentHub({ data, loadTime }) {
               {n:"3", t:"Paste in CLI", d:"Claude Code terminal"},
               {n:"4", t:"Agent works", d:"autonomously explores project"},
             ]).map(s => (
-              <div key={s.n} style={{ display:"flex", gap:8, alignItems:"flex-start", padding:"8px 10px", borderRadius:8, background:c.surf, border:`1px solid ${c.brd}` }}>
-                <div style={{ width:20, height:20, borderRadius:6, background:"#e86a2a15", color:"#e86a2a", fontSize:10, fontWeight:800, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{s.n}</div>
+              <div key={s.n} style={{ display:"flex", gap:8, alignItems:"flex-start", padding:"8px 10px", borderRadius:0, background:c.surf, border:`1px solid ${c.brd}` }}>
+                <div style={{ width:20, height:20, borderRadius:0, background:"#e86a2a15", color:"#e86a2a", fontSize:10, fontWeight:800, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{s.n}</div>
                 <div><div style={{ fontSize:10, fontWeight:700, color:c.text }}>{s.t}</div><div style={{ fontSize:9, color:c.dim }}>{s.d}</div></div>
               </div>
             ))}
@@ -1997,7 +2009,7 @@ function AgentHub({ data, loadTime }) {
                   const n = P.filter(p => p.tags && p.tags.some(t2 => cat.tags.includes(t2))).length;
                   const pct = Math.round(n / P.length * 100);
                   return (
-                    <div key={cat.k} style={{ padding:"6px 8px", borderRadius:6, border:`1px solid ${c.brd}`, background:c.card, textAlign:"center" }}>
+                    <div key={cat.k} style={{ padding:"6px 8px", borderRadius:0, border:`1px solid ${c.brd}`, background:c.card, textAlign:"center" }}>
                       <div style={{ fontSize:9, fontWeight:600, color:cat.cl }}>{cat.k}</div>
                       <div style={{ marginTop:4, height:4, borderRadius:2, background:c.surf, overflow:"hidden" }}>
                         <div style={{ width:`${Math.min(100,pct*3)}%`, height:"100%", background:cat.cl, borderRadius:2 }} />
@@ -2031,7 +2043,7 @@ function AgentHub({ data, loadTime }) {
             const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub-prompts.md"; a.click(); URL.revokeObjectURL(url);
           }} style={{
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
-            border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
+            border:`1.5px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut,
             cursor:"pointer", transition:"all .15s", outline:"none",
           }}>{lang==="ru"?"Экспорт .md":"Export .md"} ({section==="prompts"&&hasFilters?list.length:P.length})</button>
           {/* Feat 19: CSV export */}
@@ -2046,7 +2058,7 @@ function AgentHub({ data, loadTime }) {
             const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub-prompts.csv"; a.click(); URL.revokeObjectURL(url);
           }} style={{
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
-            border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
+            border:`1.5px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut,
             cursor:"pointer", transition:"all .15s", outline:"none",
           }}>{lang==="ru"?"Экспорт CSV":"Export CSV"}</button>
           <button onClick={() => {
@@ -2055,7 +2067,7 @@ function AgentHub({ data, loadTime }) {
             const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub-data.json"; a.click(); URL.revokeObjectURL(url);
           }} style={{
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
-            border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
+            border:`1.5px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut,
             cursor:"pointer", transition:"all .15s", outline:"none",
           }}>{lang==="ru"?"Экспорт JSON":"Export JSON"}</button>
           {/* Export as self-contained HTML */}
@@ -2072,7 +2084,7 @@ function AgentHub({ data, loadTime }) {
             const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub.html"; a.click(); URL.revokeObjectURL(url);
           }} style={{
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
-            border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut,
+            border:`1.5px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut,
             cursor:"pointer", transition:"all .15s", outline:"none",
           }}>{lang==="ru"?"Экспорт HTML":"Export HTML"}</button>
           {/* Feat 36: Settings backup/restore */}
@@ -2084,7 +2096,7 @@ function AgentHub({ data, loadTime }) {
                 const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub-settings.json"; a.click(); URL.revokeObjectURL(url);
               }
             } catch {}
-          }} style={{ padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600, border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>💾 {lang==="ru"?"Бэкап":"Backup"}</button>
+          }} style={{ padding:"8px 24px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>⇩ {lang==="ru"?"Бэкап":"Backup"}</button>
           <button onClick={() => {
             const input = document.createElement("input"); input.type = "file"; input.accept = ".json";
             input.onchange = (e) => {
@@ -2106,7 +2118,7 @@ function AgentHub({ data, loadTime }) {
               reader.readAsText(file);
             };
             input.click();
-          }} style={{ padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600, border:`1.5px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>📂 {lang==="ru"?"Восстановить":"Restore"}</button>
+          }} style={{ padding:"8px 24px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>⇧ {lang==="ru"?"Восстановить":"Restore"}</button>
         </div>
 
         {/* ── FOOTER ── */}
@@ -2120,7 +2132,7 @@ function AgentHub({ data, loadTime }) {
             ))}
           </div>
           <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AIAgent-Hub v9.1 · {P.length} {lang==="ru"?pl(P.length,"промт","промта","промтов"):t.prompts} · {(COMBOS[lang]||COMBOS.ru).length} {lang==="ru"?pl((COMBOS[lang]||COMBOS.ru).length,"комбо","комбо","комбо"):"combos"} · {stats.roles} {lang==="ru"?pl(stats.roles,"роль","роли","ролей"):"roles"}{loadTime ? ` · ${loadTime}ms` : ""}{copyCount > 0 ? ` · ${copyCount} ${lang==="ru"?"скопировано":"copied"}` : ""}</div>
-          {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:8, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>}
+          {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>}
         </div>
       </div>
 
@@ -2137,10 +2149,10 @@ function AgentHub({ data, loadTime }) {
       <nav className="mobile-bottom-nav" style={{ display:"none", position:"fixed", bottom:0, left:0, right:0, background:c.card, borderTop:`1px solid ${c.brd}`, padding:"6px 0", zIndex:9000, fontFamily:font }}>
         <div style={{ display:"flex", justifyContent:"space-around", maxWidth:500, margin:"0 auto" }}>
           {[
-            { k:"prompts", i:"📝", l:lang==="ru"?"Промты":"Prompts" },
-            { k:"combos", i:"👥", l:lang==="ru"?"Команды":"Teams" },
-            { k:"cheat", i:"📋", l:lang==="ru"?"CLI":"CLI" },
-            { k:"setup", i:"⚙", l:lang==="ru"?"Setup":"Setup" },
+            { k:"prompts", i:"¶", l:lang==="ru"?"Промты":"Prompts" },
+            { k:"combos", i:"⧉", l:lang==="ru"?"Комбо":"Combos" },
+            { k:"cheat", i:"≣", l:lang==="ru"?"Шпаргалки":"Cheat" },
+            { k:"setup", i:"◎", l:lang==="ru"?"Setup":"Setup" },
           ].map(n=><button key={n.k} data-active={section===n.k ? "true" : "false"} onClick={()=>{setSection(n.k);window.scrollTo({top:0,behavior:"smooth"})}} style={{ background:"none", border:"none", color:section===n.k?c.text:c.dim, cursor:"pointer", outline:"none", textAlign:"center", padding:"4px 8px", fontSize:10, fontFamily:font, fontWeight:section===n.k?700:400 }}><div style={{ fontSize:16, marginBottom:2 }}>{n.i}</div>{n.l}</button>)}
         </div>
       </nav>
