@@ -27,8 +27,8 @@ describe('CLI', () => {
   });
 
   it('list --model filters', () => {
-    const claude = run(['list', '--model', 'claude']);
-    expect(claude).toContain('rl-feat');
+    const opus = run(['list', '--model', 'opus47m']);
+    expect(opus).toContain('rl-feat');
   });
 
   it('show displays prompt', () => {
