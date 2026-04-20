@@ -2,12 +2,12 @@
 html { scroll-behavior: smooth; }
 html, body, #root { width: 100%; height: 100%; }
 
-::selection { background: rgba(99, 102, 241, 0.3); color: #fff; }
-[data-theme="light"] ::selection { background: rgba(99, 102, 241, 0.25); color: #12122a; }
+::selection { background: rgba(232, 106, 42, 0.3); color: #fff; }
+[data-theme="light"] ::selection { background: rgba(232, 106, 42, 0.25); color: #12122a; }
 
 /* Task 1,8: Focus-visible ring for keyboard a11y (overrides outline:none) */
 button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible {
-  outline: 2px solid #6366f1 !important;
+  outline: 2px solid #e86a2a !important;
   outline-offset: 2px !important;
 }
 
@@ -48,7 +48,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 }
 
 /* Task 10: Table row hover */
-tr[style]:hover { background: rgba(99, 102, 241, 0.04) !important; }
+tr[style]:hover { background: rgba(232, 106, 42, 0.04) !important; }
 
 /* Task 14: Mobile nav active indicator */
 .mobile-bottom-nav button[data-active="true"]::after {
@@ -56,7 +56,7 @@ tr[style]:hover { background: rgba(99, 102, 241, 0.04) !important; }
   display: block;
   width: 16px;
   height: 2px;
-  background: #6366f1;
+  background: #e86a2a;
   border-radius: 1px;
   margin: 2px auto 0;
 }
@@ -82,9 +82,9 @@ tr[style]:hover { background: rgba(99, 102, 241, 0.04) !important; }
 /* Cycle 11: Smooth hover on cards */
 [id^="card-"] { transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
 [id^="card-"]:hover {
-  border-color: rgba(99, 102, 241, 0.35) !important;
+  border-color: rgba(232, 106, 42, 0.35) !important;
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.08);
+  box-shadow: 0 4px 16px rgba(232, 106, 42, 0.08);
 }
 
 /* Cycle 11: Tooltip animation */
@@ -104,7 +104,7 @@ tr[style]:hover { background: rgba(99, 102, 241, 0.04) !important; }
 
 /* Cycle 18: Better scrollbar for overlay content */
 [role="dialog"] ::-webkit-scrollbar { width: 4px; }
-[role="dialog"] ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 2px; }
+[role="dialog"] ::-webkit-scrollbar-thumb { background: rgba(232, 106, 42, 0.3); border-radius: 2px; }
 
 /* Feat 20: Mobile bottom nav */
 @media (max-width: 640px) {

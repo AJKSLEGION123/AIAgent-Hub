@@ -143,13 +143,13 @@ const CSS = `
 
 :root{color-scheme:dark}
 [data-theme="light"]{color-scheme:light}
-::selection{background:#6366f140;color:inherit}
+::selection{background:#e86a2a40;color:inherit}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
 [data-theme="light"] ::-webkit-scrollbar-thumb{background:#ccc}
-input:focus{border-color:var(--brdH)!important;box-shadow:0 0 0 3px rgba(99,102,241,0.1)}
-button:focus-visible{outline:2px solid #6366f1;outline-offset:2px}
+input:focus{border-color:var(--brdH)!important;box-shadow:0 0 0 3px rgba(232,106,42,0.1)}
+button:focus-visible{outline:2px solid #e86a2a;outline-offset:2px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideDown{from{max-height:0;opacity:0}to{max-height:600px;opacity:1}}
 @keyframes pulse{0%,100%{opacity:.3;width:30%}50%{opacity:1;width:80%}}
@@ -159,7 +159,7 @@ button:focus-visible{outline:2px solid #6366f1;outline-offset:2px}
 .skeleton{background:linear-gradient(90deg,#1a1a28 25%,#252538 50%,#1a1a28 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
 [data-theme="light"] .skeleton{background:linear-gradient(90deg,#e8e8ef 25%,#d8d8e4 50%,#e8e8ef 75%);background-size:200% 100%}
 .card-enter{animation:fadeIn .2s ease;will-change:opacity,transform}
-.combo-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(99,102,241,.12)}
+.combo-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(232,106,42,.12)}
 .body-enter{animation:slideDown .25s ease;overflow:hidden;will-change:max-height,opacity}
 .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:600;pointer-events:none;max-width:min(90vw,320px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 6px 24px rgba(0,0,0,.25);animation:toastIn .18s cubic-bezier(.16,.84,.44,1),toastOut .22s ease 1.28s forwards;will-change:transform,opacity}
 .sticky-bar{position:sticky;top:0;z-index:10;padding:12px 0 8px;margin:0 -16px;padding-left:16px;padding-right:16px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
@@ -177,7 +177,7 @@ button:focus-visible{outline:2px solid #6366f1;outline-offset:2px}
   #main-content{padding-bottom:120px!important}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:0s!important;transition-duration:0s!important}}
-.skip-link{position:absolute;top:-40px;left:0;background:#6366f1;color:#fff;padding:8px 16px;z-index:100;border-radius:0 0 8px 0;font-size:12px;text-decoration:none}
+.skip-link{position:absolute;top:-40px;left:0;background:#e86a2a;color:#fff;padding:8px 16px;z-index:100;border-radius:0 0 8px 0;font-size:12px;text-decoration:none}
 .skip-link:focus{top:0}
 @media(prefers-contrast:more){
   button,div,input{border-width:2px!important}
@@ -192,7 +192,7 @@ select{-webkit-appearance:none;appearance:none;background-image:url("data:image/
   [id^="card-"]{border-top:1px solid #ddd!important;border-right:1px solid #ddd!important;border-bottom:1px solid #ddd!important;border-left:3px solid #999!important;background:#fff!important;page-break-inside:avoid}
   h1{font-size:24px!important;color:#000!important}
 }
-[id^="card-"]:focus{outline:2px solid #6366f1;outline-offset:-2px;border-radius:12px}
+[id^="card-"]:focus{outline:2px solid #e86a2a;outline-offset:-2px;border-radius:12px}
 [id^="card-"]:focus:not(:focus-visible){outline:none}
 `;
 
@@ -200,13 +200,19 @@ select{-webkit-appearance:none;appearance:none;background-image:url("data:image/
    MEMOIZED COMPONENTS (tasks: 001, 002, 082, 096, 098)
    ═══════════════════════════════════════════════ */
 const Pill = memo(({ on, fn, lb, cl, c }) => (
-  <button onClick={fn} aria-pressed={on} style={{ padding:"5px 14px", fontSize:11, fontFamily:font, border:`1px solid ${on?(cl||c.text):c.brd}`, borderRadius:20, background:on?(cl?alpha(cl,.08):c.text+"0d"):"transparent", color:on?(cl||c.text):c.mut, cursor:"pointer", transition:"all .15s", whiteSpace:"nowrap", fontWeight:on?600:400, outline:"none" }}>{lb}</button>
+  <button onClick={fn} aria-pressed={on} style={{
+    padding:"6px 2px", fontSize:10, fontFamily:font, letterSpacing:2, textTransform:"uppercase", fontWeight:on?700:500,
+    border:0, borderBottom:`1.5px solid ${on?(cl||c.accent):"transparent"}`,
+    background:"transparent", color:on?(cl||c.ink):c.mut,
+    cursor:"pointer", transition:"color .18s ease, border-color .18s ease", whiteSpace:"nowrap", outline:"none",
+    marginRight:12,
+  }}>{lb}</button>
 ));
 
 const CBtn = memo(({ id, txt, cl, sm, copied, cp, t, bg, skip }) => (
   <button onClick={() => cp(id, txt, skip)} aria-label={copied===id ? t.copied : `${t.copy}: ${id}`} style={{
-    padding:sm?"5px 12px":"7px 18px", fontSize:11, fontFamily:font, fontWeight:600,
-    border:`1.5px solid ${cl||"currentColor"}`, borderRadius:8,
+    padding:sm?"4px 12px":"6px 14px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700,
+    border:`1px solid ${cl||"currentColor"}`, borderRadius:0,
     background:copied===id?"transparent":(cl||"currentColor"), color:copied===id?(cl||"currentColor"):bg,
     cursor:"pointer", transition:"all .15s", outline:"none",
     transform: copied===id ? "scale(.96)" : "scale(1)",
@@ -231,7 +237,7 @@ const EmptyState = memo(({ c, lang }) => (
 function HL({ text, q, color }) {
   if (!q || q.length < 2) return text;
   const parts = text.split(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'));
-  return parts.map((p,i) => p.toLowerCase()===q.toLowerCase() ? <mark key={i} style={{background:alpha(color||"#6366f1",.25),color:"inherit",borderRadius:2,padding:"0 1px"}}>{p}</mark> : p);
+  return parts.map((p,i) => p.toLowerCase()===q.toLowerCase() ? <mark key={i} style={{background:alpha(color||"#e86a2a",.25),color:"inherit",borderRadius:2,padding:"0 1px"}}>{p}</mark> : p);
 }
 
 /* ═══════════════════════════════════════════════
@@ -248,7 +254,7 @@ class ErrBound extends Component {
           <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>Произошла ошибка</div>
           <div style={{fontSize:11,color:"#5e5e78",marginBottom:16,maxWidth:400}}>{this.state.err?.message}</div>
           {this.state.err?.stack && <details style={{marginBottom:16,textAlign:"left",maxWidth:500}}><summary style={{fontSize:10,color:"#5e5e78",cursor:"pointer"}}>Stack trace</summary><pre style={{fontSize:9,color:"#44445a",marginTop:8,padding:8,background:"#0a0a12",borderRadius:6,whiteSpace:"pre-wrap",wordBreak:"break-all",maxHeight:200,overflow:"auto"}}>{this.state.err.stack}</pre></details>}
-          <button onClick={()=>this.setState({err:null})} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #6366f1",borderRadius:8,background:"#6366f1",color:"#fff",cursor:"pointer"}}>Перезагрузить</button>
+          <button onClick={()=>this.setState({err:null})} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:8,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>Перезагрузить</button>
         </div>
       </div>
     );
@@ -280,7 +286,7 @@ export default function App() {
         <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>AIAgent-Hub</div>
         <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>Ошибка загрузки данных</div>
         <div style={{fontSize:11,color:"#5e5e78",marginBottom:16}}>{err?.message}</div>
-        <button onClick={()=>{setErr(null);setLoadPct(0);_d(Z,(pct)=>setLoadPct(Math.round(pct*100))).then(d=>{dataRef.current=d;setData(d)}).catch(e=>setErr(e))}} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #6366f1",borderRadius:8,background:"#6366f1",color:"#fff",cursor:"pointer"}}>Обновить</button>
+        <button onClick={()=>{setErr(null);setLoadPct(0);_d(Z,(pct)=>setLoadPct(Math.round(pct*100))).then(d=>{dataRef.current=d;setData(d)}).catch(e=>setErr(e))}} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:8,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>Обновить</button>
       </div>
     </div>
   );
@@ -293,7 +299,7 @@ export default function App() {
           <div style={{fontSize:28,fontWeight:800,color:"#ddddef",marginBottom:8}}>AIAgent-Hub</div>
           <div style={{fontSize:11,color:"#5e5e78",letterSpacing:2,marginBottom:16}}>загрузка промтов...</div>
           <div style={{width:200,height:4,background:"#1a1a28",borderRadius:2,overflow:"hidden",margin:"0 auto"}}>
-            <div style={{width:loadPct+"%",height:"100%",background:"linear-gradient(90deg,#6366f1,#8b5cf6)",borderRadius:2,transition:"width .3s ease"}} />
+            <div style={{width:loadPct+"%",height:"100%",background:"linear-gradient(90deg,#e86a2a,#c4541d)",borderRadius:2,transition:"width .3s ease"}} />
           </div>
           <div style={{fontSize:9,color:"#35354d",marginTop:8}}>{loadPct}%</div>
         </div>
@@ -514,7 +520,7 @@ function AgentHub({ data, loadTime }) {
       setShowCount(999);
       const tryScroll = (attempts = 0) => {
         const el = document.getElementById(`card-${targetId}`);
-        if (el) { el.scrollIntoView({behavior:"smooth",block:"center"}); el.style.outline="2px solid #6366f1"; setTimeout(()=>{el.style.outline=""},2000); }
+        if (el) { el.scrollIntoView({behavior:"smooth",block:"center"}); el.style.outline="2px solid #e86a2a"; setTimeout(()=>{el.style.outline=""},2000); }
         else if (attempts < 8) setTimeout(() => tryScroll(attempts + 1), 200);
       };
       setTimeout(() => tryScroll(), 300);
@@ -778,7 +784,7 @@ function AgentHub({ data, loadTime }) {
   }, [P]);
 
   const CAT_ICONS = {"AI / LLM":"\u{1F9E0}","Security":"\u{1F6E1}","Testing / QA":"\u{1F9EA}","Performance":"\u26A1","DevOps / CI":"\u2699","Frontend / UI":"\u{1F3A8}","Backend / API":"\u{1F4E6}","Data & Files":"\u{1F4CA}","Integrations":"\u{1F514}","Architecture":"\u{1F3D7}","Documentation":"\u{1F4D6}","Project Setup":"\u{1F680}"};
-  const CAT_COLORS = {"AI / LLM":"#8b5cf6","Security":"#ef4444","Testing / QA":"#a855f7","Performance":"#f59e0b","DevOps / CI":"#2563eb","Frontend / UI":"#ec4899","Backend / API":"#10b981","Data & Files":"#0891b2","Integrations":"#f97316","Architecture":"#6366f1","Documentation":"#06b6d4","Project Setup":"#0ea5e9"};
+  const CAT_COLORS = {"AI / LLM":"#c4541d","Security":"#ef4444","Testing / QA":"#a855f7","Performance":"#f59e0b","DevOps / CI":"#2563eb","Frontend / UI":"#ec4899","Backend / API":"#10b981","Data & Files":"#0891b2","Integrations":"#f97316","Architecture":"#e86a2a","Documentation":"#06b6d4","Project Setup":"#0ea5e9"};
 
   const randomPrompt = useCallback(() => {
     const r = P[Math.floor(Math.random() * P.length)];
@@ -831,7 +837,7 @@ function AgentHub({ data, loadTime }) {
       <Toast key={toastKey} msg={toast} c={c} />
 
       {/* Feat 5: Scroll progress bar */}
-      <div style={{ position:"fixed", top:0, left:0, width:scrollPct+"%", height:2, background:"linear-gradient(90deg,#6366f1,#8b5cf6)", zIndex:9999, transition:"width .1s", opacity:scrollPct>0?1:0, willChange:"width" }} />
+      <div style={{ position:"fixed", top:0, left:0, width:scrollPct+"%", height:2, background:"linear-gradient(90deg,#e86a2a,#c4541d)", zIndex:9999, transition:"width .1s", opacity:scrollPct>0?1:0, willChange:"width" }} />
 
       {/* Feat 6: Offline banner */}
       {isOffline && <div role="alert" style={{ position:"fixed", top:0, left:0, right:0, padding:"6px 0", background:"#ef4444", color:"#fff", textAlign:"center", fontSize:11, fontFamily:font, fontWeight:600, zIndex:9998 }}>{lang==="ru"?"⚡ Нет подключения к интернету":"⚡ No internet connection"}</div>}
@@ -845,7 +851,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{dp.icon} {t.r[dp.role]||dp.role} — {lang==="ru"?"Сравнение":"Diff"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
               <div>
-                <div style={{ fontSize:10, fontWeight:700, color:"#6366f1", marginBottom:8 }}>Original ({dp.text.length} chars)</div>
+                <div style={{ fontSize:10, fontWeight:700, color:"#e86a2a", marginBottom:8 }}>Original ({dp.text.length} chars)</div>
                 <pre style={{ fontSize:9, lineHeight:1.6, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", padding:12, background:c.surf, borderRadius:8, border:`1px solid ${c.brd}`, maxHeight:400, overflowY:"auto" }}>{dp.text}</pre>
               </div>
               <div>
@@ -871,7 +877,7 @@ function AgentHub({ data, loadTime }) {
             ["Story Points",lang==="ru"?"Оценка сложности: 1=5мин, 2=15мин, 3=30мин, 5=1ч":"Complexity estimate: 1=5min, 2=15min, 3=30min, 5=1hr"],
             ["♾️ Бесконечный",lang==="ru"?"Агент который не останавливается — самогенерирует задачи":"Agent that never stops — self-generates tasks"],
           ].map(([term,desc])=><div key={term} style={{ padding:"8px 0", borderBottom:`1px solid ${c.brd}` }}>
-            <div style={{ fontSize:11, fontWeight:700, color:"#6366f1" }}>{term}</div>
+            <div style={{ fontSize:11, fontWeight:700, color:"#e86a2a" }}>{term}</div>
             <div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{desc}</div>
           </div>)}
           <button onClick={()=>setShowGlossary(false)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:8, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
@@ -925,9 +931,9 @@ function AgentHub({ data, loadTime }) {
           <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{lang==="ru"?"Статистика":"Statistics"}</div>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
             {[
-              [stats.total, lang==="ru"?"Промтов":"Prompts", "#6366f1"],
+              [stats.total, lang==="ru"?"Промтов":"Prompts", "#e86a2a"],
               [stats.models, lang==="ru"?"Моделей":"Models", "#f97316"],
-              [stats.roles, lang==="ru"?"Ролей":"Roles", "#8b5cf6"],
+              [stats.roles, lang==="ru"?"Ролей":"Roles", "#c4541d"],
               [`~${stats.totalHours}h`, lang==="ru"?"Время":"Time", "#06b6d4"],
               [`~${(stats.totalTokens/1000).toFixed(0)}K`, "Tokens", "#10b981"],
               [copyCount, lang==="ru"?"Скопировано":"Copied", "#eab308"],
@@ -948,7 +954,7 @@ function AgentHub({ data, loadTime }) {
           <div style={{ marginBottom:12 }}>
             <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"Популярные теги":"Popular tags"}</div>
             <div style={{ display:"flex", gap:3, flexWrap:"wrap" }}>
-              {(() => { const tc = {}; P.forEach(p=>(p.tags||[]).forEach(tg=>{tc[tg]=(tc[tg]||0)+1})); return Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,15).map(([tg,n])=><span key={tg} style={{ fontSize:Math.max(8,Math.min(12,7+n/3)), padding:"2px 6px", borderRadius:6, background:"#6366f110", color:"#6366f1", border:"1px solid #6366f120", cursor:"pointer", fontFamily:font }} onClick={()=>{setFm("tag");setFv(tg);setSection("prompts");setShowStats(false)}}>{tg} <span style={{fontSize:8,color:c.dim}}>{n}</span></span>); })()}
+              {(() => { const tc = {}; P.forEach(p=>(p.tags||[]).forEach(tg=>{tc[tg]=(tc[tg]||0)+1})); return Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,15).map(([tg,n])=><span key={tg} style={{ fontSize:Math.max(8,Math.min(12,7+n/3)), padding:"2px 6px", borderRadius:6, background:"#e86a2a10", color:"#e86a2a", border:"1px solid #e86a2a20", cursor:"pointer", fontFamily:font }} onClick={()=>{setFm("tag");setFv(tg);setSection("prompts");setShowStats(false)}}>{tg} <span style={{fontSize:8,color:c.dim}}>{n}</span></span>); })()}
             </div>
           </div>
           {/* Cycle 26: Most copied prompts */}
@@ -1092,7 +1098,7 @@ function AgentHub({ data, loadTime }) {
           <span>AIAgent-Hub</span>
           <span>›</span>
           <span style={{ color:c.text, fontWeight:600 }}>{section==="prompts"?(lang==="ru"?"Промты":"Prompts"):section==="combos"?(lang==="ru"?"Команды":"Teams"):section==="cheat"?(lang==="ru"?"Шпаргалки":"Cheat"):section==="quick"?"CLI":(lang==="ru"?"Настройка":"Setup")}</span>
-          {hasFilters && <><span>›</span><span style={{ color:"#6366f1" }}>{debouncedSearch?`"${debouncedSearch}"`:fm!=="all"?(fm==="model"?(ML[fv]||fv):fm==="role"?(t.r[fv]||fv):fv):(showNew?"NEW":hideUsed?"Hide ✓":"filter")}</span></>}
+          {hasFilters && <><span>›</span><span style={{ color:"#e86a2a" }}>{debouncedSearch?`"${debouncedSearch}"`:fm!=="all"?(fm==="model"?(ML[fv]||fv):fm==="role"?(t.r[fv]||fv):fv):(showNew?"NEW":hideUsed?"Hide ✓":"filter")}</span></>}
         </div>
 
         {/* ── MODEL BADGES (task 018: toggle) ── */}
@@ -1115,9 +1121,9 @@ function AgentHub({ data, loadTime }) {
           {/* Search */}
           <div style={{ position:"relative", marginBottom:10 }}>
             <input ref={searchRef} value={search} onChange={e=>setSearch(e.target.value)} onFocus={()=>setSearchFocused(true)} onBlur={()=>setTimeout(()=>setSearchFocused(false),150)} type="search" placeholder={`${t.search} (Ctrl+K)`} aria-label={t.search} style={{
-              width:"100%", padding:"10px 14px 10px 36px", fontSize:12, fontFamily:font,
-              border:`1px solid ${c.brd}`, borderRadius:10, background:c.card, color:c.text,
-              outline:"none", boxSizing:"border-box", transition:"border-color .15s,box-shadow .15s",
+              width:"100%", padding:"12px 14px 12px 36px", fontSize:12, fontFamily:font, letterSpacing:0.3,
+              border:0, borderBottom:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.text,
+              outline:"none", boxSizing:"border-box", transition:"border-color .15s",
             }} />
             <span style={{ position:"absolute", left:12, top:"50%", transform:"translateY(-50%)", fontSize:14, color:c.dim, pointerEvents:"none" }}>⌕</span>
             {search && <button onClick={()=>setSearch("")} aria-label="Очистить поиск" style={{ position:"absolute", right:10, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.mut, cursor:"pointer", fontSize:16, padding:4, lineHeight:1, outline:"none" }}>×</button>}
@@ -1128,7 +1134,7 @@ function AgentHub({ data, loadTime }) {
             {[{k:"all",l:t.all},{k:"category",l:lang==="ru"?"Категории":"Categories"},{k:"model",l:t.byModel},{k:"role",l:t.byRole},{k:"type",l:t.byType},{k:"difficulty",l:lang==="ru"?"Сложность":"Difficulty"},{k:"time",l:lang==="ru"?"Время":"Time"},{k:"tag",l:lang==="ru"?"Теги":"Tags"}].map(f =>
               <Pill key={f.k} on={fm===f.k} fn={()=>{setFm(f.k);setFv("all");}} lb={f.l} c={c} />
             )}
-            {hasFilters && <button onClick={clearFilters} style={{ padding:"5px 14px", fontSize:11, fontFamily:font, border:`1px solid #ef444440`, borderRadius:20, background:"#ef444408", color:"#ef4444", cursor:"pointer", outline:"none" }}>✕ {lang==="ru"?"Сброс":"Reset"}</button>}
+            {hasFilters && <button onClick={clearFilters} style={{ padding:"6px 2px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:600, border:0, borderBottom:`1.5px solid #ef4444`, background:"transparent", color:"#ef4444", cursor:"pointer", outline:"none", marginRight:12 }}>✕ {lang==="ru"?"Сброс":"Reset"}</button>}
             <div style={{ width:1, height:16, background:c.brd }} />
             {/* Feat 10: NEW only */}
             <Pill on={showNew} fn={()=>setShowNew(!showNew)} lb="NEW" cl="#10b981" c={c} />
@@ -1146,7 +1152,7 @@ function AgentHub({ data, loadTime }) {
           </div>}
           {fm==="category" && <div style={{display:"flex",gap:6,marginBottom:8,flexWrap:"wrap"}}>
             <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
-            {Object.entries(categories.counts).map(([cat,n]) => <button key={cat} onClick={()=>setFv(cat)} style={{ display:"flex", alignItems:"center", gap:4, padding:"4px 10px", fontSize:10, fontFamily:font, fontWeight:fv===cat?700:400, border:`1px solid ${fv===cat?(CAT_COLORS[cat]||"#6366f1")+"60":c.brd}`, borderRadius:8, background:fv===cat?(CAT_COLORS[cat]||"#6366f1")+"12":"transparent", color:fv===cat?(CAT_COLORS[cat]||"#6366f1"):c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}><span>{CAT_ICONS[cat]||""}</span> {cat} <span style={{fontSize:8,opacity:.6}}>{n}</span></button>)}
+            {Object.entries(categories.counts).map(([cat,n]) => <button key={cat} onClick={()=>setFv(cat)} style={{ display:"flex", alignItems:"center", gap:4, padding:"4px 10px", fontSize:10, fontFamily:font, fontWeight:fv===cat?700:400, border:`1px solid ${fv===cat?(CAT_COLORS[cat]||"#e86a2a")+"60":c.brd}`, borderRadius:8, background:fv===cat?(CAT_COLORS[cat]||"#e86a2a")+"12":"transparent", color:fv===cat?(CAT_COLORS[cat]||"#e86a2a"):c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}><span>{CAT_ICONS[cat]||""}</span> {cat} <span style={{fontSize:8,opacity:.6}}>{n}</span></button>)}
           </div>}
           {fm==="time" && <div style={{display:"flex",gap:5,marginBottom:8,flexWrap:"wrap"}}>
             <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
@@ -1156,7 +1162,7 @@ function AgentHub({ data, loadTime }) {
           </div>}
           {fm==="tag" && <div style={{display:"flex",gap:5,marginBottom:8,flexWrap:"wrap"}}>
             <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
-            {allTags.map(tag => <Pill key={tag} on={fv===tag} fn={()=>setFv(tag)} lb={tag} cl="#6366f1" c={c} />)}
+            {allTags.map(tag => <Pill key={tag} on={fv===tag} fn={()=>setFv(tag)} lb={tag} cl="#e86a2a" c={c} />)}
           </div>}
         </div>
 
@@ -1196,7 +1202,7 @@ function AgentHub({ data, loadTime }) {
             {/* Task 74: Quick copy mode */}
             <button onClick={()=>setQuickCopy(!quickCopy)} aria-pressed={quickCopy} title={lang==="ru"?"Быстрое копирование: клик = copy":"Quick copy: click = copy"} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${quickCopy?"#06b6d4":c.brd}`, borderRadius:8, background:quickCopy?"#06b6d412":"transparent", color:quickCopy?"#06b6d4":c.mut, cursor:"pointer", outline:"none" }}>⚡</button>
             {/* Task 69: Compare mode */}
-            <button onClick={()=>{setCompareMode(!compareMode);if(compareMode)setCompareIds([]);}} aria-pressed={compareMode} title={lang==="ru"?"Выбрать промты (сравнение/экспорт)":"Select prompts (compare/export)"} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${compareMode?"#8b5cf6":c.brd}`, borderRadius:8, background:compareMode?"#8b5cf612":"transparent", color:compareMode?"#8b5cf6":c.mut, cursor:"pointer", outline:"none" }}>{compareMode ? `⊞ ${compareIds.length}` : "⊞"}</button>
+            <button onClick={()=>{setCompareMode(!compareMode);if(compareMode)setCompareIds([]);}} aria-pressed={compareMode} title={lang==="ru"?"Выбрать промты (сравнение/экспорт)":"Select prompts (compare/export)"} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${compareMode?"#c4541d":c.brd}`, borderRadius:8, background:compareMode?"#c4541d12":"transparent", color:compareMode?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}>{compareMode ? `⊞ ${compareIds.length}` : "⊞"}</button>
             {/* Random (task 047) */}
             <button onClick={() => {
               const r = P[Math.floor(Math.random()*P.length)];
@@ -1220,8 +1226,8 @@ function AgentHub({ data, loadTime }) {
 
         {/* Task 69: Compare panel */}
         {compareMode && compareIds.length >= 2 && (
-          <div style={{ marginBottom:12, padding:12, borderRadius:10, border:`2px solid #8b5cf640`, background:"#8b5cf608" }}>
-            <div style={{ fontSize:10, fontWeight:700, color:"#8b5cf6", marginBottom:8 }}>{lang==="ru"?"Сравнение":"Compare"} ({compareIds.length})</div>
+          <div style={{ marginBottom:12, padding:12, borderRadius:10, border:`2px solid #c4541d40`, background:"#c4541d08" }}>
+            <div style={{ fontSize:10, fontWeight:700, color:"#c4541d", marginBottom:8 }}>{lang==="ru"?"Сравнение":"Compare"} ({compareIds.length})</div>
             <div style={{ display:"grid", gridTemplateColumns:`repeat(${Math.min(compareIds.length, 3)}, 1fr)`, gap:8 }}>
               {compareIds.map(id => {
                 const p = pGet(id);
@@ -1239,7 +1245,7 @@ function AgentHub({ data, loadTime }) {
               <button onClick={()=>{
                 const allText = buildPromptBundle(compareIds);
                 cp("bulk-export", allText, true);
-              }} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid #6366f1`, borderRadius:6, background:"#6366f1", color:"#fff", cursor:"pointer", outline:"none" }}>
+              }} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid #e86a2a`, borderRadius:6, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
                 {copied==="bulk-export"?t.copied:(lang==="ru"?"Скопировать все":"Copy all")} ({compareIds.length})
               </button>
               <button onClick={()=>setCompareIds(list.map(p=>p.id))} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:6, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Выбрать все":"Select all"}</button>
@@ -1265,8 +1271,8 @@ function AgentHub({ data, loadTime }) {
 
         {/* Task 66: Prompt Constructor */}
         {showConstructor && (
-          <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:12, border:`2px solid #6366f140`, background:"#6366f106" }}>
-            <div style={{ fontSize:12, fontWeight:700, color:"#6366f1", marginBottom:12 }}>🔧 {lang==="ru"?"Конструктор промта":"Prompt Constructor"}</div>
+          <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:12, border:`2px solid #e86a2a40`, background:"#e86a2a06" }}>
+            <div style={{ fontSize:12, fontWeight:700, color:"#e86a2a", marginBottom:12 }}>🔧 {lang==="ru"?"Конструктор промта":"Prompt Constructor"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }} className="stack-mobile">
               <div>
                 <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:6 }}>{lang==="ru"?"Роль":"Role"}</div>
@@ -1291,7 +1297,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:12 }}>
               {["TypeScript strict","Тесты","Безопасность","Производительность","A11Y","SEO","Docker","CI/CD","Документация","Рефакторинг","Error handling","Мониторинг"].map(task => {
                 const sel = constructorTasks.includes(task);
-                return <button key={task} onClick={()=>setConstructorTasks(ts=>sel?ts.filter(x=>x!==task):[...ts,task])} style={{ fontSize:9, padding:"4px 10px", borderRadius:8, background:sel?"#6366f120":"transparent", color:sel?"#6366f1":c.mut, border:`1px solid ${sel?"#6366f140":c.brd}`, cursor:"pointer", fontFamily:font, outline:"none" }}>{task}</button>;
+                return <button key={task} onClick={()=>setConstructorTasks(ts=>sel?ts.filter(x=>x!==task):[...ts,task])} style={{ fontSize:9, padding:"4px 10px", borderRadius:8, background:sel?"#e86a2a20":"transparent", color:sel?"#e86a2a":c.mut, border:`1px solid ${sel?"#e86a2a40":c.brd}`, cursor:"pointer", fontFamily:font, outline:"none" }}>{task}</button>;
               })}
             </div>
             {constructorRole && (
@@ -1306,7 +1312,7 @@ function AgentHub({ data, loadTime }) {
                   }
                   prompt += `\nРЕЗУЛЬТАТ: .claude/reports/${constructorRole}.md\n\nАНТИ-ЛУП: 3 = смена подхода. 5 max.\n\nПЕРВЫЙ ШАГ: Прочитай проект → план → реализация.`;
                   cp("constructor", prompt);
-                }} style={{ padding:"8px 20px", fontSize:11, fontFamily:font, fontWeight:600, border:"1.5px solid #6366f1", borderRadius:8, background:"#6366f1", color:"#fff", cursor:"pointer", outline:"none" }}>
+                }} style={{ padding:"8px 20px", fontSize:11, fontFamily:font, fontWeight:600, border:"1.5px solid #e86a2a", borderRadius:8, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
                   {copied==="constructor" ? t.copied : (lang==="ru"?"Сгенерировать и скопировать":"Generate & Copy")}
                 </button>
               </div>
@@ -1332,7 +1338,7 @@ function AgentHub({ data, loadTime }) {
         {/* Task 66,76: Constructor & Import buttons + Task 58,93,94: Stack & PromptLang */}
         {!showConstructor && !showImport && (
           <div style={{ display:"flex", gap:6, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
-            <button onClick={()=>setShowConstructor(true)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px dashed #6366f140`, borderRadius:8, background:"transparent", color:"#6366f1", cursor:"pointer", outline:"none" }}>🔧 {lang==="ru"?"Конструктор":lang==="kk"?"Конструктор":"Constructor"}</button>
+            <button onClick={()=>setShowConstructor(true)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px dashed #e86a2a40`, borderRadius:8, background:"transparent", color:"#e86a2a", cursor:"pointer", outline:"none" }}>🔧 {lang==="ru"?"Конструктор":lang==="kk"?"Конструктор":"Constructor"}</button>
             <button onClick={()=>setShowImport(true)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px dashed ${c.brd}`, borderRadius:8, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>📥 {lang==="ru"?"Импорт":lang==="kk"?"Импорт":"Import"}</button>
             <div style={{ width:1, height:16, background:c.brd, margin:"0 2px" }} className="hide-mobile" />
             {/* Task 93+94: Prompt language */}
@@ -1345,7 +1351,7 @@ function AgentHub({ data, loadTime }) {
               {compactMode ? "⚡ Compact" : "📄 Full"}
             </button>
             {/* Task 58: Stack override */}
-            <select value={stackOverride} onChange={e=>setStackOverride(e.target.value)} aria-label="Stack override" style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${stackOverride?"#8b5cf6":c.brd}`, borderRadius:8, background:stackOverride?"#8b5cf608":c.card, color:stackOverride?"#8b5cf6":c.mut, cursor:"pointer", outline:"none" }}>
+            <select value={stackOverride} onChange={e=>setStackOverride(e.target.value)} aria-label="Stack override" style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${stackOverride?"#c4541d":c.brd}`, borderRadius:8, background:stackOverride?"#c4541d08":c.card, color:stackOverride?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}>
               <option value="">⚙ {lang==="ru"?"Стек":"Stack"}: Auto</option>
               <option value="React + Next.js + TypeScript">React + Next.js</option>
               <option value="Vue + Nuxt + TypeScript">Vue + Nuxt</option>
@@ -1396,24 +1402,24 @@ function AgentHub({ data, loadTime }) {
             <div key={p.id} id={`card-${p.id}`} tabIndex={0} className={isO?"":"card-enter"}
               onClick={()=>{ if(quickCopy && !isO){ cp(p.id,p.text); return; } }}
               onDoubleClick={()=>cp(p.id,p.text)} style={{
-              marginBottom:8, borderTop:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#8b5cf650":debouncedSearch?p.ac+"20":c.brd}`, borderRight:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#8b5cf650":debouncedSearch?p.ac+"20":c.brd}`, borderBottom:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#8b5cf650":debouncedSearch?p.ac+"20":c.brd}`, borderRadius:12,
-              background:isO?c.cardH:c.card, overflow:"hidden", transition:"all .2s",
-              boxShadow:isO?`0 0 20px ${p.ac}08`:"none",
-              borderLeft:`3px solid ${MC[p.mk]}`, contain:"content",
+              marginBottom:-1, borderTop:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#c4541d50":debouncedSearch?p.ac+"20":c.brd}`, borderRight:0, borderBottom:`1px solid ${isO?p.ac+"35":compareIds.includes(p.id)?"#c4541d50":debouncedSearch?p.ac+"20":c.brd}`, borderRadius:0,
+              background:isO?c.cardH:c.card, overflow:"hidden", transition:"background .2s, border-color .2s",
+              boxShadow:isO?`inset 3px 0 0 ${p.ac}`:"none",
+              borderLeft:`2px solid ${isO?p.ac:"transparent"}`, contain:"content",
               cursor:quickCopy?"copy":"default",
             }}>
               {/* Header */}
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px", gap:8 }} className="pad-mobile">
                 <div onClick={()=>toggle(p.id)} style={{ display:"flex", alignItems:"center", gap:10, flex:1, minWidth:0, cursor:"pointer" }} role="button" aria-expanded={isO} aria-controls={`body-${p.id}`}>
-                  <div style={{ width:36, height:36, borderRadius:9, background:p.ac+"12", border:`1px solid ${p.ac}25`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17, flexShrink:0 }}>{p.icon}</div>
+                  <div style={{ width:32, height:32, borderRadius:0, background:"transparent", border:0, borderRight:`1px solid ${c.brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, flexShrink:0, paddingRight:10 }}>{p.icon}</div>
                   <div style={{ minWidth:0, flex:1 }}>
                     <div style={{ display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
                       <span style={{ fontSize:13, fontWeight:700, color:p.ac }}>{debouncedSearch ? <HL text={t.r[p.role]||p.role} q={debouncedSearch} color={p.ac}/> : (t.r[p.role]||p.role)}</span>
-                      <span style={{ fontSize:9, padding:"2px 7px", borderRadius:10, background:MC[p.mk]+"12", color:MC[p.mk], border:`1px solid ${MC[p.mk]}25`, fontWeight:600 }}>{ML[p.mk]}</span>
-                      {p.type==="task" && <span style={{ fontSize:9, padding:"2px 7px", borderRadius:10, background:"#ef444412", color:"#ef4444", border:"1px solid #ef444425", fontWeight:600 }}>{lang==="ru"?"задача":"task"}</span>}
-                      {p.difficulty && <span style={{ fontSize:9, padding:"2px 7px", borderRadius:10, background:diffColors[p.difficulty]+"12", color:diffColors[p.difficulty], border:`1px solid ${diffColors[p.difficulty]}25`, fontWeight:500 }} className="hide-mobile">{p.difficulty}</span>}
-                      {p.v==="7.1" && <span style={{ fontSize:8, padding:"1px 6px", borderRadius:6, background:"#10b98118", color:"#10b981", border:"1px solid #10b98130", fontWeight:700 }}>NEW</span>}
-                      {p.time && <span style={{ fontSize:9, padding:"2px 7px", borderRadius:10, background:c.surf, color:c.mut, border:`1px solid ${c.brd}`, fontWeight:500 }} className="hide-mobile">{p.time}</span>}
+                      <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:MC[p.mk], fontWeight:700, fontFamily:font }}>{ML[p.mk]}</span>
+                      {p.type==="task" && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:"#ef4444", fontWeight:700, fontFamily:font }}>· {lang==="ru"?"задача":"task"}</span>}
+                      {p.difficulty && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:diffColors[p.difficulty], fontWeight:600, fontFamily:font }} className="hide-mobile">· {p.difficulty}</span>}
+                      {p.v==="7.1" && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:"#10b981", fontWeight:700, fontFamily:font }}>· new</span>}
+                      {p.time && <span style={{ fontSize:8, letterSpacing:1.5, color:c.dim, fontFamily:font }} className="hide-mobile">· {p.time}</span>}
                     </div>
                     {!isO && <div style={{ fontSize:10, color:c.dim, marginTop:3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{preview}...</div>}
                     {isO && <div style={{ fontSize:10, color:c.mut, marginTop:3 }}>{compactMode ? (p.compact||"").split("\n").length : ln} {t.lines} · {(compactMode ? (p.compact||"") : p.text).split(/\s+/).length} {lang==="ru"?"слов":"words"} · ~{Math.ceil((compactMode ? (p.compact||"").length : p.text.length)/4)} tokens {compactMode && <span style={{color:"#10b981",fontWeight:600}}>⚡</span>}</div>}
@@ -1422,27 +1428,25 @@ function AgentHub({ data, loadTime }) {
                 <div style={{ display:"flex", gap:6, flexShrink:0, alignItems:"center" }}>
                   {/* Task 75: Used indicator */}
                   {/* Feat 18: Focus mode button */}
-                  <button onClick={(e)=>{e.stopPropagation();setFocusPrompt(p)}} aria-label="Focus" title={lang==="ru"?"Focus mode (F)":"Focus mode (F)"} className="hide-mobile" style={{ width:30, height:30, borderRadius:7, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", fontSize:12, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>⛶</button>
+                  <button onClick={(e)=>{e.stopPropagation();setFocusPrompt(p)}} aria-label="Focus" title={lang==="ru"?"Focus mode (F)":"Focus mode (F)"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", fontSize:12, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>⛶</button>
                   {copyCounters[p.id] > 0 && <span style={{ fontSize:8, color:c.dim, fontWeight:600 }} title={lang==="ru"?`Скопировано ${copyCounters[p.id]}x`:`Copied ${copyCounters[p.id]}x`}>×{copyCounters[p.id]}</span>}
                   {isUsed && <span style={{ fontSize:10, color:"#10b981" }} title={lang==="ru"?"Использован":"Used"}>✓</span>}
                   {/* Task 69: Compare checkbox */}
-                  {compareMode && <button onClick={(e)=>{e.stopPropagation();setCompareIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} style={{ width:24, height:24, borderRadius:6, border:`1px solid ${compareIds.includes(p.id)?"#8b5cf6":c.brd}`, background:compareIds.includes(p.id)?"#8b5cf6":"transparent", color:compareIds.includes(p.id)?"#fff":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center" }}>{compareIds.includes(p.id)?"✓":""}</button>}
-                  <button onClick={(e)=>{e.stopPropagation();setPinnedIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} aria-label="Pin" title={lang==="ru"?"Закрепить наверху":"Pin to top"} className="hide-mobile" style={{ width:30, height:30, borderRadius:7, border:`1px solid ${pinnedIds.includes(p.id)?"#6366f140":c.brd}`, background:pinnedIds.includes(p.id)?"#6366f112":"transparent", color:pinnedIds.includes(p.id)?"#6366f1":c.dim, cursor:"pointer", outline:"none", fontSize:12, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{pinnedIds.includes(p.id)?"📌":"📍"}</button>
-                  <button onClick={(e)=>{e.stopPropagation();toggleFav(p.id)}} aria-label={favs[p.id]?(lang==="ru"?"Убрать":lang==="kk"?"Алып тастау":"Remove"):(lang==="ru"?"Избранное":lang==="kk"?"Таңдаулы":"Favorite")} aria-pressed={!!favs[p.id]} style={{ width:30, height:30, borderRadius:7, border:`1px solid ${favs[p.id]?"#eab30840":c.brd}`, background:favs[p.id]?"#eab30812":"transparent", color:favs[p.id]?"#eab308":c.dim, cursor:"pointer", outline:"none", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{favs[p.id]?"★":"☆"}</button>
-                  <button onClick={(e)=>{e.stopPropagation();toggle(p.id)}} aria-expanded={isO} className="hide-mobile" style={{ padding:"5px 11px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:7, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>{isO ? t.hide : t.show}</button>
+                  {compareMode && <button onClick={(e)=>{e.stopPropagation();setCompareIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} style={{ width:24, height:24, borderRadius:6, border:`1px solid ${compareIds.includes(p.id)?"#c4541d":c.brd}`, background:compareIds.includes(p.id)?"#c4541d":"transparent", color:compareIds.includes(p.id)?"#fff":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center" }}>{compareIds.includes(p.id)?"✓":""}</button>}
+                  <button onClick={(e)=>{e.stopPropagation();setPinnedIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} aria-label="Pin" title={lang==="ru"?"Закрепить наверху":"Pin to top"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${pinnedIds.includes(p.id)?"#e86a2a40":c.brd}`, background:pinnedIds.includes(p.id)?"#e86a2a12":"transparent", color:pinnedIds.includes(p.id)?"#e86a2a":c.dim, cursor:"pointer", outline:"none", fontSize:11, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{pinnedIds.includes(p.id)?"◆":"◇"}</button>
+                  <button onClick={(e)=>{e.stopPropagation();toggleFav(p.id)}} aria-label={favs[p.id]?(lang==="ru"?"Убрать":lang==="kk"?"Алып тастау":"Remove"):(lang==="ru"?"Избранное":lang==="kk"?"Таңдаулы":"Favorite")} aria-pressed={!!favs[p.id]} style={{ width:28, height:28, borderRadius:0, border:`1px solid ${favs[p.id]?"#eab30840":c.brd}`, background:favs[p.id]?"#eab30812":"transparent", color:favs[p.id]?"#eab308":c.dim, cursor:"pointer", outline:"none", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{favs[p.id]?"★":"☆"}</button>
+                  <button onClick={(e)=>{e.stopPropagation();toggle(p.id)}} aria-expanded={isO} className="hide-mobile" style={{ padding:"4px 12px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:600, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>{isO ? t.hide : t.show}</button>
                   <CBtn id={p.id} txt={compactMode && p.compact ? p.compact : p.text} cl={p.ac} sm copied={copied} cp={cp} t={t} bg={c.bg} />
                   {/* Cycle 6: Copy as markdown */}
-                  {isO && <button onClick={(e)=>{e.stopPropagation();const md=`## ${p.icon} ${t.r[p.role]||p.role} (${p.m})\n\n\`\`\`\n${p.text}\n\`\`\`\n`;cp("md-"+p.id,md,true)}} title={lang==="ru"?"Копировать как Markdown":"Copy as Markdown"} className="hide-mobile" style={{ width:30, height:30, borderRadius:7, border:`1px solid ${copied===("md-"+p.id)?"#10b981":c.brd}`, background:copied===("md-"+p.id)?"#10b98112":"transparent", color:copied===("md-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s", fontFamily:font, fontWeight:700 }}>{copied===("md-"+p.id)?"✓":"MD"}</button>}
-                  {/* Cycle 25: Diff button */}
-                  {isO && p.compact && <button onClick={(e)=>{e.stopPropagation();setShowDiff(p.id)}} title={lang==="ru"?"Сравнить original vs compact":"Diff original vs compact"} className="hide-mobile" style={{ width:30, height:30, borderRadius:7, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", fontSize:9, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s", fontFamily:font, fontWeight:700 }}>⇄</button>}
-                  {/* Task 77: Share link */}
-                  <button onClick={(e)=>{e.stopPropagation();const url=location.origin+location.pathname+`#prompt-${p.id}`;navigator.clipboard?.writeText(url);setCopied("share-"+p.id);setTimeout(()=>setCopied(null),2000)}} title={lang==="ru"?"Скопировать ссылку":"Copy link"} style={{ width:30, height:30, borderRadius:7, border:`1px solid ${copied===("share-"+p.id)?"#10b981":c.brd}`, background:copied===("share-"+p.id)?"#10b98112":"transparent", color:copied===("share-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", fontSize:11, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{copied===("share-"+p.id)?"✓":"🔗"}</button>
+                  {isO && <button onClick={(e)=>{e.stopPropagation();const md=`## ${p.icon} ${t.r[p.role]||p.role} (${p.m})\n\n\`\`\`\n${p.text}\n\`\`\`\n`;cp("md-"+p.id,md,true)}} title={lang==="ru"?"Копировать как Markdown":"Copy as Markdown"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${copied===("md-"+p.id)?"#10b981":c.brd}`, background:copied===("md-"+p.id)?"#10b98112":"transparent", color:copied===("md-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s", fontFamily:font, fontWeight:700 }}>{copied===("md-"+p.id)?"✓":"MD"}</button>}
+                  {isO && p.compact && <button onClick={(e)=>{e.stopPropagation();setShowDiff(p.id)}} title={lang==="ru"?"Сравнить original vs compact":"Diff original vs compact"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", fontSize:9, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s", fontFamily:font, fontWeight:700 }}>⇄</button>}
+                  <button onClick={(e)=>{e.stopPropagation();const url=location.origin+location.pathname+`#prompt-${p.id}`;navigator.clipboard?.writeText(url);setCopied("share-"+p.id);setTimeout(()=>setCopied(null),2000)}} title={lang==="ru"?"Скопировать ссылку":"Copy link"} style={{ width:28, height:28, borderRadius:0, border:`1px solid ${copied===("share-"+p.id)?"#10b981":c.brd}`, background:copied===("share-"+p.id)?"#10b98112":"transparent", color:copied===("share-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", fontSize:11, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{copied===("share-"+p.id)?"✓":"§"}</button>
                 </div>
               </div>
               {/* Body (task 084: lazy render) */}
               {isO && (
                 <div id={`body-${p.id}`} className="body-enter" style={{ padding:"0 16px 14px" }}>
-                  <div style={{ maxHeight:420, overflowY:"auto", padding:14, background:c.surf, borderRadius:9, border:`1px solid ${c.brd}` }}>
+                  <div style={{ maxHeight:420, overflowY:"auto", padding:16, background:c.surf, borderRadius:0, border:`1px solid ${c.brd}`, borderLeft:`2px solid ${p.ac}40` }}>
                     {compactMode && <div style={{ marginBottom:8, padding:"4px 10px", borderRadius:6, background:"#10b98110", border:"1px solid #10b98120", fontSize:9, color:"#10b981", fontWeight:600 }}>⚡ COMPACT MODE — {lang==="ru"?"оптимизировано для Claude Code (~700 символов)":"optimized for Claude Code (~700 chars)"}</div>}
                     <pre style={{ fontSize:10.5, lineHeight:1.65, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", margin:0, fontFamily:font }}>{debouncedSearch ? <HL text={compactMode && p.compact ? p.compact : p.text} q={debouncedSearch} color={p.ac}/> : (compactMode && p.compact ? p.compact : p.text)}</pre>
                   </div>
@@ -1478,7 +1482,7 @@ function AgentHub({ data, loadTime }) {
                   {/* Tags display */}
                   {p.tags && p.tags.length > 0 && (
                     <div style={{ marginTop:6, display:"flex", gap:3, flexWrap:"wrap" }}>
-                      {p.tags.map(tag => <button key={tag} onClick={()=>{setFm("tag");setFv(tag)}} style={{ fontSize:8, padding:"1px 6px", borderRadius:6, background:"#6366f108", color:"#6366f1", border:`1px solid #6366f120`, cursor:"pointer", fontFamily:font, outline:"none" }}>#{tag}</button>)}
+                      {p.tags.map(tag => <button key={tag} onClick={()=>{setFm("tag");setFv(tag)}} style={{ fontSize:8, padding:"1px 6px", borderRadius:6, background:"#e86a2a08", color:"#e86a2a", border:`1px solid #e86a2a20`, cursor:"pointer", fontFamily:font, outline:"none" }}>#{tag}</button>)}
                     </div>
                   )}
                 </div>
@@ -1536,8 +1540,8 @@ function AgentHub({ data, loadTime }) {
         
         {/* Task 70: Workflow Sequencer */}
         <details style={{ marginBottom:16 }}>
-          <summary style={{ fontSize:11, fontWeight:700, color:"#8b5cf6", cursor:"pointer", padding:"8px 0" }}>🔀 {lang==="ru"?"Конструктор workflow":"Workflow Builder"}</summary>
-          <div style={{ marginTop:8, padding:"14px 16px", borderRadius:10, border:`2px solid #8b5cf630`, background:"#8b5cf606" }}>
+          <summary style={{ fontSize:11, fontWeight:700, color:"#c4541d", cursor:"pointer", padding:"8px 0" }}>🔀 {lang==="ru"?"Конструктор workflow":"Workflow Builder"}</summary>
+          <div style={{ marginTop:8, padding:"14px 16px", borderRadius:10, border:`2px solid #c4541d30`, background:"#c4541d06" }}>
             <div style={{ fontSize:10, color:c.dim, marginBottom:10 }}>{lang==="ru"?"Перетаскивай промты для создания последовательности выполнения:":"Drag prompts to create execution sequence:"}</div>
             <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:12 }}>
               {P.filter(p=>!workflow.includes(p.id)).slice(0,30).map(p => (
@@ -1568,7 +1572,7 @@ function AgentHub({ data, loadTime }) {
                       return wp ? `═══ ШАГ ${i+1}: ${(t.r[wp.role]||wp.role).toUpperCase()} (${wp.m}) ═══\n\n${wp.text}` : null;
                     }).filter(Boolean).join("\n\n\n");
                     cp("workflow", wfText, true);
-                  }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #8b5cf6", borderRadius:6, background:"#8b5cf6", color:"#fff", cursor:"pointer", outline:"none" }}>
+                  }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #c4541d", borderRadius:6, background:"#c4541d", color:"#fff", cursor:"pointer", outline:"none" }}>
                     {copied==="workflow"?t.copied:(lang==="ru"?"Скопировать workflow":"Copy workflow")} ({workflow.length})
                   </button>
                   <button onClick={()=>setWorkflow([])} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:6, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Очистить":"Clear"}</button>
@@ -1579,14 +1583,14 @@ function AgentHub({ data, loadTime }) {
         </details>
         
         {/* Task 114: Custom combo builder */}
-        <div style={{ marginBottom:16, padding:"12px 16px", borderRadius:10, border:`1px dashed ${buildingCombo?'#6366f1':c.brd}`, background:buildingCombo?'#6366f108':c.card }}>
+        <div style={{ marginBottom:16, padding:"12px 16px", borderRadius:10, border:`1px dashed ${buildingCombo?'#e86a2a':c.brd}`, background:buildingCombo?'#e86a2a08':c.card }}>
           {!buildingCombo ? (
             <button onClick={()=>setBuildingCombo(true)} style={{ width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:"none", background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>
               + {lang==="ru"?"Создать свою команду":"Build custom team"}
             </button>
           ) : (
             <div>
-              <div style={{ fontSize:11, fontWeight:700, color:"#6366f1", marginBottom:8 }}>{lang==="ru"?"Выбери промты для команды":"Select prompts for team"}</div>
+              <div style={{ fontSize:11, fontWeight:700, color:"#e86a2a", marginBottom:8 }}>{lang==="ru"?"Выбери промты для команды":"Select prompts for team"}</div>
               <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8 }}>
                 {P.filter(p=>p.type==="role"||customCombo.includes(p.id)).map(p => {
                   const sel = customCombo.includes(p.id);
@@ -1605,7 +1609,7 @@ function AgentHub({ data, loadTime }) {
                 {customCombo.length >= 2 && <button onClick={()=>{
                   const allText = buildPromptBundle(customCombo);
                   cp("custom-combo", allText);
-                }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #6366f1", borderRadius:6, background:"#6366f1", color:"#fff", cursor:"pointer", outline:"none" }}>
+                }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #e86a2a", borderRadius:6, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
                   {copied==="custom-combo" ? t.copied : (lang==="ru"?"Скопировать":"Copy")} ({customCombo.length})
                 </button>}
                 <button onClick={()=>{setBuildingCombo(false);setCustomCombo([])}} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:6, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Отмена":"Cancel"}</button>
@@ -1757,10 +1761,10 @@ function AgentHub({ data, loadTime }) {
         {/* ════════════════ SECTION: SETUP ════════════════ */}
         {section === "setup" && <div role="tabpanel" id="panel-setup">
         {/* Full team setup */}
-        <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:12, border:`2px solid #6366f140`, background:"linear-gradient(135deg, #6366f108, #8b5cf608)", position:"relative", overflow:"hidden" }}>
-          <div style={{ position:"absolute", top:0, right:0, width:120, height:120, background:"radial-gradient(circle, #6366f110, transparent 70%)", pointerEvents:"none" }} />
+        <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:12, border:`2px solid #e86a2a40`, background:"linear-gradient(135deg, #e86a2a08, #c4541d08)", position:"relative", overflow:"hidden" }}>
+          <div style={{ position:"absolute", top:0, right:0, width:120, height:120, background:"radial-gradient(circle, #e86a2a10, transparent 70%)", pointerEvents:"none" }} />
           <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:10 }} className="stack-mobile">
-            <div style={{ width:40, height:40, borderRadius:10, background:"#6366f120", border:"1px solid #6366f130", display:"flex", alignItems:"center", justifyContent:"center", fontSize:20 }}>🚀</div>
+            <div style={{ width:40, height:40, borderRadius:10, background:"#e86a2a20", border:"1px solid #e86a2a30", display:"flex", alignItems:"center", justifyContent:"center", fontSize:20 }}>🚀</div>
             <div>
               <div style={{ fontSize:14, fontWeight:800, color:c.text }}>{t.teamSetup}</div>
               <div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{t.teamSetupDesc}</div>
@@ -1769,9 +1773,9 @@ function AgentHub({ data, loadTime }) {
           <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
             <button onClick={()=>cp("team-setup", TEAM_SETUP)} style={{
               padding:"9px 22px", fontSize:12, fontFamily:font, fontWeight:700,
-              border:"1.5px solid #6366f1", borderRadius:8,
-              background:copied==="team-setup"?"transparent":"#6366f1",
-              color:copied==="team-setup"?"#6366f1":"#fff",
+              border:"1.5px solid #e86a2a", borderRadius:8,
+              background:copied==="team-setup"?"transparent":"#e86a2a",
+              color:copied==="team-setup"?"#e86a2a":"#fff",
               cursor:"pointer", transition:"all .15s", outline:"none",
             }}>{copied==="team-setup" ? t.copied : (lang==="ru"?"Копировать setup-agents.sh":"Copy setup-agents.sh")}</button>
           </div>
@@ -1914,7 +1918,7 @@ function AgentHub({ data, loadTime }) {
               {n:"4", t:"Agent works", d:"autonomously explores project"},
             ]).map(s => (
               <div key={s.n} style={{ display:"flex", gap:8, alignItems:"flex-start", padding:"8px 10px", borderRadius:8, background:c.surf, border:`1px solid ${c.brd}` }}>
-                <div style={{ width:20, height:20, borderRadius:6, background:"#6366f115", color:"#6366f1", fontSize:10, fontWeight:800, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{s.n}</div>
+                <div style={{ width:20, height:20, borderRadius:6, background:"#e86a2a15", color:"#e86a2a", fontSize:10, fontWeight:800, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{s.n}</div>
                 <div><div style={{ fontSize:10, fontWeight:700, color:c.text }}>{s.t}</div><div style={{ fontSize:9, color:c.dim }}>{s.d}</div></div>
               </div>
             ))}
@@ -1938,7 +1942,7 @@ function AgentHub({ data, loadTime }) {
               <div><strong>{lang==="ru"?"Как запустить агента?":"How to start an agent?"}</strong> — {lang==="ru"?"Скопируй промт → откройте терминал в git worktree → вставь при первом запросе → агент работает автономно.":"Copy prompt → open terminal in git worktree → paste on first request → agent works autonomously."}</div>
               <div style={{marginTop:6}}><strong>{lang==="ru"?"Что такое АНТИ-ЛУП?":"What is ANTI-LOOP?"}</strong> — {lang==="ru"?"Защита от зацикливания: если агент делает 3 похожих действия подряд — он меняет подход. Максимум 5 попыток на одну подзадачу.":"Loop protection: if agent does 3 similar actions — it changes approach. Maximum 5 attempts per subtask."}</div>
               <div style={{marginTop:6}}><strong>{lang==="ru"?"Можно ли запускать несколько агентов?":"Can I run multiple agents?"}</strong> — {lang==="ru"?"Да! Используй git worktree для изоляции. Каждый агент в своей worktree не мешает другим. Координация через .claude/logs/ и .gemini/bugs/.":"Yes! Use git worktree for isolation. Each agent in its own worktree. Coordination via .claude/logs/ and .gemini/bugs/."}</div>
-              <div style={{marginTop:6}}><strong>{lang==="ru"?"Где документация CLI?":"CLI documentation?"}</strong> — Claude Code: <span style={{color:"#f97316"}}>docs.anthropic.com</span> · Gemini CLI: <span style={{color:"#8b5cf6"}}>github.com/google-gemini/gemini-cli</span> · Codex CLI: <span style={{color:"#06b6d4"}}>github.com/openai/codex</span></div>
+              <div style={{marginTop:6}}><strong>{lang==="ru"?"Где документация CLI?":"CLI documentation?"}</strong> — Claude Code: <span style={{color:"#f97316"}}>docs.anthropic.com</span> · Gemini CLI: <span style={{color:"#c4541d"}}>github.com/google-gemini/gemini-cli</span> · Codex CLI: <span style={{color:"#06b6d4"}}>github.com/openai/codex</span></div>
               <div style={{marginTop:6}}><strong>{lang==="ru"?"Claude Code вылетает/зависает?":"Claude Code crashes/hangs?"}</strong> — {lang==="ru"?"Контекст 200K токенов, но реально ~120K-140K после системных промтов. Используй Compact режим (⚡). Коммить каждые 15 минут. Bash timeout = 2 мин (увеличь: BASH_DEFAULT_TIMEOUT_MS=1800000 в ~/.claude/settings.json). Не более 30-45 мин на сессию.":"Context is 200K tokens but only ~120-140K usable. Use Compact mode (⚡). Commit every 15 min. Bash timeout = 2 min (increase: BASH_DEFAULT_TIMEOUT_MS=1800000 in ~/.claude/settings.json). Keep sessions under 30-45 min."}</div>
               <div style={{marginTop:6}}><strong>{lang==="ru"?"Что такое CLAUDE.md?":"What is CLAUDE.md?"}</strong> — {lang==="ru"?"Файл инструкций в корне проекта. Claude Code читает его автоматически. Держи < 200 строк. Загружается после каждой компактизации контекста.":"Project root instruction file. Claude Code reads it automatically. Keep under 200 lines. Reloaded after every context compaction."}</div>
             </div>
@@ -1959,8 +1963,8 @@ function AgentHub({ data, loadTime }) {
                 ].map((p,i,a) => (
                   <g key={i}>
                     {i > 0 && <line x1={a[i-1].x+24} y1={40} x2={p.x} y2={40} stroke={c.brd} strokeWidth={2} />}
-                    <circle cx={p.x+12} cy={40} r={Math.max(6, p.n/10)} fill="#6366f1" opacity={0.3+i*0.15} />
-                    <circle cx={p.x+12} cy={40} r={4} fill="#6366f1" />
+                    <circle cx={p.x+12} cy={40} r={Math.max(6, p.n/10)} fill="#e86a2a" opacity={0.3+i*0.15} />
+                    <circle cx={p.x+12} cy={40} r={4} fill="#e86a2a" />
                     <text x={p.x+12} y={18} fill={c.text} fontSize={11} fontWeight={700} textAnchor="middle" fontFamily={font}>{p.v}</text>
                     <text x={p.x+12} y={62} fill={c.dim} fontSize={8} textAnchor="middle" fontFamily={font}>{p.n} промтов</text>
                     <text x={p.x+12} y={74} fill={c.dim} fontSize={7} textAnchor="middle" fontFamily={font} opacity={0.6}>{p.d}</text>
@@ -1980,11 +1984,11 @@ function AgentHub({ data, loadTime }) {
                   {k:"Backend",tags:["nodejs","api","database"],cl:"#10b981"},
                   {k:"Testing",tags:["testing","playwright","qa"],cl:"#f59e0b"},
                   {k:"Security",tags:["security","auth"],cl:"#ef4444"},
-                  {k:"DevOps",tags:["docker","ci-cd","kubernetes"],cl:"#8b5cf6"},
+                  {k:"DevOps",tags:["docker","ci-cd","kubernetes"],cl:"#c4541d"},
                   {k:"Performance",tags:["performance","bundle"],cl:"#ea580c"},
                   {k:"Database",tags:["postgresql","redis","sql"],cl:"#06b6d4"},
                   {k:"UI/UX",tags:["ui","ux","design-system"],cl:"#ec4899"},
-                  {k:"Docs",tags:["documentation","readme"],cl:"#6366f1"},
+                  {k:"Docs",tags:["documentation","readme"],cl:"#e86a2a"},
                   {k:"Infra",tags:["infrastructure","nginx","ssl"],cl:"#14b8a6"},
                   {k:"Monitoring",tags:["monitoring","logging","sentry"],cl:"#d946ef"},
                   {k:"Mobile",tags:["mobile","responsive","pwa"],cl:"#f97316"},
@@ -2057,7 +2061,7 @@ function AgentHub({ data, loadTime }) {
           {/* Export as self-contained HTML */}
           <button onClick={() => {
             const items = section==="prompts" && hasFilters ? list : P;
-            let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>AIAgent-Hub v9.0</title><style>body{font-family:monospace;background:#060609;color:#ddd;padding:20px;max-width:800px;margin:0 auto}h1{color:#6366f1}h2{color:#f97316;border-bottom:1px solid #222;padding-bottom:8px}h3{color:#8b5cf6;margin-top:24px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap;font-size:12px;line-height:1.6;overflow-x:auto;border:1px solid #222}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#1a1a28;color:#888;margin:2px}</style></head><body><h1>AIAgent-Hub v9.0</h1><p>${items.length} prompts · ${stats.models} models · ~${stats.totalHours}h</p>`;
+            let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>AIAgent-Hub v9.0</title><style>body{font-family:monospace;background:#060609;color:#ddd;padding:20px;max-width:800px;margin:0 auto}h1{color:#e86a2a}h2{color:#f97316;border-bottom:1px solid #222;padding-bottom:8px}h3{color:#c4541d;margin-top:24px}pre{background:#111;padding:12px;border-radius:8px;white-space:pre-wrap;font-size:12px;line-height:1.6;overflow-x:auto;border:1px solid #222}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:#1a1a28;color:#888;margin:2px}</style></head><body><h1>AIAgent-Hub v9.0</h1><p>${items.length} prompts · ${stats.models} models · ~${stats.totalHours}h</p>`;
             items.forEach(p => {
               html += `<h3>${p.icon} ${t.r[p.role]||p.role} <small>(${p.m} · ${p.time||""} · ${p.difficulty||""})</small></h3>`;
               if (p.tags) html += `<div>${p.tags.map(t2=>`<span class="tag">#${t2}</span>`).join(" ")}</div>`;
