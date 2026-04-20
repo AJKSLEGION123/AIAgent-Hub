@@ -135,10 +135,13 @@ const CSS = `
 .masthead::before,.masthead::after{content:"";display:block;height:3px}
 .masthead::before{border-top:1px solid currentColor;border-bottom:1px solid currentColor;opacity:.35;margin-bottom:28px}
 .masthead::after{border-top:1px solid currentColor;border-bottom:1px solid currentColor;opacity:.35;margin-top:24px}
-.nav-btn{height:32px;min-width:32px;padding:0 10px;border-radius:0;border:1px solid;background:transparent;cursor:pointer;font-size:10px;letter-spacing:1.8px;text-transform:uppercase;font-weight:600;display:inline-flex;align-items:center;justify-content:center;outline:none;transition:background .18s ease,border-color .18s ease,color .18s ease;font-family:'JetBrains Mono',monospace;white-space:nowrap;position:relative}
-.nav-btn:hover{background:rgba(232,106,42,.08)}
-.nav-btn .kbd-hint{position:absolute;top:-7px;right:4px;font-size:7px;letter-spacing:1px;opacity:.55;font-weight:500}
-.nav-btn .dot{position:absolute;top:-4px;right:-4px;min-width:14px;height:14px;padding:0 4px;border-radius:0;font-size:8px;font-weight:700;letter-spacing:0;display:flex;align-items:center;justify-content:center;line-height:1}
+.nav-btn{width:36px;height:36px;padding:0;border-radius:0;border:1px solid;background:transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;outline:none;transition:background .18s ease,border-color .18s ease,color .18s ease;font-family:'JetBrains Mono',monospace;position:relative}
+.nav-btn.nav-btn-text{width:auto;padding:0 12px;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700}
+.nav-btn:hover{background:rgba(232,106,42,.1)}
+.nav-btn[data-active="true"]{background:rgba(232,106,42,.12)}
+.nav-btn svg{display:block}
+.nav-btn .kbd-hint{position:absolute;top:1px;right:3px;font-size:7px;letter-spacing:1px;opacity:.55;font-weight:600;font-family:'JetBrains Mono',monospace}
+.nav-btn .dot{position:absolute;top:-5px;right:-5px;min-width:15px;height:15px;padding:0 4px;border-radius:0;font-size:8px;font-weight:700;letter-spacing:0;display:flex;align-items:center;justify-content:center;line-height:1;font-family:'JetBrains Mono',monospace}
 .card-editorial{position:relative;padding:18px 20px 16px;border:0;border-top:1px solid;transition:background .2s ease,border-color .2s ease}
 .card-editorial::before{content:attr(data-idx);position:absolute;top:12px;right:16px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;opacity:.35}
 .card-editorial:hover{background:rgba(232,106,42,.03)}
@@ -198,6 +201,18 @@ select{-webkit-appearance:none;appearance:none;background-image:url("data:image/
 [id^="card-"]:focus{outline:2px solid #e86a2a;outline-offset:-2px;border-radius:12px}
 [id^="card-"]:focus:not(:focus-visible){outline:none}
 `;
+
+/* ═══════════════════════════════════════════════
+   NAV ICONS (SVG, inherit color via currentColor)
+   ═══════════════════════════════════════════════ */
+const IconStats = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M2.5 13.5V9M6 13.5V5M9.5 13.5V10.5M13 13.5V2.5"/></svg>;
+const IconLog = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.3 2.3"/></svg>;
+const IconBook = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h7.5a2 2 0 012 2v8a1 1 0 01-1 1H4a1 1 0 01-1-1V3z"/><path d="M3 3v11M6 6h4M6 9h3"/></svg>;
+const IconKeyboard = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1.5" y="4.5" width="13" height="8" rx="1"/><path d="M4 7.5h.01M7 7.5h.01M10 7.5h.01M4.5 10.5h7"/></svg>;
+const IconMoon = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13.5 9.3A5.5 5.5 0 116.7 2.5a4.2 4.2 0 006.8 6.8z"/></svg>;
+const IconSun = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.3 3.3l1 1M11.7 11.7l1 1M3.3 12.7l1-1M11.7 4.3l1-1"/></svg>;
+const IconLang = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2a9 9 0 010 12M8 2a9 9 0 000 12"/></svg>;
+const IconTextSize = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 13l3-9 3 9M3.2 10.3h3.6"/><path d="M11 7v6M9 10l2 2 2-2"/></svg>;
 
 /* ═══════════════════════════════════════════════
    MEMOIZED COMPONENTS (tasks: 001, 002, 082, 096, 098)
@@ -1043,27 +1058,27 @@ function AgentHub({ data, loadTime }) {
 
           {/* Control row */}
           <div style={{ display:"flex", justifyContent:"flex-end", gap:6, marginTop:14, flexWrap:"wrap" }}>
-            <button onClick={()=>setShowStats(true)} aria-label="Statistics" title={lang==="ru"?"Статистика":"Statistics"} className="nav-btn" style={{ borderColor:c.brd, color:c.text }}>
-              {lang==="ru"?"Стат":lang==="kk"?"Стат":"Stats"}
+            <button onClick={()=>setShowStats(true)} aria-label="Statistics" title={lang==="ru"?"Статистика":"Statistics"} className="nav-btn" data-active={showStats} style={{ borderColor: showStats?c.accent:c.brd, color: showStats?c.accent:c.text }}>
+              <IconStats />
             </button>
-            <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":"Copy history"} className="nav-btn" style={{ borderColor:c.brd, color:c.text }}>
-              {lang==="ru"?"Лог":lang==="kk"?"Лог":"Log"}
+            <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":"Copy history"} className="nav-btn" data-active={showCopyHistory} style={{ borderColor: showCopyHistory?c.accent:c.brd, color: showCopyHistory?c.accent:c.text }}>
+              <IconLog />
               {copyCount>0 && <span className="dot" style={{ background:c.accent, color:c.bg }}>{copyCount}</span>}
             </button>
-            <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":"Glossary"} className="nav-btn" style={{ borderColor:c.brd, color:c.text }}>
-              {lang==="ru"?"Терм":lang==="kk"?"Терм":"Ref"}
+            <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":"Glossary"} className="nav-btn" data-active={showGlossary} style={{ borderColor: showGlossary?c.accent:c.brd, color: showGlossary?c.accent:c.text }}>
+              <IconBook />
             </button>
-            <button onClick={()=>setShowShortcuts(true)} aria-label="Keyboard shortcuts" title={lang==="ru"?"Горячие клавиши (?)":"Keyboard shortcuts (?)"} className="nav-btn" style={{ borderColor:c.brd, color:c.text }}>
-              {lang==="ru"?"Клавиши":lang==="kk"?"Клавиша":"Keys"}
-              <span className="kbd-hint" style={{ color:c.dim }}>?</span>
+            <button onClick={()=>setShowShortcuts(true)} aria-label="Keyboard shortcuts" title={lang==="ru"?"Горячие клавиши (?)":"Keyboard shortcuts (?)"} className="nav-btn" data-active={showShortcuts} style={{ borderColor: showShortcuts?c.accent:c.brd, color: showShortcuts?c.accent:c.text }}>
+              <IconKeyboard />
+              <span className="kbd-hint" style={{ color: showShortcuts?c.accent:c.dim }}>?</span>
             </button>
-            <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} title={`${theme==="dark"?"Light":"Dark"} (T)`} className="nav-btn" style={{ borderColor:c.brd, color:c.text }}>
-              {theme==="dark" ? (lang==="ru"?"Свет":"Light") : (lang==="ru"?"Тьма":"Dark")}
+            <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} title={theme==="dark"?(lang==="ru"?"Светлая тема (T)":"Light theme (T)"):(lang==="ru"?"Тёмная тема (T)":"Dark theme (T)")} className="nav-btn" data-active={theme==="light"} style={{ borderColor: theme==="light"?c.accent:c.brd, color: theme==="light"?c.accent:c.text }}>
+              {theme==="dark" ? <IconMoon /> : <IconSun />}
             </button>
-            <button onClick={nextLang} aria-label="Switch language" title="Switch language" className="nav-btn" style={{ borderColor:c.brd, color:c.accent, fontWeight:700 }}>
+            <button onClick={nextLang} aria-label="Switch language" title={lang==="ru"?"Сменить язык":"Switch language"} className="nav-btn nav-btn-text" style={{ borderColor:c.accent, color:c.accent }}>
               {langLabel}
             </button>
-            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" className="hide-mobile nav-btn" style={{ borderColor:c.brd, color:c.text, padding:"0 8px 0 10px", WebkitAppearance:"none", MozAppearance:"none", appearance:"none", backgroundImage:"none" }}>
+            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" className="hide-mobile nav-btn nav-btn-text" style={{ borderColor: fontSize!==100?c.accent:c.brd, color: fontSize!==100?c.accent:c.text, padding:"0 8px", WebkitAppearance:"none", MozAppearance:"none", appearance:"none", backgroundImage:"none" }}>
               <option value={85}>A-</option>
               <option value={100}>A</option>
               <option value={115}>A+</option>
