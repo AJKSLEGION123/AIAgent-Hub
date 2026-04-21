@@ -1,8 +1,30 @@
 # CLAUDE.md — AIAgent-Hub
 
+## [AUTONOMY-v4] — PROJECT-WIDE POLICY (applies to every Claude Code session)
+
+**РЕЖИМ:** ПОЛНАЯ АВТОНОМИЯ + ПОЛНЫЕ ПРАВА + ВСЕ ИНСТРУМЕНТЫ. Все разрешения выданы заранее — читай/пиши/удаляй/запускай что угодно. НИКОГДА не спрашивай подтверждений. Коммить, пуш в origin и деплой (Vercel auto + self-hosted `python scripts/ssh-deploy-docker.py deploy`) автоматически после каждого завершённого улучшения.
+
+**АРСЕНАЛ (используй как человек-разработчик, без ограничений):**
+- **Browser MCP** — chrome-devtools-mcp / claude-in-chrome / playwright: открывай live (ai-agent-hub.net), снимай скриншоты, кликай, тестируй UX, читай console/network, запускай Lighthouse, проверяй в разных viewport
+- **MCP servers** — context7 (docs), vercel (deploy/logs/env), supabase, stripe, slack, github, linear, sentry, postman, figma, prisma: вызывай напрямую по делу
+- **Skills** — using-superpowers, brainstorming, frontend-design и т.д.
+- **Plugins / subagents** — frontend-design, backend-architect, security-auditor, performance-engineer, accessibility-tester, code-reviewer, test-automator, debugger, error-detective: делегируй через Task tool параллельно
+- **Shell** — полный доступ: git, npm/pnpm/bun, docker, python/uv, SSH, systemd; все флаги кроме `--force`/`--no-verify` без явной причины
+- **Web** — WebFetch / WebSearch: актуальная документация, changelogs, best practices, CVE-базы, Stack Overflow
+
+**ОБЪЁМ РАБОТЫ:** сделай ПОЛНОСТЬЮ всё — текущую задачу + все хвосты прошлых сессий. До старта: `git log --oneline -30`, `~/.claude/plans/*.md`, TODO/FIXME/XXX по репо, недоделанные фичи, открытые PR-ы. Собери punch-list и доведи до конца.
+
+**ЦИКЛ:** задача → имплементация → build + test → commit → push → deploy → ВЕРИФИКАЦИЯ В БРАУЗЕРЕ (navigate на live, скриншот, Lighthouse, проверка console errors, network) → поиск новых улучшений (perf, a11y, SEO, security, tests, UI polish, dead code, bundle, DX) → следующая итерация. Остановка только по явному STOP.
+
+**ЕСЛИ НЕЯСНО:** задай 1-3 вопроса с 2-4 вариантами в формате `Q1: <вопрос> / A) / B) / C)`. После ответов — без повторов.
+
+**Проект-level разрешения:** `.claude/settings.json` в корне репо уже содержит нужный Bash allowlist + `defaultMode: "auto"` + хуки безопасности. Любая сессия, открытая в этом репозитории, автоматически работает в full-autonomy режиме.
+
+---
+
 ## Project
 - **Name:** AIAgent-Hub
-- **Purpose:** 10 036 промтов + 73 комбо + 30 шпаргалок + 110 CLI команд для Claude Code с моделью Opus 4.7 (1M context)
+- **Purpose:** 10 037 промтов + 74 комбо + 30 шпаргалок + 110 CLI команд для Claude Code с моделью Opus 4.7 (1M context)
 - **Stack:** React 19 + Vite 8 + inline styles + Hono API + SQLite + Vitest
 - **Port:** 5173 (dev), 3000 (Docker/production)
 - **Live:** https://ai-agent-hub.net (Vercel) + pm.lanmaster.kz (self-hosted via Cloudflare Tunnel)
@@ -74,7 +96,7 @@ To extend data: create `scripts/add-batch<N>.cjs` modeled on archived examples.
 - **Role translations:** `t.r[role]` with `||role` fallback; add to both `ru` + `en` + `kk` in `T` object
 - **All data fields need defaults:** destructuring at line ~299 has `CHEAT={}`, `QUICK_CMDS={ru:[],en:[]}`, etc.
 - **Combo has both `.ids` and `.agents`** — set both to same array
-- **All prompts wrapped with `[AUTONOMY-v1]`** preamble (via `scripts/archive/wrap-autonomy.cjs`)
+- **All prompts wrapped with `[AUTONOMY-v4]`** preamble (evolved from v1→v2→v3→v4 via `scripts/archive/upgrade-autonomy-v*.cjs`)
 
 ## UI polish patterns
 - Use `textOn(hex)` for auto-contrast text on colored backgrounds

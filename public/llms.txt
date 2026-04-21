@@ -14,16 +14,17 @@ All prompts are optimized for **Claude Code** CLI with **Claude Opus 4.7 · 1M c
 - **110 CLI commands** — 14 categories covering dev, test, git, docker, search, npm, deploy, K8s, Compose, PostgreSQL, Bun, Python/uv
 - **13 config templates** — CLAUDE.md, ESLint, Dockerfile, GHA CI, Compose, tsconfig, Prettier, .gitignore, Vitest, .env, nginx, K8s Deployment, multi-stage Dockerfile
 
-## Prompt structure
+## Autonomy policy
 
-Every prompt is wrapped with an autonomy preamble:
+This repo operates under **[AUTONOMY-v4]** — a project-wide full-autonomy policy. Any Claude Code session opened in this repo inherits it via `CLAUDE.md` + `.claude/settings.json`. Individual prompts also embed the same block so they carry it into other projects.
 
 ```
-[AUTONOMY-v2]
-MODE: full autonomy + full permissions. Don't ask for minor confirmations.
-SCOPE OF WORK: finish EVERYTHING — current task + all leftover work from prior sessions.
+[AUTONOMY-v4]
+MODE: full autonomy + full permissions + all tools. No confirmations. Auto commit/push/deploy per improvement.
+ARSENAL: Browser MCP (chrome-devtools, claude-in-chrome, playwright), MCP servers (context7, vercel, supabase, stripe, slack, github, linear, sentry, postman, figma, prisma), Skills, Plugins/subagents, full Shell, Web (WebFetch/WebSearch).
+SCOPE: finish EVERYTHING — current task + leftover work from prior sessions.
   Before starting, scan git log, ~/.claude/plans/, TODO/FIXME/XXX, half-done features, open PRs.
-  Compile remaining-work list and complete it alongside the new task. Leave no loose ends.
+LOOP: task → implement → build+test → commit → push → deploy → BROWSER VERIFICATION (navigate live, screenshot, Lighthouse, console errors, network) → find next improvements → repeat. Stop only on explicit STOP.
 IF UNCLEAR: ask 1-3 clarifying questions with 2-4 multiple-choice options each.
 ```
 

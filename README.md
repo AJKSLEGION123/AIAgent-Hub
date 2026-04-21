@@ -2,7 +2,9 @@
 
 **10 036 промтов · 73 комбо · 30 шпаргалок · 110 CLI-команд** для Claude Code + Opus 4.7 · 1M context.
 
-Полевой справочник автономной разработки. Каждый промт готов к копированию в Claude Code, содержит фазу полной разведки проекта и **[AUTONOMY-v2]** wrapper — заставляет агента доделать текущую задачу + все незавершённые хвосты из прошлых сессий (git log, `~/.claude/plans/`, TODO/FIXME, открытые PR-ы).
+Полевой справочник автономной разработки. Каждый промт готов к копированию в Claude Code, содержит фазу полной разведки проекта и **[AUTONOMY-v4]** wrapper — даёт агенту полные права + арсенал (Browser MCP, все MCP servers, skills, plugins, shell, web) + auto-commit/push/deploy после каждого улучшения + браузерную верификацию post-deploy + бесконечный цикл улучшений.
+
+**Проект-level политика:** любая сессия Claude Code, открытая в этом репо, автоматически работает в full-autonomy режиме — см. [`CLAUDE.md`](./CLAUDE.md) (AUTONOMY-v4 policy) и [`.claude/settings.json`](./.claude/settings.json) (expanded Bash allowlist + `defaultMode: auto` + safety hooks). Копировать промт необязательно — агент готов к работе сразу.
 
 Live: <https://ai-agent-hub.net>
 
