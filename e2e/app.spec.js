@@ -35,7 +35,7 @@ test.describe('AIAgent-Hub', () => {
   test('section tabs navigate', async ({ page }) => {
     await page.goto('/');
     await page.waitForSelector('[role="tab"]', { timeout: 15000 });
-    await page.click('role=tab >> text=/Команды|Teams/');
+    await page.click('role=tab >> text=/Комбо|Combos/');
     await expect(page.locator('#panel-combos')).toBeVisible();
   });
 
@@ -46,7 +46,8 @@ test.describe('AIAgent-Hub', () => {
     const copyBtn = firstCard.locator('button:has-text("Копировать"), button:has-text("Copy")');
     if (await copyBtn.count() > 0) {
       await copyBtn.first().click();
-      await expect(firstCard.locator('text=/Скопировано|Copied/')).toBeVisible({ timeout: 3000 });
+      // Toast renders at top of viewport (.toast class), not inside the card
+      await expect(page.locator('.toast')).toBeVisible({ timeout: 3000 });
     }
   });
 

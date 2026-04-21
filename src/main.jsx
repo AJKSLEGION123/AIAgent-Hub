@@ -14,6 +14,14 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
+// Dismiss the inline loader once React mounts
+requestAnimationFrame(() => {
+  const boot = document.getElementById('boot');
+  if (!boot) return;
+  boot.classList.add('fade');
+  setTimeout(() => boot.remove(), 350);
+});
+
 // PWA: Register Service Worker with auto-update
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {

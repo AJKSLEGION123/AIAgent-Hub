@@ -1,5 +1,5 @@
 // Cache-bust via build timestamp. Bumping this invalidates all previous caches.
-const BUILD_ID = 'v12-2026-04-21-i-readable';
+const BUILD_ID = 'v12-2026-04-21-j-loader';
 const CACHE_NAME = 'aiagent-hub-' + BUILD_ID;
 const PRECACHE_URLS = ['/favicon.svg', '/manifest.json'];
 
