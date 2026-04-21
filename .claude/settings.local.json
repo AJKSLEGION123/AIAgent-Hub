@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp ~/.claude/settings.json ~/.claude/settings.backup-2026-04-21.json)",
+      "Read(//c/Users/pavel/.claude/**)"
+    ]
+  }
+}

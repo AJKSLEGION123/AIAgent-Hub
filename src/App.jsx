@@ -1085,7 +1085,7 @@ function AgentHub({ data, loadTime }) {
           <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6 }} />
           <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6, marginTop:2 }} />
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 0" }}>
-            <span className="label-tech-sm" style={{ color:c.mut }}>№ v9.1 · {new Date().toLocaleDateString(lang==="ru"?"ru-RU":"en-US",{month:"short",year:"numeric"}).toUpperCase()}</span>
+            <span className="label-tech-sm" style={{ color:c.mut }}>№ v12 · {new Date().toLocaleDateString(lang==="ru"?"ru-RU":"en-US",{month:"short",year:"numeric"}).toUpperCase()}</span>
             <span className="label-tech-sm" style={{ color:c.mut }}>An Almanac of Autonomous Development</span>
           </div>
           <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6 }} />

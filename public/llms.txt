@@ -19,8 +19,11 @@ All prompts are optimized for **Claude Code** CLI with **Claude Opus 4.7 · 1M c
 Every prompt is wrapped with an autonomy preamble:
 
 ```
-[AUTONOMY-v1]
+[AUTONOMY-v2]
 MODE: full autonomy + full permissions. Don't ask for minor confirmations.
+SCOPE OF WORK: finish EVERYTHING — current task + all leftover work from prior sessions.
+  Before starting, scan git log, ~/.claude/plans/, TODO/FIXME/XXX, half-done features, open PRs.
+  Compile remaining-work list and complete it alongside the new task. Leave no loose ends.
 IF UNCLEAR: ask 1-3 clarifying questions with 2-4 multiple-choice options each.
 ```
 
