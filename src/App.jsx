@@ -1681,17 +1681,34 @@ function AgentHub({ data, loadTime }) {
           )}
         </div>
 
-        {/* Task 122: Difficulty distribution */}
-        <div style={{ display:"flex", gap:8, marginBottom:16, alignItems:"center" }}>
-          <span style={{ fontSize:9, color:c.dim }}>{lang==="ru"?"Сложность:":"Difficulty:"}</span>
-          {[{k:"beginner",l:lang==="ru"?"Начальный":"Beginner",cl:"#10b981"},{k:"intermediate",l:lang==="ru"?"Средний":"Intermediate",cl:"#f59e0b"},{k:"advanced",l:lang==="ru"?"Продвинутый":"Advanced",cl:"#ef4444"}].map(d => {
-            const n = P.filter(p=>p.difficulty===d.k).length;
-            return <div key={d.k} style={{ display:"flex", alignItems:"center", gap:4 }}>
-              <div style={{ width:Math.max(16, n*1.5), height:6, borderRadius:3, background:d.cl+"60" }} />
-              <span style={{ fontSize:9, color:d.cl }}>{n}</span>
-            </div>;
-          })}
-        </div>
+        {/* Task 122: Difficulty distribution — segmented bar */}
+        {(() => {
+          const diffs = [
+            {k:"beginner",l:lang==="ru"?"Начальный":"Beginner",cl:"#10b981"},
+            {k:"intermediate",l:lang==="ru"?"Средний":"Intermediate",cl:"#f59e0b"},
+            {k:"advanced",l:lang==="ru"?"Продвинутый":"Advanced",cl:"#ef4444"},
+          ];
+          const counts = diffs.map(d => ({ ...d, n: P.filter(p=>p.difficulty===d.k).length }));
+          const total = counts.reduce((s,d)=>s+d.n, 0) || 1;
+          return (
+            <div style={{ display:"flex", gap:12, marginBottom:20, alignItems:"center", flexWrap:"wrap" }}>
+              <span className="label-tech-sm" style={{ color:c.mut }}>{lang==="ru"?"Сложность":"Difficulty"}</span>
+              <div style={{ display:"flex", flex:1, minWidth:200, height:4, background:c.brd, overflow:"hidden" }}>
+                {counts.map(d => (
+                  <div key={d.k} title={`${d.l}: ${d.n} (${Math.round(d.n/total*100)}%)`} style={{ width:`${d.n/total*100}%`, height:"100%", background:d.cl, transition:"width .2s ease" }} />
+                ))}
+              </div>
+              <div style={{ display:"flex", gap:14, fontFamily:font, fontSize:10 }}>
+                {counts.map(d => (
+                  <span key={d.k} style={{ display:"inline-flex", alignItems:"center", gap:5, color:c.mut }} title={d.l}>
+                    <span style={{ width:8, height:8, background:d.cl, display:"inline-block" }} />
+                    <span style={{ color:d.cl, fontWeight:700 }}>{d.n}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {comboSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{comboSearch}" — {(COMBOS[lang]||COMBOS.ru).filter(cb => (cb.name + " " + cb.desc + " " + (cb.ids||[]).map(id=>{const p=pGet(id);return p?(t.r[p.role]||p.role):""}).join(" ")).toLowerCase().includes(comboSearch.toLowerCase())).length} / {(COMBOS[lang]||COMBOS.ru).length}</div>}
         {comboSearch && (COMBOS[lang]||COMBOS.ru).filter(cb => (cb.name + " " + cb.desc + " " + (cb.ids||[]).map(id=>{const p=pGet(id);return p?(t.r[p.role]||p.role):""}).join(" ")).toLowerCase().includes(comboSearch.toLowerCase())).length === 0 && <EmptyState c={c} lang={lang} />}
