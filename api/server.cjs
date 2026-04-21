@@ -46,7 +46,7 @@ app.post('/api/login', async (c) => {
 
 // ── Prompts CRUD ──
 app.get('/api/prompts', (c) => {
-  const { model, role, tag, search, public: pub } = c.req.query();
+  const { model, role, tag, search } = c.req.query();
   let prompts = db.prepare('SELECT * FROM custom_prompts WHERE is_public = 1').all();
   if (model) prompts = prompts.filter(p => p.model === model);
   if (role) prompts = prompts.filter(p => p.role === role);

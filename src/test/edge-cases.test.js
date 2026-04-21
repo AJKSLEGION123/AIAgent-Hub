@@ -3,7 +3,6 @@ import { describe, it, expect } from 'vitest';
 describe('Edge cases', () => {
   describe('localStorage handling', () => {
     it('handles missing localStorage gracefully', () => {
-      const original = window.localStorage;
       // Simulate localStorage being unavailable
       expect(() => {
         try {

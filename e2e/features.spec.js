@@ -66,7 +66,6 @@ test.describe('Features', () => {
   test('scroll progress bar appears', async ({ page }) => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await page.waitForTimeout(300);
-    const bar = page.locator('[style*="position:fixed"][style*="height:2"]').first();
     // Bar should exist in DOM
     expect(await page.locator('[style*="will-change"]').count()).toBeGreaterThanOrEqual(0);
   });

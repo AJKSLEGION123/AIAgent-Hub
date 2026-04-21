@@ -78,7 +78,6 @@ const ML = { opus47m:"Claude Opus 4.7 · 1M" };
 const MI = { opus47m:"∞" };
 const font = "'JetBrains Mono','IBM Plex Mono','Fira Code',monospace";
 const fontDisplay = "'Fraunces','Cormorant Garamond','Times New Roman',serif";
-const fontBody = "'Instrument Serif','Spectral','Georgia',serif";
 const alpha = (hex, a) => hex + Math.round(a*255).toString(16).padStart(2,'0');
 // Relative luminance → best-contrast text color (dark vs pure white on the accent).
 // White beats cream on borderline mid-dark backgrounds (slate-500, red-600, fuchsia-600)
@@ -287,7 +286,7 @@ const CBtn = memo(({ id, txt, cl, sm, copied, cp, t, bg, skip }) => {
   );
 });
 
-const Toast = memo(({ msg, c }) => msg ? (
+const Toast = memo(({ msg }) => msg ? (
   <div className="toast" role="status" aria-live="polite" style={{ background:"#10b981", color:"#fff", fontFamily:font }}>{msg}</div>
 ) : null);
 
@@ -448,7 +447,6 @@ function AgentHub({ data, loadTime }) {
   const [showStats, setShowStats] = useState(false); // feat 24: stats modal
   const [viewMode, setViewMode] = useState("card"); // feat 26: card/table
   const [recentViewed, setRecentViewed] = useState([]); // feat 30: recently viewed
-  const [sessionStart] = useState(Date.now()); // feat 33: session timer
   const [showDiff, setShowDiff] = useState(null); // feat 34: diff modal
   const [pinnedIds, setPinnedIds] = useState([]); // cycle 9: pinned prompts
   const [showGlossary, setShowGlossary] = useState(false); // cycle 9: glossary
@@ -464,9 +462,7 @@ function AgentHub({ data, loadTime }) {
   const [importText, setImportText] = useState(""); // task 76: import prompt
   const [showImport, setShowImport] = useState(false); // task 76
   const [stackOverride, setStackOverride] = useState(""); // task 58: stack selector
-  const [dragId, setDragId] = useState(null); // task 32: drag&drop
   const [workflow, setWorkflow] = useState([]); // task 70: workflow sequencer
-  const [showWorkflow, setShowWorkflow] = useState(false); // task 70
   const searchRef = useRef(null);
   const loadMoreRef = useRef(null); // feat 27: infinite scroll sentinel
   
@@ -913,7 +909,7 @@ function AgentHub({ data, loadTime }) {
   return (
     <div data-theme={theme} style={{ minHeight:"100vh", background:c.bg, color:c.text, fontFamily:font, transition:"background .3s,color .3s", fontSize: fontSize + "%" }}>
       <style>{CSS}</style>
-      <Toast key={toastKey} msg={toast} c={c} />
+      <Toast key={toastKey} msg={toast} />
 
       {/* Feat 5: Scroll progress bar */}
       <div style={{ position:"fixed", top:0, left:0, width:scrollPct+"%", height:2, background:"linear-gradient(90deg,#e86a2a,#c4541d)", zIndex:9999, transition:"width .1s", opacity:scrollPct>0?1:0, willChange:"width" }} />
@@ -1143,7 +1139,7 @@ function AgentHub({ data, loadTime }) {
             <div className="hide-mobile" role="radiogroup" aria-label={lang==="ru"?"Размер шрифта":"Font size"} style={{ display:"inline-flex", border:`1px solid ${fontSize!==100?c.accent:c.brd}`, borderRadius:0, overflow:"hidden", height:32 }}>
               {[{v:85,Icon:(p)=><svg {...p} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l1.5-5L8 12M5.8 10h1.4M10 8h4"/></svg>,t:lang==="ru"?"Меньше":"Smaller"},
                 {v:100,Icon:(p)=><svg {...p} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 13l2-7 2 7M5 11h2M10 7v6M10 7h2M9 13h2"/></svg>,t:lang==="ru"?"Обычный":"Normal"},
-                {v:115,Icon:(p)=><svg {...p} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 14l3-10 3 10M4.2 11h3.6M10 5v9M10 5h4"/></svg>,t:lang==="ru"?"Больше":"Larger"}].map(({v,Icon,t:tt}) => (
+                {v:115,Icon:(p)=><svg {...p} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 14l3-10 3 10M4.2 11h3.6M10 5v9M10 5h4"/></svg>,t:lang==="ru"?"Больше":"Larger"}].map(({v,Icon,t:tt}) => ( // eslint-disable-line no-unused-vars
                 <button key={v} onClick={()=>setFontSize(v)} title={tt} role="radio" aria-checked={fontSize===v} aria-label={tt} style={{ width:32, height:30, border:"none", background:fontSize===v?(c.accent+"18"):"transparent", color:fontSize===v?c.accent:c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"background .15s ease, color .15s ease" }}><Icon/></button>
               ))}
             </div>
@@ -2130,7 +2126,7 @@ function AgentHub({ data, loadTime }) {
                 const counts = stats.byModel.map(([mk,n])=>({mk,n}));
                 const total = counts.reduce((a,c)=>a+c.n,0);
                 let cum = 0;
-                return counts.map(({mk,n},i) => {
+                return counts.map(({mk,n},_i) => {
                   const start = cum/total*360;
                   cum += n;
                   const end = cum/total*360;
@@ -2220,7 +2216,7 @@ function AgentHub({ data, loadTime }) {
                   ];
                   const maxN = data[data.length-1].n;
                   const step = 580 / (data.length - 1);
-                  return data.map((p, i, a) => {
+                  return data.map((p, i, _a) => {
                     const x = 10 + i * step;
                     const prevX = i > 0 ? 10 + (i-1) * step : x;
                     const r = Math.max(4, Math.min(14, Math.sqrt(p.n/maxN) * 14));

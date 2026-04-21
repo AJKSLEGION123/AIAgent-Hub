@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import App from '../App';
 
 describe('App integration', () => {
@@ -15,8 +15,7 @@ describe('App integration', () => {
 
   it('renders skip link', () => {
     const { container } = render(<App />);
-    // Skip link may or may not be visible depending on load state
-    const skipLinks = container.querySelectorAll('a[href="#main-content"]');
+    // Skip link may or may not be visible depending on load state.
     // In loading state, skip link is not rendered (only in AgentHub)
     expect(container).toBeTruthy();
   });

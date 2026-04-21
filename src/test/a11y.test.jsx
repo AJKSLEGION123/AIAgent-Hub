@@ -10,7 +10,6 @@ describe('Accessibility', () => {
 
   it('has no broken aria references', () => {
     const { container } = render(<App />);
-    const ariaControls = container.querySelectorAll('[aria-controls]');
     // During loading, no aria-controls elements exist — that's fine
     expect(container).toBeTruthy();
   });
@@ -19,7 +18,6 @@ describe('Accessibility', () => {
     const { container } = render(<App />);
     const buttons = container.querySelectorAll('button');
     buttons.forEach(btn => {
-      const hasName = btn.textContent?.trim() || btn.getAttribute('aria-label') || btn.getAttribute('title');
       // Loading state buttons should have text content
       if (btn.textContent?.trim()) {
         expect(btn.textContent.trim().length).toBeGreaterThan(0);
