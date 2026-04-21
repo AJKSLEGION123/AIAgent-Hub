@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useRef, memo, Component } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef, memo, Component, Fragment } from "react";
 
 /* ═══════════════════════════════════════════════
    TRANSLATIONS
@@ -79,6 +79,16 @@ const MI = { opus47m:"∞" };
 const font = "'JetBrains Mono','IBM Plex Mono','Fira Code',monospace";
 const fontDisplay = "'Fraunces','Cormorant Garamond','Times New Roman',serif";
 const alpha = (hex, a) => hex + Math.round(a*255).toString(16).padStart(2,'0');
+// Relative luminance → contrasting text color
+const textOn = (hex) => {
+  if (!hex || hex.length < 4) return "#0a0806";
+  const h = hex.replace("#","");
+  const to = (s) => parseInt(s.length===1?s+s:s,16)/255;
+  const [r,g,b] = h.length===3 ? [to(h[0]),to(h[1]),to(h[2])] : [to(h.slice(0,2)),to(h.slice(2,4)),to(h.slice(4,6))];
+  const lin = (c) => c<=0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4);
+  const L = 0.2126*lin(r) + 0.7152*lin(g) + 0.0722*lin(b);
+  return L > 0.45 ? "#0a0806" : "#f5efdd";
+};
 /** Russian pluralization: pl(5,"модель","модели","моделей") → "моделей" */
 const pl = (n, one, few, many) => { const m=Math.abs(n)%100, d=m%10; return d===1&&m!==11?one:d>=2&&d<=4&&(m<12||m>14)?few:many; };
 
@@ -150,10 +160,18 @@ const CSS = `
 :root{color-scheme:dark}
 [data-theme="light"]{color-scheme:light}
 ::selection{background:#e86a2a40;color:inherit}
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
-[data-theme="light"] ::-webkit-scrollbar-thumb{background:#ccc}
+*{scrollbar-width:auto;scrollbar-color:#c4541d #120e09}
+[data-theme="light"] *{scrollbar-color:#a84a12 #ebe5d6}
+::-webkit-scrollbar{width:14px;height:14px}
+::-webkit-scrollbar-track{background:#120e09;border-left:1px solid #221d15}
+::-webkit-scrollbar-thumb{background:#c4541d;border:2px solid #120e09;min-height:40px}
+::-webkit-scrollbar-thumb:hover{background:#e86a2a}
+::-webkit-scrollbar-thumb:active{background:#f07a3a}
+::-webkit-scrollbar-corner{background:#120e09}
+[data-theme="light"] ::-webkit-scrollbar-track{background:#ebe5d6;border-left:1px solid #d9cfb8}
+[data-theme="light"] ::-webkit-scrollbar-thumb{background:#a84a12;border:2px solid #ebe5d6}
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#c4541d}
+[data-theme="light"] ::-webkit-scrollbar-corner{background:#ebe5d6}
 input:focus{border-color:var(--brdH)!important;box-shadow:0 0 0 3px rgba(232,106,42,0.1)}
 button:focus-visible{outline:2px solid #e86a2a;outline-offset:2px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
@@ -246,15 +264,18 @@ const Pill = memo(({ on, fn, lb, cl, c }) => (
   }}>{lb}</button>
 ));
 
-const CBtn = memo(({ id, txt, cl, sm, copied, cp, t, bg, skip }) => (
-  <button onClick={() => cp(id, txt, skip)} aria-label={copied===id ? t.copied : `${t.copy}: ${id}`} style={{
-    padding:sm?"4px 12px":"6px 14px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700,
-    border:`1px solid ${cl||"currentColor"}`, borderRadius:0,
-    background:copied===id?"transparent":(cl||"currentColor"), color:copied===id?(cl||"currentColor"):bg,
-    cursor:"pointer", transition:"all .15s", outline:"none",
-    transform: copied===id ? "scale(.96)" : "scale(1)",
-  }}>{copied===id ? "✓" : t.copy}</button>
-));
+const CBtn = memo(({ id, txt, cl, sm, copied, cp, t, bg, skip }) => {
+  const textClr = cl ? textOn(cl) : (bg || "#0a0806");
+  return (
+    <button onClick={() => cp(id, txt, skip)} aria-label={copied===id ? t.copied : `${t.copy}: ${id}`} style={{
+      padding:sm?"4px 12px":"6px 14px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700,
+      border:`1px solid ${cl||"currentColor"}`, borderRadius:0,
+      background:copied===id?"transparent":(cl||"currentColor"), color:copied===id?(cl||"currentColor"):textClr,
+      cursor:"pointer", transition:"all .15s", outline:"none",
+      transform: copied===id ? "scale(.96)" : "scale(1)",
+    }}>{copied===id ? "✓" : t.copy}</button>
+  );
+});
 
 const Toast = memo(({ msg, c }) => msg ? (
   <div className="toast" role="status" aria-live="polite" style={{ background:"#10b981", color:"#fff", fontFamily:font }}>{msg}</div>
@@ -1407,7 +1428,7 @@ function AgentHub({ data, loadTime }) {
               <div style={{ fontSize:11, fontWeight:600, color:c.text }}>{potd.icon} {t.r[potd.role]||potd.role} <span style={{ fontSize:9, color:c.mut, fontWeight:400 }}>({ML[potd.mk]})</span></div>
               <div style={{ display:"flex", gap:4 }}>
                 <button onClick={()=>{setExpanded(e=>({...e,[potd.id]:true}));setTimeout(()=>document.getElementById("card-"+potd.id)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${potd.ac}40`, borderRadius:0, background:"transparent", color:potd.ac, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Открыть":"Open"}</button>
-                <button onClick={()=>cp(potd.id,potd.text)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${potd.ac}`, borderRadius:0, background:potd.ac, color:c.onAccent, cursor:"pointer", outline:"none" }}>{copied===potd.id?t.copied:t.copy}</button>
+                <button onClick={()=>cp(potd.id,potd.text)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${potd.ac}`, borderRadius:0, background:potd.ac, color:textOn(potd.ac), cursor:"pointer", outline:"none" }}>{copied===potd.id?t.copied:t.copy}</button>
               </div>
             </div>
           </div>
@@ -1840,11 +1861,23 @@ function AgentHub({ data, loadTime }) {
                   </span>
                 ))}
               </div>
-              {/* agent chips */}
-              <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:12, flex:1 }}>
-                {(cb.ids||[]).map(id => {
+              {/* agent list — text chips with dot separators, clickable → open prompt */}
+              <div style={{ fontSize:10, lineHeight:1.7, marginBottom:12, flex:1, fontFamily:font }}>
+                {(cb.ids||[]).map((id, ix) => {
                   const p = pGet(id);
-                  return p ? <span key={id} style={{ fontSize:9, padding:"2px 7px", borderRadius:0, background:"transparent", color:p.ac, border:`1px solid ${p.ac}35`, fontFamily:font, letterSpacing:.2 }}>{p.icon} {t.r[p.role]||p.role}</span> : null;
+                  if (!p) return null;
+                  const name = t.r[p.role]||p.role;
+                  return (
+                    <Fragment key={id}>
+                      {ix > 0 && <span style={{ color:c.dim, margin:"0 6px", opacity:.6 }}>·</span>}
+                      <button onClick={(e)=>{ e.stopPropagation(); setSection("prompts"); setFm("all"); setFv("all"); setSearch(""); setTimeout(()=>{setExpanded(ex=>({...ex,[p.id]:true})); setTimeout(()=>document.getElementById(`card-${p.id}`)?.scrollIntoView({behavior:"smooth",block:"center"}), 100);}, 100); }}
+                        title={lang==="ru"?`Открыть промт: ${name}`:`Open prompt: ${name}`}
+                        style={{ background:"none", border:"none", padding:0, fontFamily:"inherit", fontSize:"inherit", color:p.ac, cursor:"pointer", outline:"none", textDecoration:"none" }}
+                        onMouseEnter={e=>{e.currentTarget.style.textDecoration="underline";}} onMouseLeave={e=>{e.currentTarget.style.textDecoration="none";}}>
+                        <span style={{ opacity:.8 }}>{p.icon}</span> {name}
+                      </button>
+                    </Fragment>
+                  );
                 })}
               </div>
               <div style={{ display:"flex", gap:8 }}>
@@ -1855,7 +1888,7 @@ function AgentHub({ data, loadTime }) {
                 }} style={{ flex:1, padding:"7px 10px", fontSize:9, letterSpacing:1.8, textTransform:"uppercase", borderRadius:0,
                   border:`1px solid ${copied===("combo-"+i)?"#10b981":cb.color}`,
                   background:copied===("combo-"+i)?"transparent":cb.color,
-                  color:copied===("combo-"+i)?"#10b981":c.onAccent,
+                  color:copied===("combo-"+i)?"#10b981":textOn(cb.color),
                   cursor:"pointer", textAlign:"center", fontWeight:700, fontFamily:font, transition:"all .15s", outline:"none" }}>
                   {copied===("combo-"+i) ? (lang==="ru"?"✓ Готово":"✓ Copied") : (lang==="ru"?"Копировать":lang==="kk"?"Көшіру":"Copy")}
                 </button>
