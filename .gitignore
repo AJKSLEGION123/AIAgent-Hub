@@ -29,6 +29,7 @@ data/
 # Agent logs and reports (generated at runtime)
 .claude/logs/
 .claude/reports/
+.claude/settings.local.json
 .gemini/
 .codex/
 
