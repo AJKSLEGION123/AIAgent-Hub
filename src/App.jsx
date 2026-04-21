@@ -145,7 +145,7 @@ const CSS = `
 .card-editorial{position:relative;padding:18px 20px 16px;border:0;border-top:1px solid;transition:background .2s ease,border-color .2s ease}
 .card-editorial::before{content:attr(data-idx);position:absolute;top:12px;right:16px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;opacity:.35}
 .card-editorial:hover{background:rgba(232,106,42,.03)}
-@media(max-width:640px){.masthead-stat-num{font-size:56px!important}.masthead-title{font-size:38px!important}}
+@media(max-width:640px){.masthead-stat-num{font-size:56px!important}.masthead-title{font-size:38px!important}.masthead-grid{grid-template-columns:1fr!important;gap:18px!important;align-items:flex-start!important}.masthead-stat{text-align:left!important;min-width:0!important}}
 
 :root{color-scheme:dark}
 [data-theme="light"]{color-scheme:light}
@@ -1063,8 +1063,8 @@ function AgentHub({ data, loadTime }) {
           <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6, marginTop:2 }} />
 
           {/* Main heading row */}
-          <div style={{ display:"grid", gridTemplateColumns:"1fr auto", gap:32, alignItems:"end", padding:"32px 0 8px" }} className="stack-mobile">
-            <div className="full-mobile">
+          <div className="masthead-grid" style={{ display:"grid", gridTemplateColumns:"1fr auto", gap:32, alignItems:"end", padding:"32px 0 8px" }}>
+            <div>
               <h1 className="display-serif masthead-title" style={{ fontSize:64, lineHeight:.95, letterSpacing:"-2.5px", fontWeight:400, margin:0, color:c.ink, fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>
                 <span style={{ color:c.accent, fontStyle:"italic", fontWeight:300 }}>AI</span>Agent<span style={{ color:c.mut }}>·</span>Hub
               </h1>
@@ -1073,7 +1073,7 @@ function AgentHub({ data, loadTime }) {
               </p>
             </div>
             {/* Statistical display */}
-            <div style={{ textAlign:"right", minWidth:130 }} className="full-mobile">
+            <div className="masthead-stat" style={{ textAlign:"right", minWidth:130 }}>
               <div className="display-serif masthead-stat-num" style={{ fontSize:88, lineHeight:.85, fontWeight:300, letterSpacing:"-4px", color:c.accent, fontVariationSettings:"'SOFT' 30,'opsz' 144" }}>
                 {stats.total}
               </div>
@@ -2116,24 +2116,36 @@ function AgentHub({ data, loadTime }) {
           <details style={{ marginTop:8 }}>
             <summary style={{ fontSize:10, fontWeight:600, color:c.mut, cursor:"pointer", letterSpacing:1, textTransform:"uppercase", marginBottom:6 }}>{lang==="ru"?"Эволюция":"Evolution"}</summary>
             <div style={{ marginTop:8, padding:"8px 0" }}>
-              <svg width="100%" height="80" viewBox="0 0 600 80">
-                {[
-                  { x:10, v:"v1", n:15, d:"Nov 2024" },
-                  { x:120, v:"v3", n:34, d:"Jan 2025" },
-                  { x:230, v:"v5", n:100, d:"Feb 2025" },
-                  { x:340, v:"v6", n:127, d:"Mar 2025" },
-                  { x:400, v:"v7", n:132, d:"Mar 2025" },
-                  { x:520, v:"v9.1", n:188, d:"Apr 2025" },
-                ].map((p,i,a) => (
-                  <g key={i}>
-                    {i > 0 && <line x1={a[i-1].x+24} y1={40} x2={p.x} y2={40} stroke={c.brd} strokeWidth={2} />}
-                    <circle cx={p.x+12} cy={40} r={Math.max(6, p.n/10)} fill="#e86a2a" opacity={0.3+i*0.15} />
-                    <circle cx={p.x+12} cy={40} r={4} fill="#e86a2a" />
-                    <text x={p.x+12} y={18} fill={c.text} fontSize={11} fontWeight={700} textAnchor="middle" fontFamily={font}>{p.v}</text>
-                    <text x={p.x+12} y={62} fill={c.dim} fontSize={8} textAnchor="middle" fontFamily={font}>{p.n} промтов</text>
-                    <text x={p.x+12} y={74} fill={c.dim} fontSize={7} textAnchor="middle" fontFamily={font} opacity={0.6}>{p.d}</text>
-                  </g>
-                ))}
+              <svg width="100%" height="90" viewBox="0 0 600 90">
+                {(() => {
+                  const data = [
+                    { v:"v1", n:15, d:"Nov 2024" },
+                    { v:"v3", n:34, d:"Jan 2025" },
+                    { v:"v5", n:100, d:"Feb 2025" },
+                    { v:"v7", n:132, d:"Mar 2025" },
+                    { v:"v9.1", n:188, d:"Apr 2025" },
+                    { v:"v11", n:296, d:"Apr 2026" },
+                    { v:"v11.5", n:1024, d:"Apr 2026" },
+                    { v:"v12", n:10036, d:"Apr 2026" },
+                  ];
+                  const maxN = data[data.length-1].n;
+                  const step = 580 / (data.length - 1);
+                  return data.map((p, i, a) => {
+                    const x = 10 + i * step;
+                    const prevX = i > 0 ? 10 + (i-1) * step : x;
+                    const r = Math.max(4, Math.min(14, Math.sqrt(p.n/maxN) * 14));
+                    return (
+                      <g key={i}>
+                        {i > 0 && <line x1={prevX} y1={42} x2={x} y2={42} stroke={c.brd} strokeWidth={1.5} />}
+                        <circle cx={x} cy={42} r={r+3} fill="#e86a2a" opacity={0.15} />
+                        <circle cx={x} cy={42} r={r} fill="#e86a2a" opacity={0.9} />
+                        <text x={x} y={18} fill={c.text} fontSize={10} fontWeight={700} textAnchor="middle" fontFamily={font}>{p.v}</text>
+                        <text x={x} y={70} fill="#e86a2a" fontSize={9} fontWeight={700} textAnchor="middle" fontFamily={font}>{p.n >= 1000 ? (p.n/1000).toFixed(1)+"K" : p.n}</text>
+                        <text x={x} y={82} fill={c.dim} fontSize={7} textAnchor="middle" fontFamily={font} opacity={0.6}>{p.d}</text>
+                      </g>
+                    );
+                  });
+                })()}
               </svg>
             </div>
           </details>
