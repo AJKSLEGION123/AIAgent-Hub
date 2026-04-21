@@ -861,7 +861,7 @@ function AgentHub({ data, loadTime }) {
   }, [P]);
 
   const CAT_ICONS = {"AI / LLM":"\u{1F9E0}","Security":"\u{1F6E1}","Testing / QA":"\u{1F9EA}","Performance":"\u26A1","DevOps / CI":"\u2699","Frontend / UI":"\u{1F3A8}","Backend / API":"\u{1F4E6}","Data & Files":"\u{1F4CA}","Integrations":"\u{1F514}","Architecture":"\u{1F3D7}","Documentation":"\u{1F4D6}","Project Setup":"\u{1F680}"};
-  const CAT_COLORS = {"AI / LLM":"#c4541d","Security":"#ef4444","Testing / QA":"#a855f7","Performance":"#f59e0b","DevOps / CI":"#2563eb","Frontend / UI":"#ec4899","Backend / API":"#10b981","Data & Files":"#0891b2","Integrations":"#f97316","Architecture":"#e86a2a","Documentation":"#06b6d4","Project Setup":"#0ea5e9"};
+  const CAT_COLORS = {"AI / LLM":"#c4541d","Security":"#ef4444","Testing / QA":"#c084fc","Performance":"#f59e0b","DevOps / CI":"#60a5fa","Frontend / UI":"#ec4899","Backend / API":"#34d399","Data & Files":"#22d3ee","Integrations":"#f97316","Architecture":"#e86a2a","Documentation":"#67e8f9","Project Setup":"#38bdf8"};
 
   const randomPrompt = useCallback(() => {
     const r = P[Math.floor(Math.random() * P.length)];
