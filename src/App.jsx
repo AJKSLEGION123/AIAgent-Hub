@@ -211,7 +211,7 @@ button:focus-visible{outline:2px solid #e86a2a;outline-offset:2px}
   #main-content{padding-bottom:120px!important}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:0s!important;transition-duration:0s!important}}
-.skip-link{position:absolute;top:-40px;left:0;background:#e86a2a;color:#fff;padding:8px 16px;z-index:100;border-radius:0 0 8px 0;font-size:12px;text-decoration:none}
+.skip-link{position:absolute;top:-40px;left:0;background:#e86a2a;color:#0a0806;padding:10px 18px;z-index:100;border-radius:0;font-size:12px;font-weight:700;text-decoration:none;letter-spacing:1px}
 .skip-link:focus{top:0}
 @media(prefers-contrast:more){
   button,div,input{border-width:2px!important}
@@ -1595,7 +1595,7 @@ function AgentHub({ data, loadTime }) {
                   <div style={{ width:32, height:32, borderRadius:0, background:"transparent", border:0, borderRight:`1px solid ${c.brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, flexShrink:0, paddingRight:10 }}>{p.icon}</div>
                   <div style={{ minWidth:0, flex:1 }}>
                     <div style={{ display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
-                      <span className="body-serif" style={{ fontSize:17, fontWeight:400, color:p.ac, letterSpacing:-0.1, lineHeight:1.15 }}>{debouncedSearch ? <HL text={t.r[p.role]||p.role} q={debouncedSearch} color={p.ac}/> : (t.r[p.role]||p.role)}</span>
+                      <span className="body-serif" style={{ fontSize:19, fontWeight:500, color:p.ac, letterSpacing:-0.1, lineHeight:1.15 }}>{debouncedSearch ? <HL text={t.r[p.role]||p.role} q={debouncedSearch} color={p.ac}/> : (t.r[p.role]||p.role)}</span>
                       <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:MC[p.mk], fontWeight:700, fontFamily:font }}>{ML[p.mk]}</span>
                       {p.type==="task" && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:"#ef4444", fontWeight:700, fontFamily:font }}>· {lang==="ru"?"задача":"task"}</span>}
                       {p.difficulty && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:diffColors[p.difficulty], fontWeight:600, fontFamily:font }} className="hide-mobile">· {p.difficulty}</span>}

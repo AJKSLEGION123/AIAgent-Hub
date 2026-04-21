@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a0806"/>
+      <stop offset="1" stop-color="#15110b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="600" cy="200" r="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e86a2a" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#e86a2a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Editorial masthead rules -->
+  <line x1="80" y1="68" x2="1120" y2="68" stroke="#ece3ce" stroke-opacity="0.5" stroke-width="1"/>
+  <line x1="80" y1="74" x2="1120" y2="74" stroke="#ece3ce" stroke-opacity="0.5" stroke-width="1"/>
+
+  <!-- Top meta row -->
+  <text x="80" y="62" fill="#a09584" font-family="'JetBrains Mono',monospace" font-size="13" letter-spacing="4">№ V12 · АПР. 2026 Г.</text>
+  <text x="1120" y="62" text-anchor="end" fill="#a09584" font-family="'JetBrains Mono',monospace" font-size="13" letter-spacing="3">AN ALMANAC OF AUTONOMOUS DEVELOPMENT</text>
+
+  <line x1="80" y1="100" x2="1120" y2="100" stroke="#ece3ce" stroke-opacity="0.5" stroke-width="1"/>
+  <line x1="80" y1="106" x2="1120" y2="106" stroke="#ece3ce" stroke-opacity="0.5" stroke-width="1"/>
+
+  <!-- Title -->
+  <text x="80" y="230" fill="#ece3ce" font-family="'Fraunces','Times New Roman',serif" font-size="108" font-weight="500" letter-spacing="-2">AIAgent·Hub</text>
+
+  <!-- Subtitle -->
+  <text x="80" y="300" fill="#b3a794" font-family="'Instrument Serif','Georgia',serif" font-size="30" font-style="italic">Полевой справочник автономной разработки с Claude Code.</text>
+
+  <!-- Big stat -->
+  <text x="80" y="475" fill="#e86a2a" font-family="'Fraunces','Times New Roman',serif" font-size="220" font-weight="300" letter-spacing="-6">10 036</text>
+
+  <!-- Stat label -->
+  <text x="80" y="520" fill="#a09584" font-family="'JetBrains Mono',monospace" font-size="16" letter-spacing="6">ПРОМТОВ ДЛЯ CLAUDE OPUS 4.7 · 1M CONTEXT</text>
+
+  <!-- Footer rules -->
+  <line x1="80" y1="556" x2="1120" y2="556" stroke="#ece3ce" stroke-opacity="0.5" stroke-width="1"/>
+  <line x1="80" y1="562" x2="1120" y2="562" stroke="#ece3ce" stroke-opacity="0.5" stroke-width="1"/>
+
+  <!-- Footer row -->
+  <text x="80" y="598" fill="#a09584" font-family="'JetBrains Mono',monospace" font-size="13" letter-spacing="2">73 КОМБО · 30 ШПАРГАЛОК · 110 CLI-КОМАНД</text>
+  <text x="1120" y="598" text-anchor="end" fill="#e86a2a" font-family="'JetBrains Mono',monospace" font-size="13" letter-spacing="3" font-weight="700">AI-AGENT-HUB.NET</text>
+</svg>
