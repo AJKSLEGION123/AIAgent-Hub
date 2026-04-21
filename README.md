@@ -1,121 +1,116 @@
-# AIAgent-Hub v11.0
+# AIAgent-Hub v12
 
-188 универсальных промтов для Claude Code. Каждый промт начинается с реальной команды (`/ralph-loop`, `/feature-dev`, `/review-pr`, `/code-review`, `/simplify`, `/loop`) и включает фазу полного изучения проекта.
+**10 036 промтов · 73 комбо · 30 шпаргалок · 110 CLI-команд** для Claude Code + Opus 4.7 · 1M context.
 
-## Quick Start
+Полевой справочник автономной разработки. Каждый промт готов к копированию в Claude Code, содержит фазу полной разведки проекта и full-autonomy wrapper.
+
+Live: <https://ai-agent-hub.net>
+
+## Quick start
 
 ```bash
-# 1. Открой сайт
-https://ai-agent-hub.net
+# 1. Запусти Claude Code с Opus 4.7 1M
+claude --model claude-opus-4-7[1m]
 
-# 2. Выбери промт для задачи
-# 3. Скопируй команду
-# 4. Вставь в Claude Code CLI
-# 5. Агент изучит проект и работает автономно
+# 2. Открой ai-agent-hub.net, выбери промт для задачи
+# 3. Нажми "Копировать"
+# 4. Вставь в Claude Code — агент работает автономно
 ```
 
 ## Что внутри
 
-| Метрика | Значение |
+| Раздел | Количество |
 |---|---|
-| Промты | **188** универсальных |
-| Комбо | **39** готовых пакетов |
-| Категории | **12** автоклассификация |
-| Шпаргалки | **16** технологий |
-| CLI Commands | **10** quick commands |
-| Config Templates | **13** шаблонов |
+| Промты | **10 036** |
+| Воркфлоу-комбо | **73** |
+| Шпаргалки | **30** |
+| CLI-команды | **110** |
+| Config-шаблоны | **13** |
+| Категории | **12** |
 
-## Категории (12)
+## Содержимое
 
-| Категория | Примеры |
-|---|---|
-| **AI / LLM** | RAG Pipeline, AI Agent, Prompt Engineering |
-| **Security** | Audit, Auth System, 2FA, RBAC, OWASP |
-| **Testing / QA** | TDD, E2E, Project Supervisor, Output QA, Auto-Polish |
-| **Performance** | Cache, Bundle, DB Optimization |
-| **DevOps / CI** | Docker, K8s, GitHub Actions, Monitoring |
-| **Frontend / UI** | Dashboard, Design System, Dark Mode, Animations |
-| **Backend / API** | CRUD, REST, GraphQL, WebSocket, API Gateway |
-| **Data & Files** | Registry Audit, CSV Import, PDF, Migration |
-| **Integrations** | Webhooks, Email, Upload, Notifications |
-| **Architecture** | Monorepo, Microservices, API Versioning |
-| **Documentation** | README Gen, OpenAPI, Docs |
-| **Project Setup** | Init, Git Workflow, Env Config, CI/CD |
+**Промты (10 036):** 20 языков × 35 задач, 40 фреймворков × 10 операций, 15 БД × 12 операций, AWS/GCP/Azure/Cloudflare × сервисы, паттерны проектирования, алгоритмы, тестирование, безопасность, performance, e-commerce, SaaS, analytics, CMS, auth, платежи, observability, web3, DX. Плюс **∞ Opus 4.7 Perfectionist Suite** — 14 премиум-промтов с полной автономией для любого проекта.
 
-## Команды Claude Code
+**Комбо (73):** AI Product Launch, Next.js Production, E-commerce Launch, SaaS Bootstrap, Zero-Trust Security, Observability Stack, Mobile MVP, Data Pipeline, Performance Triage, Incident Response Playbook, Event-Driven Architecture, Multi-Tenant SaaS, Full-Stack AI Agent, CI/CD Modernization, Testing Pyramid Rollout и др.
+
+**Шпаргалки (30):** Claude Code, Git, npm/pnpm, Docker, Testing, TypeScript, React, Prisma, Tailwind CSS, SQL, Python, Go, Rust, Kubernetes, Redis, Nginx, Next.js, Cargo, curl, openssl, ffmpeg, jq, awk, Homebrew, Terraform, GitHub Actions, Kafka, psql, Linux perf.
+
+**CLI-команды (110):** 14 категорий — Разработка, Тестирование, Git, Docker, Claude Code, Поиск и навигация, npm / pnpm, Деплой, Kubernetes, Docker Compose, PostgreSQL, Bun, Python/uv.
+
+## Команды Claude Code внутри промтов
 
 ```
-/ralph-loop "задача" --completion-promise "DONE"   # Автономный цикл
-/feature-dev                                        # Guided разработка
-/review-pr                                          # Мульти-агент PR ревью
-/code-review                                        # Ревью кода / A11y / DB
-/simplify                                           # Рефакторинг / упрощение
-/commit                                             # Smart commit
-/commit-push-pr                                     # Commit + Push + PR
-/loop 3m "задача"                                   # Рекурсивный мониторинг
-/supervise                                          # QA-начальник проекта
+/ralph-loop "задача" --completion-promise "DONE"   — автономный цикл
+/feature-dev                                        — guided разработка
+/review-pr                                          — мульти-агент PR ревью
+/code-review                                        — ревью кода / A11y / DB
+/simplify                                           — рефакторинг / упрощение
+/commit                                             — smart commit
+/loop 3m "задача"                                   — рекурсивный мониторинг
 ```
 
-## Комбо-пакеты (39)
+## Стек
 
-```
-Project QA Suite    — Supervisor + Output QA + Polish + Templates + Audit
-AI Application      — RAG + AI Agent + Prompt Engineering
-Project Kickstart   — Setup + Config + README + CI/CD
-Full Stack Feature  — CRUD API + Auth + Dashboard
-Mobile Sprint       — Mobile App + Auth + Chat + Monitoring
-Code Quality Blitz  — A11y + DB Review + Refactor + Security + Perf
-Continuous Ops      — Health Monitor + Tests + Deploy + Deps
-Frontend Sprint     — UI + формы + state + a11y + dark mode + бандл
-Backend Sprint      — API + БД + auth + ошибки + логи + кэш
-Security Hardening  — Аудит + фиксы + auth + env
-Testing Blitz       — Unit + integration + E2E
-...и ещё 28 комбо
-```
+- **Frontend:** React 19 + Vite 8 + inline styles
+- **Typography:** Fraunces (display), Instrument Serif (body), JetBrains Mono (data/code)
+- **Palette:** espresso `#0a0806` + cream `#ece3ce` + burnt orange `#e86a2a`
+- **Data:** zlib+base64 blob в `src/App.jsx` (`const Z`)
+- **API:** Hono + SQLite (api/server.cjs)
+- **Tests:** Vitest (220 unit) + Playwright (E2E)
+- **Deploy:** Vercel auto + self-hosted Docker через `scripts/ssh-deploy-docker.py`
 
-## Шпаргалки (16)
-
-Claude Code, Git, npm/pnpm, Docker, Kubernetes, Testing, TypeScript, React, Prisma, Tailwind CSS, SQL, Python, Go, Rust, Redis, Nginx
-
-## Config Templates (13)
-
-CLAUDE.md, ESLint, Dockerfile, GitHub Actions CI, Docker Compose, tsconfig.json, Prettier, .gitignore, vitest.config.ts, .env.example, nginx.conf, K8s Deployment, Dockerfile Multi-stage
-
-## Платформы
-
-| Платформа | Описание |
-|---|---|
-| **Web** | SPA на React 19 + Vite |
-| **API** | Hono + SQLite |
-| **CLI** | `node cli/index.cjs list\|show\|search\|copy` |
-| **Telegram** | `node bot/telegram.cjs` |
-| **VS Code** | Extension с Ctrl+Shift+A |
-
-## Dev Setup
+## Dev
 
 ```bash
 git clone https://github.com/AJKSLEGION123/AIAgent-Hub.git
 cd AIAgent-Hub
 npm install
-npm run dev        # localhost:5173
-npm test           # 220 tests
-npm run build      # production build
+npm run dev          # localhost:5173
+npm test             # 220 unit tests
+npm run build        # production -> dist/
+node scripts/check-data.cjs   # data integrity check
 ```
 
-## Docker
+## Data contribution
+
+Промты хранятся в сжатом `const Z` внутри `src/App.jsx`. Для расширения создай новый `scripts/add-batch<N>.cjs` (примеры в `scripts/archive/`) и запусти:
 
 ```bash
-docker compose up -d   # localhost:3000
-docker compose logs -f
+node scripts/add-batch<N>.cjs      # добавляет к data.P, пересжимает Z
+node scripts/check-data.cjs        # проверяет integrity (0 dupes, 0 broken refs)
+npm run build && npm test          # проверка сборки и тестов
 ```
 
-## Stack
+## Deploy
 
-- **Frontend**: React 19, Vite 8, TypeScript
-- **API**: Hono, better-sqlite3
-- **Tests**: Vitest (220 unit) + Playwright (E2E)
-- **Deploy**: Vercel (ai-agent-hub.net) + Docker
+**Vercel** (production автоматически на `git push origin master`):
+
+```bash
+git add -A && git commit -m "..." && git push origin master
+```
+
+**Self-hosted** (pm.lanmaster.kz + Cloudflare Tunnel):
+
+```bash
+python scripts/ssh-deploy-docker.py deploy   # git reset + docker build + smoke test
+python scripts/ssh-deploy-docker.py rollback # откат к HEAD~1
+python scripts/ssh-deploy-docker.py status   # контейнер + URL + health
+```
+
+## Архитектура
+
+```
+src/App.jsx              — SPA (~2200 строк): UI + state + декомпрессия Z
+api/server.cjs           — Hono API (auth, CRUD)
+api/db.cjs               — SQLite setup
+cli/index.cjs            — CLI tool (list, show, search, copy, export)
+bot/telegram.cjs         — Telegram бот
+vscode-extension/        — VS Code расширение (Ctrl+Shift+A)
+scripts/                 — генерация данных + deploy
+scripts/archive/         — старые batch скрипты
+```
 
 ## License
 
-MIT
+MIT — см. [LICENSE](LICENSE).

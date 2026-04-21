@@ -1,32 +1,63 @@
 # AIAgent-Hub
 
-> Multi-agent development system. 175 prompts for autonomous AI agents.
+> Field guide to autonomous development with Claude Code. 10 036 prompts for Claude Opus 4.7 · 1M context.
 
-## Models
-- Claude Code Opus 4.6 (Anthropic)
-- Gemini 3.1 Pro (Google)
-- Codex CLI (OpenAI)
+## Model
+
+All prompts are optimized for **Claude Code** CLI with **Claude Opus 4.7 · 1M context** model. Prompts leverage the 1M token window to read entire project at once before acting.
+
+## Content
+
+- **10 036 prompts** — frontend, backend, DevOps, AI/LLM, security, performance, mobile, SaaS, e-commerce, analytics, CMS, auth, payments, observability, web3, DX, career
+- **73 workflow combos** — pre-assembled agent teams for specific launches (AI Product, E-commerce, SaaS Bootstrap, Zero-Trust Security, Observability, Mobile MVP, Data Pipeline, Performance Triage, Incident Response)
+- **30 cheat sheets** — Claude Code, Git, npm, Docker, Kubernetes, Testing, TypeScript, React, Prisma, Tailwind, SQL, Python, Go, Rust, Redis, Nginx, Next.js, Cargo, curl, openssl, ffmpeg, jq, awk, Homebrew, Terraform, GitHub Actions, Kafka, psql, Linux perf
+- **110 CLI commands** — 14 categories covering dev, test, git, docker, search, npm, deploy, K8s, Compose, PostgreSQL, Bun, Python/uv
+- **13 config templates** — CLAUDE.md, ESLint, Dockerfile, GHA CI, Compose, tsconfig, Prettier, .gitignore, Vitest, .env, nginx, K8s Deployment, multi-stage Dockerfile
+
+## Prompt structure
+
+Every prompt is wrapped with an autonomy preamble:
+
+```
+[AUTONOMY-v1]
+MODE: full autonomy + full permissions. Don't ask for minor confirmations.
+IF UNCLEAR: ask 1-3 clarifying questions with 2-4 multiple-choice options each.
+```
+
+Main prompt commands used internally:
+- `/ralph-loop "task" --completion-promise "DONE"` — autonomous loop
+- `/feature-dev` — guided feature development
+- `/review-pr` — multi-agent PR review
+- `/code-review` — code / a11y / DB review
+- `/simplify` — refactor / cleanup
+- `/commit` — smart commit
+- `/loop 3m "task"` — recursive monitor
+
+## Categories (12)
+
+AI / LLM · Security · Testing / QA · Performance · DevOps / CI · Frontend / UI · Backend / API · Data & Files · Integrations · Architecture · Documentation · Project Setup
 
 ## Features
-- 175 prompts for different roles and tasks
-- 48 team combinations (combos)
-- Overnight mode (100+ tasks autonomously)
-- Infinite mode (never stops until Ctrl+C)
-- 3 languages: Russian, English, Kazakh
-- Dark/light theme
-- Search, filter, sort, compare
-- Export: Markdown, JSON, CSV, HTML
-- PWA with offline support
-- 12 keyboard shortcuts
 
-## Prompt Categories
-- Roles: Frontend, Backend, Fullstack, Tester, Designer, DevOps, Architect, Security, etc.
-- Tasks: Overnight (100+ tasks), Features (50+), Testing (100+ tests), Security audit, Refactoring, Performance, A11y, Documentation, Sprint
-- Special: Infinite mode (♾️), Mega teams (3-10 agents)
+- Search + filter (role, tag, time, difficulty, category, model)
+- Top-60 pagination for roles/tags with live search
+- Category-first landing grid
+- Compact / Full mode per prompt
+- Dark / Light theme
+- 3-tier typography (Fraunces / Instrument Serif / JetBrains Mono)
+- Per-prompt description extracted separately from prompt text
+- Per-combo markdown export
+- Session persistence (viewMode, compactMode, fontSize, language)
+- Keyboard shortcuts
+- PWA with smart caching
+- 3 languages: Russian, English, Kazakh
 
 ## Links
-- Source: /
+
+- Source: https://ai-agent-hub.net/
 - Prompts: /#prompts
-- Teams: /#combos
-- CLI: /#cheat
+- Combos: /#combos
+- Cheat sheets: /#cheat
+- CLI commands: /#quick
 - Setup: /#setup
+- Repo: https://github.com/AJKSLEGION123/AIAgent-Hub
