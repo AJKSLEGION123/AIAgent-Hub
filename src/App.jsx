@@ -1108,7 +1108,7 @@ function AgentHub({ data, loadTime }) {
             <button onClick={nextLang} aria-label="Switch language" title={lang==="ru"?"Сменить язык":"Switch language"} className="nav-btn nav-btn-text" style={{ borderColor:c.accent, color:c.accent }}>
               {langLabel}
             </button>
-            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" className="hide-mobile nav-btn nav-btn-text" style={{ borderColor: fontSize!==100?c.accent:c.brd, color: fontSize!==100?c.accent:c.text, padding:"0 8px", WebkitAppearance:"none", MozAppearance:"none", appearance:"none", backgroundImage:"none" }}>
+            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" title={lang==="ru"?"Размер шрифта":"Font size"} className="hide-mobile" style={{ width:44, height:32, padding:0, border:`1px solid ${fontSize!==100?c.accent:c.brd}`, background:fontSize!==100?"rgba(232,106,42,.08)":"transparent", color: fontSize!==100?c.accent:c.text, cursor:"pointer", outline:"none", fontFamily:font, fontSize:11, fontWeight:700, letterSpacing:0, textAlign:"center", textAlignLast:"center", WebkitAppearance:"none", MozAppearance:"none", appearance:"none", backgroundImage:"none", borderRadius:0, lineHeight:"30px", verticalAlign:"middle" }}>
               <option value={85}>A-</option>
               <option value={100}>A</option>
               <option value={115}>A+</option>
