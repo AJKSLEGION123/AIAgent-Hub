@@ -197,7 +197,7 @@ def _smoke_test(c):
     Runs against localhost:3000 so it's not affected by a flaky tunnel."""
     rc, out, _ = run(
         c,
-        "curl -sS --max-time 10 -w '\\n---HTTP %{http_code}' http://localhost:3000/ | tail -30",
+        "curl -sS --max-time 10 -w '\\n---HTTP %{http_code}' http://localhost:3000/",
         show=False,
     )
     html = out
