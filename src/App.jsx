@@ -2011,57 +2011,55 @@ function AgentHub({ data, loadTime }) {
 
         {/* ════════════════ SECTION: SETUP ════════════════ */}
         {section === "setup" && <div role="tabpanel" id="panel-setup">
-        {/* Full team setup */}
-        <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:0, border:`2px solid #e86a2a40`, background:"linear-gradient(135deg, #e86a2a08, #c4541d08)", position:"relative", overflow:"hidden" }}>
-          <div style={{ position:"absolute", top:0, right:0, width:120, height:120, background:"radial-gradient(circle, #e86a2a10, transparent 70%)", pointerEvents:"none" }} />
-          <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:10 }} className="stack-mobile">
-            <div style={{ width:40, height:40, borderRadius:0, background:"#e86a2a20", border:"1px solid #e86a2a30", display:"flex", alignItems:"center", justifyContent:"center", fontSize:20 }}>🚀</div>
-            <div>
-              <div style={{ fontSize:14, fontWeight:800, color:c.text }}>{t.teamSetup}</div>
-              <div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{t.teamSetupDesc}</div>
-            </div>
-          </div>
-          <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-            <button onClick={()=>cp("team-setup", TEAM_SETUP)} style={{
-              padding:"9px 22px", fontSize:12, fontFamily:font, fontWeight:700,
-              border:"1.5px solid #e86a2a", borderRadius:0,
-              background:copied==="team-setup"?"transparent":"#e86a2a",
-              color:copied==="team-setup"?"#e86a2a":"#fff",
-              cursor:"pointer", transition:"all .15s", outline:"none",
-            }}>{copied==="team-setup" ? t.copied : (lang==="ru"?"Копировать setup-agents.sh":"Copy setup-agents.sh")}</button>
-          </div>
+        {/* Full team setup — hero card */}
+        <div style={{ marginBottom:20, padding:"22px 24px", borderRadius:0, border:`1px solid ${c.accent}40`, borderLeft:`3px solid ${c.accent}`, background:c.accent+"08", position:"relative", overflow:"hidden" }}>
+          <div style={{ position:"absolute", top:0, right:0, width:160, height:160, background:`radial-gradient(circle, ${c.accent}12, transparent 65%)`, pointerEvents:"none" }} />
+          <div className="label-tech-sm" style={{ color:c.accent, marginBottom:8 }}>01 · Hero</div>
+          <h3 className="display-serif" style={{ fontSize:24, fontWeight:400, color:c.ink, margin:0, lineHeight:1.1, letterSpacing:"-.4px" }}>{t.teamSetup}</h3>
+          <p className="body-serif" style={{ fontSize:15, color:c.mut, marginTop:8, marginBottom:16, lineHeight:1.4 }}>{t.teamSetupDesc}</p>
+          <button onClick={()=>cp("team-setup", TEAM_SETUP)} style={{
+            padding:"9px 22px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700,
+            border:`1px solid ${c.accent}`, borderRadius:0,
+            background:copied==="team-setup"?"transparent":c.accent,
+            color:copied==="team-setup"?c.accent:textOn(c.accent),
+            cursor:"pointer", transition:"all .15s", outline:"none",
+          }}>{copied==="team-setup" ? (lang==="ru"?"✓ Готово":"✓ Copied") : (lang==="ru"?"setup-agents.sh":"setup-agents.sh")}</button>
         </div>
 
-        {/* Setup commands */}
-        <div style={{ marginBottom:6 }}>
-          <div style={{ fontSize:10, letterSpacing:3, color:c.mut, textTransform:"uppercase", marginBottom:10, paddingLeft:4, fontWeight:600, borderBottom:`1px solid ${c.brd}`, paddingBottom:8 }}>{lang==="ru"?"Настройка и запуск":"Setup & Launch"}</div>
+        {/* Setup commands section label */}
+        <div style={{ marginBottom:14, paddingBottom:8, borderBottom:`1px solid ${c.brd}`, display:"flex", alignItems:"baseline", gap:12 }}>
+          <h3 className="display-serif" style={{ fontSize:22, fontWeight:400, margin:0, color:c.ink, lineHeight:1, letterSpacing:"-.3px" }}>{lang==="ru"?"Настройка и запуск":"Setup & Launch"}</h3>
+          <span className="label-tech-sm" style={{ color:c.dim }}>02 · Setup</span>
         </div>
         {[
-          { id:"git", icon:"📂", title:t.setup, desc:t.setupDesc, text:GIT_SETUP },
-          { id:"launch", icon:"▶", title:t.launch, desc:t.launchDesc, text:LAUNCH },
+          { id:"git", Icon:IconDownload, title:t.setup, desc:t.setupDesc, text:GIT_SETUP, col:"#10b981" },
+          { id:"launch", Icon:IconZap, title:t.launch, desc:t.launchDesc, text:LAUNCH, col:"#06b6d4" },
         ].map(s => (
-          <div key={s.id} style={{ marginBottom:8, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card }}>
-            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px" }}>
-              <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                <div style={{ width:36, height:36, borderRadius:0, background:c.surf, border:`1px solid ${c.brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17 }}>{s.icon}</div>
-                <div><div style={{ fontSize:13, fontWeight:600 }}>{s.title}</div><div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{s.desc}</div></div>
+          <div key={s.id} style={{ marginBottom:6, border:`1px solid ${c.brd}`, borderLeft:`2px solid ${s.col}40`, borderRadius:0, background:c.card }}>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", gap:12 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:12, flex:1, minWidth:0 }}>
+                <span style={{ color:s.col, display:"inline-flex", flexShrink:0 }}><s.Icon /></span>
+                <div style={{ minWidth:0 }}>
+                  <div style={{ fontSize:14, fontWeight:600, color:c.text }}>{s.title}</div>
+                  <div className="body-serif" style={{ fontSize:13, color:c.mut, marginTop:3, lineHeight:1.3 }}>{s.desc}</div>
+                </div>
               </div>
-              <CBtn id={s.id} txt={s.text} copied={copied} cp={cp} t={t} bg={c.onAccent} skip />
+              <CBtn id={s.id} txt={s.text} cl={s.col} copied={copied} cp={cp} t={t} bg={c.onAccent} skip />
             </div>
           </div>
         ))}
 
         {/* Structure */}
-        <div style={{ marginTop:16, marginBottom:8, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card }}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px" }}>
-            <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-              <div style={{ width:36, height:36, borderRadius:0, background:c.surf, border:`1px solid ${c.brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17 }}>🗂</div>
-              <div>
-                <div style={{ fontSize:13, fontWeight:600 }}>{t.structure}</div>
-                <div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{t.structureDesc}</div>
+        <div style={{ marginTop:14, marginBottom:8, border:`1px solid ${c.brd}`, borderLeft:`2px solid #f59e0b40`, borderRadius:0, background:c.card }}>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", gap:12 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:12, flex:1, minWidth:0 }}>
+              <span style={{ color:"#f59e0b", display:"inline-flex", flexShrink:0 }}><IconCards /></span>
+              <div style={{ minWidth:0 }}>
+                <div style={{ fontSize:14, fontWeight:600, color:c.text }}>{t.structure}</div>
+                <div className="body-serif" style={{ fontSize:13, color:c.mut, marginTop:3, lineHeight:1.3 }}>{t.structureDesc}</div>
               </div>
             </div>
-            <CBtn id="structure" txt={FOLDER_STRUCTURE} copied={copied} cp={cp} t={t} bg={c.onAccent} skip />
+            <CBtn id="structure" txt={FOLDER_STRUCTURE} cl="#f59e0b" copied={copied} cp={cp} t={t} bg={c.onAccent} skip />
           </div>
         </div>
 
