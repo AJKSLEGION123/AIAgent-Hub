@@ -1,6 +1,6 @@
 # AIAgent-Hub
 
-> Field guide to autonomous development with Claude Code. 10 036 prompts for Claude Opus 4.7 · 1M context.
+> Field guide to autonomous development with Claude Code. 10 037 prompts for Claude Opus 4.7 · 1M context.
 
 ## Model
 
@@ -8,8 +8,8 @@ All prompts are optimized for **Claude Code** CLI with **Claude Opus 4.7 · 1M c
 
 ## Content
 
-- **10 036 prompts** — frontend, backend, DevOps, AI/LLM, security, performance, mobile, SaaS, e-commerce, analytics, CMS, auth, payments, observability, web3, DX, career
-- **73 workflow combos** — pre-assembled agent teams for specific launches (AI Product, E-commerce, SaaS Bootstrap, Zero-Trust Security, Observability, Mobile MVP, Data Pipeline, Performance Triage, Incident Response)
+- **10 037 prompts** — frontend, backend, DevOps, AI/LLM, security, performance, mobile, SaaS, e-commerce, analytics, CMS, auth, payments, observability, web3, DX, career
+- **74 workflow combos** — pre-assembled agent teams (∞ Perpetual Improvement, AI Product, E-commerce, SaaS Bootstrap, Zero-Trust Security, Observability, Mobile MVP, Data Pipeline, Performance Triage, Incident Response)
 - **30 cheat sheets** — Claude Code, Git, npm, Docker, Kubernetes, Testing, TypeScript, React, Prisma, Tailwind, SQL, Python, Go, Rust, Redis, Nginx, Next.js, Cargo, curl, openssl, ffmpeg, jq, awk, Homebrew, Terraform, GitHub Actions, Kafka, psql, Linux perf
 - **110 CLI commands** — 14 categories covering dev, test, git, docker, search, npm, deploy, K8s, Compose, PostgreSQL, Bun, Python/uv
 - **13 config templates** — CLAUDE.md, ESLint, Dockerfile, GHA CI, Compose, tsconfig, Prettier, .gitignore, Vitest, .env, nginx, K8s Deployment, multi-stage Dockerfile

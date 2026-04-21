@@ -1,6 +1,6 @@
 # AIAgent-Hub v12
 
-**10 036 промтов · 73 комбо · 30 шпаргалок · 110 CLI-команд** для Claude Code + Opus 4.7 · 1M context.
+**10 037 промтов · 74 комбо · 30 шпаргалок · 110 CLI-команд** для Claude Code + Opus 4.7 · 1M context.
 
 Полевой справочник автономной разработки. Каждый промт готов к копированию в Claude Code, содержит фазу полной разведки проекта и **[AUTONOMY-v4]** wrapper — даёт агенту полные права + арсенал (Browser MCP, все MCP servers, skills, plugins, shell, web) + auto-commit/push/deploy после каждого улучшения + браузерную верификацию post-deploy + бесконечный цикл улучшений.
 
@@ -23,8 +23,8 @@ claude --model claude-opus-4-7[1m]
 
 | Раздел | Количество |
 |---|---|
-| Промты | **10 036** |
-| Воркфлоу-комбо | **73** |
+| Промты | **10 037** |
+| Воркфлоу-комбо | **74** |
 | Шпаргалки | **30** |
 | CLI-команды | **110** |
 | Config-шаблоны | **13** |
@@ -32,7 +32,7 @@ claude --model claude-opus-4-7[1m]
 
 ## Содержимое
 
-**Промты (10 036):** 20 языков × 35 задач, 40 фреймворков × 10 операций, 15 БД × 12 операций, AWS/GCP/Azure/Cloudflare × сервисы, паттерны проектирования, алгоритмы, тестирование, безопасность, performance, e-commerce, SaaS, analytics, CMS, auth, платежи, observability, web3, DX. Плюс **∞ Opus 4.7 Perfectionist Suite** — 14 премиум-промтов с полной автономией для любого проекта.
+**Промты (10 037):** 20 языков × 35 задач, 40 фреймворков × 10 операций, 15 БД × 12 операций, AWS/GCP/Azure/Cloudflare × сервисы, паттерны проектирования, алгоритмы, тестирование, безопасность, performance, e-commerce, SaaS, analytics, CMS, auth, платежи, observability, web3, DX. Плюс **∞ Opus 4.7 Perfectionist Suite** + **∞ God-Mode Autonomous** — премиум-промты с полной автономией и всеми инструментами для любого проекта.
 
 **Комбо (73):** AI Product Launch, Next.js Production, E-commerce Launch, SaaS Bootstrap, Zero-Trust Security, Observability Stack, Mobile MVP, Data Pipeline, Performance Triage, Incident Response Playbook, Event-Driven Architecture, Multi-Tenant SaaS, Full-Stack AI Agent, CI/CD Modernization, Testing Pyramid Rollout и др.
 
