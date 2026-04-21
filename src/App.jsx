@@ -73,9 +73,9 @@ const TH = {
   dark: { bg:"#0a0806", bg2:"#120e09", card:"#15110b", cardH:"#1c1811", brd:"#221d15", brdH:"#2e281e", text:"#ece3ce", mut:"#a09584", dim:"#6e6656", surf:"#120e09", glow:"rgba(232,106,42,0.05)", meta:"#0a0806", accent:"#e86a2a", ink:"#f5efdd" },
   light: { bg:"#f5f0e6", bg2:"#ebe5d6", card:"#fffcf4", cardH:"#f8f3e6", brd:"#d9cfb8", brdH:"#b8ab90", text:"#1a140a", mut:"#57503e", dim:"#8a826c", surf:"#f0e9d6", glow:"rgba(232,106,42,0.08)", meta:"#f5f0e6", accent:"#a84a12", ink:"#0a0806" },
 };
-const MC = { opus47m:"#d4a574", claude:"#d4a574" };
-const ML = { opus47m:"Claude Opus 4.7 · 1M", claude:"Claude Opus 4.7 · 1M" };
-const MI = { opus47m:"∞", claude:"∞" };
+const MC = { opus47m:"#d4a574" };
+const ML = { opus47m:"Claude Opus 4.7 · 1M" };
+const MI = { opus47m:"∞" };
 const font = "'JetBrains Mono','IBM Plex Mono','Fira Code',monospace";
 const fontDisplay = "'Fraunces','Cormorant Garamond','Times New Roman',serif";
 const alpha = (hex, a) => hex + Math.round(a*255).toString(16).padStart(2,'0');
@@ -213,6 +213,25 @@ const IconMoon = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="non
 const IconSun = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.3 3.3l1 1M11.7 11.7l1 1M3.3 12.7l1-1M11.7 4.3l1-1"/></svg>;
 const IconLang = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2a9 9 0 010 12M8 2a9 9 0 000 12"/></svg>;
 const IconTextSize = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 13l3-9 3 9M3.2 10.3h3.6"/><path d="M11 7v6M9 10l2 2 2-2"/></svg>;
+const IconDice = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><circle cx="5.5" cy="5.5" r=".8" fill="currentColor"/><circle cx="10.5" cy="5.5" r=".8" fill="currentColor"/><circle cx="8" cy="8" r=".8" fill="currentColor"/><circle cx="5.5" cy="10.5" r=".8" fill="currentColor"/><circle cx="10.5" cy="10.5" r=".8" fill="currentColor"/></svg>;
+const IconStar = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l1.9 4.2 4.6.4-3.5 3 1 4.5L8 11.3 3.9 13.6l1-4.5-3.5-3 4.6-.4z"/></svg>;
+const IconStarOutline = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"><path d="M8 1.5l1.9 4.2 4.6.4-3.5 3 1 4.5L8 11.3 3.9 13.6l1-4.5-3.5-3 4.6-.4z"/></svg>;
+const IconZap = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 1L3 9h4l-1.5 6L13 7H9z"/></svg>;
+const IconGrid = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg>;
+const IconDownload = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 2v8m0 0l-3-3m3 3l3-3M2.5 13h11"/></svg>;
+const IconUpload = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 11V3m0 0L5 6m3-3l3 3M2.5 13h11"/></svg>;
+const IconPencil = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11.5 2.5l2 2-8 8-3 1 1-3z"/><path d="M10 4l2 2"/></svg>;
+const IconX = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>;
+const IconCopy = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="5" width="9" height="9" rx="1"/><path d="M11 5V3a1 1 0 00-1-1H3a1 1 0 00-1 1v7a1 1 0 001 1h2"/></svg>;
+const IconCheck = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>;
+const IconExpand = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 6l3 3 3-3"/></svg>;
+const IconCollapse = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 10l3-3 3 3"/></svg>;
+const IconFocus = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5V3h2M11 3h2v2M13 11v2h-2M5 13H3v-2"/></svg>;
+const IconPin = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M10.5 1.5l4 4-3 1-1 4-2-2-3.5 3.5V11L7.5 7.5l-2-2 4-1z"/></svg>;
+const IconPinOutline = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"><path d="M10.5 1.5l4 4-3 1-1 4-2-2-3.5 3.5V11L7.5 7.5l-2-2 4-1z"/></svg>;
+const IconLink = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6.5 9.5l3-3M9 11l-1.5 1.5a2.5 2.5 0 01-3.5-3.5L5.5 7.5M10.5 8.5L12 7a2.5 2.5 0 013.5 3.5L14 12"/></svg>;
+const IconList = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg>;
+const IconCards = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"><rect x="2" y="2.5" width="12" height="4.5"/><rect x="2" y="9" width="12" height="4.5"/></svg>;
 
 /* ═══════════════════════════════════════════════
    MEMOIZED COMPONENTS (tasks: 001, 002, 082, 096, 098)
@@ -942,7 +961,7 @@ function AgentHub({ data, loadTime }) {
             </div>
             <div style={{ display:"flex", gap:6 }}>
               <CBtn id={"focus-"+focusPrompt.id} txt={focusPrompt.text} cl={focusPrompt.ac} copied={copied} cp={cp} t={t} bg={c.bg} />
-              <button onClick={()=>setFocusPrompt(null)} style={{ width:32, height:32, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.mut, cursor:"pointer", fontSize:16, outline:"none" }}>×</button>
+              <button onClick={()=>setFocusPrompt(null)} aria-label={lang==="ru"?"Закрыть":"Close"} style={{ width:32, height:32, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconX /></button>
             </div>
           </div>
           <pre style={{ fontSize:11, lineHeight:1.7, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", margin:0, fontFamily:font, padding:16, background:c.surf, borderRadius:0, border:`1px solid ${c.brd}` }}>{focusPrompt.text}</pre>
@@ -1088,7 +1107,7 @@ function AgentHub({ data, loadTime }) {
 
         {/* Feat 16: Welcome banner — editorial style */}
         {isFirstVisit && <div style={{ marginBottom:24, padding:"20px 24px", border:`1px solid ${c.accent}40`, borderLeft:`3px solid ${c.accent}`, background:`${c.accent}06`, position:"relative" }}>
-          <button onClick={()=>setIsFirstVisit(false)} aria-label="Close" style={{ position:"absolute", top:10, right:14, background:"none", border:"none", color:c.mut, cursor:"pointer", fontSize:18, outline:"none", fontFamily:font }}>×</button>
+          <button onClick={()=>setIsFirstVisit(false)} aria-label={lang==="ru"?"Закрыть":"Close"} style={{ position:"absolute", top:12, right:14, background:"none", border:"none", color:c.mut, cursor:"pointer", outline:"none", padding:4, display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconX /></button>
           <div className="label-tech-sm" style={{ color:c.accent, marginBottom:10 }}>Ed. Note · {lang==="ru"?"Добро пожаловать":"Welcome"}</div>
           <div className="display-serif" style={{ fontSize:20, fontWeight:400, color:c.ink, marginBottom:10, lineHeight:1.25, fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>
             {lang==="ru"?"Полевой справочник":"A Field Guide"}
@@ -1226,13 +1245,13 @@ function AgentHub({ data, loadTime }) {
             <span style={{ fontSize:11, color:c.dim }}>{debouncedSearch ? `${list.length} / ${P.length}` : list.length} {t.prompts} · ~{(filteredStats.tokens/1000).toFixed(0)}K</span>
             {/* Task 75: Progress tracker */}
             {usedCount > 0 && <span style={{ fontSize:10, color:"#10b981", fontWeight:600 }}>✓ {usedCount}/{P.length}</span>}
-            <button onClick={randomPrompt} title={lang==="ru"?"Случайный промпт":"Random prompt"} style={{ padding:"4px 10px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:600, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>⟲ {lang==="ru"?"Случайный":"Random"}</button>
-            {favCount > 0 && <button onClick={()=>setShowFavsOnly(!showFavsOnly)} aria-pressed={showFavsOnly} style={{
-              padding:"4px 10px", fontSize:9, letterSpacing:1.5, fontFamily:font, fontWeight:showFavsOnly?700:500,
+            <button onClick={randomPrompt} aria-label={lang==="ru"?"Случайный промпт":"Random prompt"} title={lang==="ru"?"Случайный промпт":"Random prompt"} style={{ width:28, height:28, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconDice /></button>
+            {favCount > 0 && <button onClick={()=>setShowFavsOnly(!showFavsOnly)} aria-pressed={showFavsOnly} aria-label={lang==="ru"?"Показать избранные":"Show favorites"} title={lang==="ru"?"Избранные":"Favorites"} style={{
+              display:"inline-flex", alignItems:"center", justifyContent:"center", gap:5, padding:"0 8px", height:28, fontSize:9, fontWeight:700, fontFamily:font,
               border:`1px solid ${showFavsOnly?"#eab308":c.brd}`, borderRadius:0,
               background:showFavsOnly?"#eab30812":"transparent", color:showFavsOnly?"#eab308":c.mut,
               cursor:"pointer", outline:"none",
-            }}>★ {favCount}</button>}
+            }}><IconStar />{favCount}</button>}
             {/* Sort (task 045) */}
             <select value={sortBy} onChange={e=>setSortBy(e.target.value)} aria-label={lang==="ru"?"Сортировка":"Sort"} style={{ padding:"3px 8px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>
               <option value="default">{lang==="ru"?"По умолчанию":"Default"}</option>
@@ -1244,16 +1263,16 @@ function AgentHub({ data, loadTime }) {
           </div>
           <div style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap" }}>
             {/* Task 74: Quick copy mode */}
-            <button onClick={()=>setQuickCopy(!quickCopy)} aria-pressed={quickCopy} title={lang==="ru"?"Быстрое копирование: клик = copy":"Quick copy: click = copy"} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:700, border:`1px solid ${quickCopy?"#06b6d4":c.brd}`, borderRadius:0, background:quickCopy?"#06b6d412":"transparent", color:quickCopy?"#06b6d4":c.mut, cursor:"pointer", outline:"none" }}>⌁</button>
+            <button onClick={()=>setQuickCopy(!quickCopy)} aria-pressed={quickCopy} title={lang==="ru"?"Быстрое копирование: клик = copy":"Quick copy: click = copy"} style={{ width:28, height:28, border:`1px solid ${quickCopy?"#06b6d4":c.brd}`, borderRadius:0, background:quickCopy?"#06b6d412":"transparent", color:quickCopy?"#06b6d4":c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconZap /></button>
             {/* Task 69: Compare mode */}
-            <button onClick={()=>{setCompareMode(!compareMode);if(compareMode)setCompareIds([]);}} aria-pressed={compareMode} title={lang==="ru"?"Выбрать промты (сравнение/экспорт)":"Select prompts (compare/export)"} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:700, border:`1px solid ${compareMode?"#c4541d":c.brd}`, borderRadius:0, background:compareMode?"#c4541d12":"transparent", color:compareMode?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}>{compareMode ? `▦ ${compareIds.length}` : "▦"}</button>
+            <button onClick={()=>{setCompareMode(!compareMode);if(compareMode)setCompareIds([]);}} aria-pressed={compareMode} title={lang==="ru"?"Выбрать промты (сравнение/экспорт)":"Select prompts (compare/export)"} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:5, minWidth:28, height:28, padding: compareMode && compareIds.length ? "0 8px" : 0, fontSize:9, fontWeight:700, fontFamily:font, border:`1px solid ${compareMode?"#c4541d":c.brd}`, borderRadius:0, background:compareMode?"#c4541d12":"transparent", color:compareMode?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}><IconGrid />{compareMode && compareIds.length > 0 && compareIds.length}</button>
             {/* Random (task 047) */}
             <button onClick={() => {
               const r = P[Math.floor(Math.random()*P.length)];
               setExpanded(e=>({...e,[r.id]:true}));
               setFm("all"); setFv("all"); setSearch(""); setShowFavsOnly(false);
               setTimeout(()=>{document.getElementById(`card-${r.id}`)?.scrollIntoView({behavior:"smooth",block:"center"})},100);
-            }} aria-label={lang==="ru"?"Случайный промт":"Random"} style={{ padding:"4px 12px", fontSize:11, fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>⟲</button>
+            }} aria-label={lang==="ru"?"Случайный промт":"Random"} title={lang==="ru"?"Случайный":"Random"} style={{ width:28, height:28, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconDice /></button>
             {list.length > 0 && hasFilters && <button onClick={() => {
               const allText = list.map(p => `═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${compactMode && p.compact ? p.compact : p.text}`).join('\n\n\n');
               cp("copy-filtered", allText, true);
@@ -1263,7 +1282,7 @@ function AgentHub({ data, loadTime }) {
             <button onClick={toggleAll} style={{ fontSize:10, fontFamily:font, color:c.mut, background:"none", border:"none", cursor:"pointer", padding:"4px 8px", outline:"none" }}>{allExpanded ? t.collapseAll : t.expandAll}</button>
             {/* Feat 26: View mode toggle */}
             <div style={{ display:"flex", border:`1px solid ${c.brd}`, borderRadius:0, overflow:"hidden" }}>
-              {[{k:"card",l:"▤",t:lang==="ru"?"Карточки":"Cards"},{k:"table",l:"≡",t:lang==="ru"?"Таблица":"Table"}].map(v=><button key={v.k} onClick={()=>setViewMode(v.k)} title={v.t} style={{ padding:"4px 10px", fontSize:12, fontWeight:700, background:viewMode===v.k?c.accent+"15":"transparent", color:viewMode===v.k?c.accent:c.dim, border:"none", cursor:"pointer", fontFamily:font, outline:"none" }}>{v.l}</button>)}
+              {[{k:"card",I:IconCards,t:lang==="ru"?"Карточки":"Cards"},{k:"table",I:IconList,t:lang==="ru"?"Таблица":"Table"}].map(v=><button key={v.k} onClick={()=>setViewMode(v.k)} aria-pressed={viewMode===v.k} title={v.t} style={{ width:28, height:28, background:viewMode===v.k?c.accent+"15":"transparent", color:viewMode===v.k?c.accent:c.dim, border:"none", cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><v.I/></button>)}
             </div>
           </div>
         </div>
@@ -1382,7 +1401,7 @@ function AgentHub({ data, loadTime }) {
         {/* Task 66,76: Constructor & Import buttons + Task 58,93,94: Stack & PromptLang */}
         {!showConstructor && !showImport && (
           <div style={{ display:"flex", gap:6, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
-            <button onClick={()=>setShowConstructor(true)} style={{ padding:"5px 14px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:700, fontFamily:font, border:`1px dashed #e86a2a60`, borderRadius:0, background:"transparent", color:"#e86a2a", cursor:"pointer", outline:"none" }}>✎ {lang==="ru"?"Конструктор":lang==="kk"?"Конструктор":"Constructor"}</button>
+            <button onClick={()=>setShowConstructor(true)} aria-label={lang==="ru"?"Конструктор промта":"Prompt Constructor"} title={lang==="ru"?"Конструктор промта":"Prompt Constructor"} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:6, padding:"5px 12px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:700, fontFamily:font, border:`1px dashed #e86a2a60`, borderRadius:0, background:"transparent", color:"#e86a2a", cursor:"pointer", outline:"none" }}><IconPencil />{lang==="ru"?"Конструктор":lang==="kk"?"Конструктор":"Constructor"}</button>
             <button onClick={()=>setShowImport(true)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px dashed ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>📥 {lang==="ru"?"Импорт":lang==="kk"?"Импорт":"Import"}</button>
             <div style={{ width:1, height:16, background:c.brd, margin:"0 2px" }} className="hide-mobile" />
             {/* Task 93+94: Prompt language */}
@@ -1472,19 +1491,19 @@ function AgentHub({ data, loadTime }) {
                 <div style={{ display:"flex", gap:6, flexShrink:0, alignItems:"center" }}>
                   {/* Task 75: Used indicator */}
                   {/* Feat 18: Focus mode button */}
-                  <button onClick={(e)=>{e.stopPropagation();setFocusPrompt(p)}} aria-label="Focus" title={lang==="ru"?"Focus mode (F)":"Focus mode (F)"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", fontSize:12, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>⛶</button>
+                  <button onClick={(e)=>{e.stopPropagation();setFocusPrompt(p)}} aria-label="Focus" title={lang==="ru"?"Focus mode (F)":"Focus mode (F)"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}><IconFocus /></button>
                   {copyCounters[p.id] > 0 && <span style={{ fontSize:8, color:c.dim, fontWeight:600 }} title={lang==="ru"?`Скопировано ${copyCounters[p.id]}x`:`Copied ${copyCounters[p.id]}x`}>×{copyCounters[p.id]}</span>}
                   {isUsed && <span style={{ fontSize:10, color:"#10b981" }} title={lang==="ru"?"Использован":"Used"}>✓</span>}
                   {/* Task 69: Compare checkbox */}
                   {compareMode && <button onClick={(e)=>{e.stopPropagation();setCompareIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} style={{ width:24, height:24, borderRadius:0, border:`1px solid ${compareIds.includes(p.id)?"#c4541d":c.brd}`, background:compareIds.includes(p.id)?"#c4541d":"transparent", color:compareIds.includes(p.id)?"#fff":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center" }}>{compareIds.includes(p.id)?"✓":""}</button>}
-                  <button onClick={(e)=>{e.stopPropagation();setPinnedIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} aria-label="Pin" title={lang==="ru"?"Закрепить наверху":"Pin to top"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${pinnedIds.includes(p.id)?"#e86a2a40":c.brd}`, background:pinnedIds.includes(p.id)?"#e86a2a12":"transparent", color:pinnedIds.includes(p.id)?"#e86a2a":c.dim, cursor:"pointer", outline:"none", fontSize:11, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{pinnedIds.includes(p.id)?"◆":"◇"}</button>
-                  <button onClick={(e)=>{e.stopPropagation();toggleFav(p.id)}} aria-label={favs[p.id]?(lang==="ru"?"Убрать":lang==="kk"?"Алып тастау":"Remove"):(lang==="ru"?"Избранное":lang==="kk"?"Таңдаулы":"Favorite")} aria-pressed={!!favs[p.id]} style={{ width:28, height:28, borderRadius:0, border:`1px solid ${favs[p.id]?"#eab30840":c.brd}`, background:favs[p.id]?"#eab30812":"transparent", color:favs[p.id]?"#eab308":c.dim, cursor:"pointer", outline:"none", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{favs[p.id]?"★":"☆"}</button>
+                  <button onClick={(e)=>{e.stopPropagation();setPinnedIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} aria-label="Pin" title={lang==="ru"?"Закрепить наверху":"Pin to top"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${pinnedIds.includes(p.id)?"#e86a2a40":c.brd}`, background:pinnedIds.includes(p.id)?"#e86a2a12":"transparent", color:pinnedIds.includes(p.id)?"#e86a2a":c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{pinnedIds.includes(p.id)?<IconPin/>:<IconPinOutline/>}</button>
+                  <button onClick={(e)=>{e.stopPropagation();toggleFav(p.id)}} aria-label={favs[p.id]?(lang==="ru"?"Убрать":lang==="kk"?"Алып тастау":"Remove"):(lang==="ru"?"Избранное":lang==="kk"?"Таңдаулы":"Favorite")} aria-pressed={!!favs[p.id]} style={{ width:28, height:28, borderRadius:0, border:`1px solid ${favs[p.id]?"#eab30840":c.brd}`, background:favs[p.id]?"#eab30812":"transparent", color:favs[p.id]?"#eab308":c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{favs[p.id]?<IconStar/>:<IconStarOutline/>}</button>
                   <button onClick={(e)=>{e.stopPropagation();toggle(p.id)}} aria-expanded={isO} className="hide-mobile" style={{ padding:"4px 12px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:600, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>{isO ? t.hide : t.show}</button>
                   <CBtn id={p.id} txt={compactMode && p.compact ? p.compact : p.text} cl={p.ac} sm copied={copied} cp={cp} t={t} bg={c.bg} />
                   {/* Cycle 6: Copy as markdown */}
                   {isO && <button onClick={(e)=>{e.stopPropagation();const md=`## ${p.icon} ${t.r[p.role]||p.role} (${p.m})\n\n\`\`\`\n${p.text}\n\`\`\`\n`;cp("md-"+p.id,md,true)}} title={lang==="ru"?"Копировать как Markdown":"Copy as Markdown"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${copied===("md-"+p.id)?"#10b981":c.brd}`, background:copied===("md-"+p.id)?"#10b98112":"transparent", color:copied===("md-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s", fontFamily:font, fontWeight:700 }}>{copied===("md-"+p.id)?"✓":"MD"}</button>}
                   {isO && p.compact && <button onClick={(e)=>{e.stopPropagation();setShowDiff(p.id)}} title={lang==="ru"?"Сравнить original vs compact":"Diff original vs compact"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", fontSize:9, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s", fontFamily:font, fontWeight:700 }}>⇄</button>}
-                  <button onClick={(e)=>{e.stopPropagation();const url=location.origin+location.pathname+`#prompt-${p.id}`;navigator.clipboard?.writeText(url);setCopied("share-"+p.id);setTimeout(()=>setCopied(null),2000)}} title={lang==="ru"?"Скопировать ссылку":"Copy link"} style={{ width:28, height:28, borderRadius:0, border:`1px solid ${copied===("share-"+p.id)?"#10b981":c.brd}`, background:copied===("share-"+p.id)?"#10b98112":"transparent", color:copied===("share-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", fontSize:11, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{copied===("share-"+p.id)?"✓":"§"}</button>
+                  <button onClick={(e)=>{e.stopPropagation();const url=location.origin+location.pathname+`#prompt-${p.id}`;navigator.clipboard?.writeText(url);setCopied("share-"+p.id);setTimeout(()=>setCopied(null),2000)}} aria-label={lang==="ru"?"Скопировать ссылку":"Copy link"} title={lang==="ru"?"Скопировать ссылку":"Copy link"} style={{ width:28, height:28, borderRadius:0, border:`1px solid ${copied===("share-"+p.id)?"#10b981":c.brd}`, background:copied===("share-"+p.id)?"#10b98112":"transparent", color:copied===("share-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{copied===("share-"+p.id)?<IconCheck/>:<IconLink/>}</button>
                 </div>
               </div>
               {/* Body (task 084: lazy render) */}
@@ -2128,7 +2147,7 @@ function AgentHub({ data, loadTime }) {
                 const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub-settings.json"; a.click(); URL.revokeObjectURL(url);
               }
             } catch {}
-          }} style={{ padding:"8px 24px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>⇩ {lang==="ru"?"Бэкап":"Backup"}</button>
+          }} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, padding:"8px 20px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}><IconDownload />{lang==="ru"?"Бэкап":"Backup"}</button>
           <button onClick={() => {
             const input = document.createElement("input"); input.type = "file"; input.accept = ".json";
             input.onchange = (e) => {
@@ -2150,7 +2169,7 @@ function AgentHub({ data, loadTime }) {
               reader.readAsText(file);
             };
             input.click();
-          }} style={{ padding:"8px 24px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>⇧ {lang==="ru"?"Восстановить":"Restore"}</button>
+          }} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, padding:"8px 20px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}><IconUpload />{lang==="ru"?"Восстановить":"Restore"}</button>
         </div>
 
         {/* ── FOOTER ── */}
