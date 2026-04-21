@@ -41,6 +41,6 @@
   <line x1="80" y1="562" x2="1120" y2="562" stroke="#ece3ce" stroke-opacity="0.5" stroke-width="1"/>
 
   <!-- Footer row -->
-  <text x="80" y="598" fill="#a09584" font-family="'JetBrains Mono',monospace" font-size="13" letter-spacing="2">74 КОМБО · 30 ШПАРГАЛОК · 110 CLI-КОМАНД</text>
+  <text x="80" y="598" fill="#a09584" font-family="'JetBrains Mono',monospace" font-size="13" letter-spacing="2">74 КОМБО · 30 ШПАРГАЛОК · 108 CLI-КОМАНД</text>
   <text x="1120" y="598" text-anchor="end" fill="#e86a2a" font-family="'JetBrains Mono',monospace" font-size="13" letter-spacing="3" font-weight="700">AI-AGENT-HUB.NET</text>
 </svg>

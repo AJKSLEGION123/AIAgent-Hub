@@ -1,6 +1,6 @@
 # AIAgent-Hub v12
 
-**10 009 промтов · 74 комбо · 30 шпаргалок · 110 CLI-команд** для Claude Code + Opus 4.7 · 1M context.
+**10 009 промтов · 74 комбо · 30 шпаргалок · 108 CLI-команд** для Claude Code + Opus 4.7 · 1M context.
 
 Полевой справочник автономной разработки. Каждый промт готов к копированию в Claude Code, содержит фазу полной разведки проекта и **[AUTONOMY-v4]** wrapper — даёт агенту полные права + арсенал (Browser MCP, все MCP servers, skills, plugins, shell, web) + auto-commit/push/deploy после каждого улучшения + браузерную верификацию post-deploy + бесконечный цикл улучшений.
 
@@ -26,7 +26,7 @@ claude --model claude-opus-4-7[1m]
 | Промты | **10 009** |
 | Воркфлоу-комбо | **74** |
 | Шпаргалки | **30** |
-| CLI-команды | **110** |
+| CLI-команды | **108** |
 | Config-шаблоны | **13** |
 | Категории | **12** |
 
@@ -38,7 +38,7 @@ claude --model claude-opus-4-7[1m]
 
 **Шпаргалки (30):** Claude Code, Git, npm/pnpm, Docker, Testing, TypeScript, React, Prisma, Tailwind CSS, SQL, Python, Go, Rust, Kubernetes, Redis, Nginx, Next.js, Cargo, curl, openssl, ffmpeg, jq, awk, Homebrew, Terraform, GitHub Actions, Kafka, psql, Linux perf.
 
-**CLI-команды (110):** 14 категорий — Разработка, Тестирование, Git, Docker, Claude Code, Поиск и навигация, npm / pnpm, Деплой, Kubernetes, Docker Compose, PostgreSQL, Bun, Python/uv.
+**CLI-команды (108):** 14 категорий — Разработка, Тестирование, Git, Docker, Claude Code, Поиск и навигация, npm / pnpm, Деплой, Kubernetes, Docker Compose, PostgreSQL, Bun, Python/uv.
 
 ## Команды Claude Code внутри промтов
 

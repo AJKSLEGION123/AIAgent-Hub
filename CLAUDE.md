@@ -24,7 +24,7 @@
 
 ## Project
 - **Name:** AIAgent-Hub
-- **Purpose:** 10 009 промтов + 74 комбо + 30 шпаргалок + 110 CLI команд для Claude Code с моделью Opus 4.7 (1M context)
+- **Purpose:** 10 009 промтов + 74 комбо + 30 шпаргалок + 108 CLI команд для Claude Code с моделью Opus 4.7 (1M context)
 - **Stack:** React 19 + Vite 8 + inline styles + Hono API + SQLite + Vitest
 - **Port:** 5173 (dev), 3000 (Docker/production)
 - **Live:** https://ai-agent-hub.net (Vercel) + pm.lanmaster.kz (self-hosted via Cloudflare Tunnel)
