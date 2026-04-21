@@ -6,7 +6,8 @@ import { ErrorBoundary } from './ErrorBoundary.jsx'
 
 if (typeof performance !== 'undefined') performance.mark('app-init');
 
-createRoot(document.getElementById('root')).render(
+const rootEl = document.getElementById('root');
+createRoot(rootEl).render(
   <StrictMode>
     <ErrorBoundary>
       <App />
@@ -14,13 +15,23 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Dismiss the inline loader once React mounts
-requestAnimationFrame(() => {
+// Dismiss the inline loader once React paints content into #root.
+// MutationObserver is more reliable than rAF for catching actual render.
+{
   const boot = document.getElementById('boot');
-  if (!boot) return;
-  boot.classList.add('fade');
-  setTimeout(() => boot.remove(), 350);
-});
+  if (boot) {
+    const kill = () => { boot.style.opacity = '0'; setTimeout(() => boot.remove(), 300); };
+    if (rootEl.firstElementChild) { kill(); }
+    else {
+      const obs = new MutationObserver(() => {
+        if (rootEl.firstElementChild) { obs.disconnect(); kill(); }
+      });
+      obs.observe(rootEl, { childList: true });
+      // Safety net — force remove after 3s even if nothing else fires
+      setTimeout(() => { obs.disconnect(); kill(); }, 3000);
+    }
+  }
+}
 
 // PWA: Register Service Worker with auto-update
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
