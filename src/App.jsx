@@ -1134,14 +1134,17 @@ function AgentHub({ data, loadTime }) {
             <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?"Светлая тема":"Тёмная тема"} title={theme==="dark"?(lang==="ru"?"Светлая тема (T)":"Light theme (T)"):(lang==="ru"?"Тёмная тема (T)":"Dark theme (T)")} className="nav-btn" data-active={theme==="light"} style={{ borderColor: theme==="light"?c.accent:c.brd, color: theme==="light"?c.accent:c.text }}>
               {theme==="dark" ? <IconMoon /> : <IconSun />}
             </button>
-            <button onClick={nextLang} aria-label="Switch language" title={lang==="ru"?"Сменить язык":"Switch language"} className="nav-btn nav-btn-text" style={{ borderColor:c.accent, color:c.accent }}>
-              {langLabel}
+            <button onClick={nextLang} aria-label="Switch language" title={lang==="ru"?"Сменить язык":"Switch language"} className="nav-btn" style={{ borderColor:c.accent, color:c.accent, width:"auto", padding:"0 10px", gap:6, display:"inline-flex", alignItems:"center", justifyContent:"center", fontFamily:font, fontSize:10, letterSpacing:2, textTransform:"uppercase", fontWeight:700 }}>
+              <IconLang />
+              <span>{langLabel}</span>
             </button>
-            <select value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} aria-label="Font size" title={lang==="ru"?"Размер шрифта":"Font size"} className="hide-mobile" style={{ width:44, height:32, padding:0, border:`1px solid ${fontSize!==100?c.accent:c.brd}`, background:fontSize!==100?"rgba(232,106,42,.08)":"transparent", color: fontSize!==100?c.accent:c.text, cursor:"pointer", outline:"none", fontFamily:font, fontSize:11, fontWeight:700, letterSpacing:0, textAlign:"center", textAlignLast:"center", WebkitAppearance:"none", MozAppearance:"none", appearance:"none", backgroundImage:"none", borderRadius:0, lineHeight:"30px", verticalAlign:"middle" }}>
-              <option value={85}>A-</option>
-              <option value={100}>A</option>
-              <option value={115}>A+</option>
-            </select>
+            <div className="hide-mobile" role="radiogroup" aria-label={lang==="ru"?"Размер шрифта":"Font size"} style={{ display:"inline-flex", border:`1px solid ${fontSize!==100?c.accent:c.brd}`, borderRadius:0, overflow:"hidden", height:32 }}>
+              {[{v:85,Icon:(p)=><svg {...p} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l1.5-5L8 12M5.8 10h1.4M10 8h4"/></svg>,t:lang==="ru"?"Меньше":"Smaller"},
+                {v:100,Icon:(p)=><svg {...p} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 13l2-7 2 7M5 11h2M10 7v6M10 7h2M9 13h2"/></svg>,t:lang==="ru"?"Обычный":"Normal"},
+                {v:115,Icon:(p)=><svg {...p} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 14l3-10 3 10M4.2 11h3.6M10 5v9M10 5h4"/></svg>,t:lang==="ru"?"Больше":"Larger"}].map(({v,Icon,t:tt}) => (
+                <button key={v} onClick={()=>setFontSize(v)} aria-pressed={fontSize===v} title={tt} role="radio" aria-checked={fontSize===v} style={{ width:32, height:30, border:"none", background:fontSize===v?(c.accent+"18"):"transparent", color:fontSize===v?c.accent:c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"background .15s ease, color .15s ease" }}><Icon/></button>
+              ))}
+            </div>
           </div>
         </header>
 
