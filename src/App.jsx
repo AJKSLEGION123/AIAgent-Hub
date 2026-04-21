@@ -1944,24 +1944,25 @@ function AgentHub({ data, loadTime }) {
           const filteredCmds = cheatSearch ? sheet.cmds.filter(c2 => (c2.cmd + " " + c2.desc).toLowerCase().includes(cheatSearch.toLowerCase())) : sheet.cmds;
           if (cheatSearch && filteredCmds.length === 0) return null;
           return (
-          <div key={key} style={{ marginBottom:16 }}>
-            <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
-              <div style={{ width:24, height:24, borderRadius:0, background:sheet.color+"20", color:sheet.color, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:800 }}>{MI[key]||key[0].toUpperCase()}</div>
-              <span style={{ fontSize:14, fontWeight:700, color:sheet.color }}>{sheet.name}</span>
-              <span style={{ fontSize:9, color:c.dim }}>{filteredCmds.length}</span>
+          <div key={key} style={{ marginBottom:24 }}>
+            <div style={{ display:"flex", alignItems:"baseline", gap:12, marginBottom:12, paddingBottom:8, borderBottom:`1px solid ${sheet.color}25` }}>
+              <h3 className="display-serif" style={{ fontSize:22, fontWeight:400, margin:0, color:sheet.color, lineHeight:1, letterSpacing:"-.3px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{sheet.name}</h3>
+              <span className="label-tech-sm numeric" style={{ color:c.dim }}>{filteredCmds.length} {lang==="ru"?"команд":"cmds"}</span>
             </div>
             {filteredCmds.map((c2, i) => (
               <div key={i} onClick={()=>cp(`cheat-${key}-${i}`, c2.cmd)} className="card-enter" style={{
-                display:"flex", alignItems:"center", justifyContent:"space-between", gap:12,
-                padding:"8px 14px", marginBottom:4, borderRadius:0,
-                border:`1px solid ${c.brd}`, background:c.card, cursor:"pointer", transition:"all .15s",
-              }}>
+                display:"flex", alignItems:"center", justifyContent:"space-between", gap:14,
+                padding:"10px 14px", marginBottom:3, borderRadius:0,
+                borderTop:`1px solid ${c.brd}`, borderBottom:`1px solid ${c.brd}`,
+                borderLeft:`2px solid ${sheet.color}30`, borderRight:"none",
+                background:c.card, cursor:"pointer", transition:"background .2s ease, border-color .2s ease",
+              }} onMouseEnter={e=>{e.currentTarget.style.background=sheet.color+"08";e.currentTarget.style.borderLeftColor=sheet.color;}} onMouseLeave={e=>{e.currentTarget.style.background=c.card;e.currentTarget.style.borderLeftColor=sheet.color+"30";}}>
                 <div style={{ flex:1, minWidth:0 }}>
-                  <code style={{ fontSize:11, color:sheet.color, fontFamily:font, wordBreak:"break-all" }}>{c2.cmd}</code>
-                  <div style={{ fontSize:10, color:c.mut, marginTop:2 }}>{c2.desc}</div>
+                  <code style={{ fontSize:12, color:sheet.color, fontFamily:font, wordBreak:"break-all", fontFeatureSettings:"'liga','calt','ss01','ss02'" }}>{c2.cmd}</code>
+                  <div className="body-serif" style={{ fontSize:14, color:c.mut, marginTop:4, lineHeight:1.35 }}>{c2.desc}</div>
                 </div>
-                <span style={{ fontSize:10, color:copied===`cheat-${key}-${i}`?"#10b981":c.dim, flexShrink:0, fontWeight:600 }}>
-                  {copied===`cheat-${key}-${i}` ? "✓" : "⎘"}
+                <span style={{ color:copied===`cheat-${key}-${i}`?"#10b981":c.dim, flexShrink:0, display:"inline-flex", alignItems:"center" }}>
+                  {copied===`cheat-${key}-${i}` ? <IconCheck /> : <IconCopy />}
                 </span>
               </div>
             ))}
@@ -1985,17 +1986,22 @@ function AgentHub({ data, loadTime }) {
           const filteredQC = quickSearch ? cmds.filter(cmd => (cmd.cmd + " " + cmd.label).toLowerCase().includes(quickSearch.toLowerCase())) : cmds;
           if (quickSearch && filteredQC.length === 0) return null;
           return (
-          <div key={ci} style={{ marginBottom:20 }}>
-            <div style={{ fontSize:11, fontWeight:700, color:c.text, marginBottom:8, paddingLeft:4, letterSpacing:1 }}>{cat.cat} <span style={{ fontSize:9, color:c.dim, fontWeight:400 }}>({filteredQC.length})</span></div>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(260px, 1fr))", gap:6 }}>
+          <div key={ci} style={{ marginBottom:28 }}>
+            <div style={{ display:"flex", alignItems:"baseline", gap:12, marginBottom:12, paddingBottom:8, borderBottom:`1px solid ${c.brd}` }}>
+              <h3 className="display-serif" style={{ fontSize:22, fontWeight:400, margin:0, color:c.ink, lineHeight:1, letterSpacing:"-.3px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{cat.cat}</h3>
+              <span className="label-tech-sm numeric" style={{ color:c.dim }}>{filteredQC.length}</span>
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(280px, 1fr))", gap:8 }}>
               {filteredQC.map((cmd, i) => (
                 <div key={i} onClick={()=>cp(`qc-${ci}-${i}`, cmd.cmd)} className="card-enter" style={{
-                  padding:"10px 14px", borderRadius:0, border:`1px solid ${c.brd}`,
-                  background:c.card, cursor:"pointer", transition:"all .15s",
-                }}>
-                  <div style={{ fontSize:10, color:c.mut, marginBottom:4 }}>{cmd.label}</div>
-                  <code style={{ fontSize:11, color:c.text, fontFamily:font, wordBreak:"break-all" }}>{cmd.cmd}</code>
-                  {copied===`qc-${ci}-${i}` && <div style={{ fontSize:9, color:"#10b981", marginTop:4, fontWeight:600 }}>{t.copied}</div>}
+                  padding:"12px 14px", borderRadius:0, borderTop:`1px solid ${c.brd}`, borderRight:`1px solid ${c.brd}`, borderBottom:`1px solid ${c.brd}`,
+                  borderLeft:`2px solid ${copied===`qc-${ci}-${i}`?"#10b981":c.accent+"35"}`,
+                  background:copied===`qc-${ci}-${i}`?"#10b98108":c.card, cursor:"pointer",
+                  transition:"background .2s ease, border-color .2s ease",
+                }} onMouseEnter={e=>{if(copied!==`qc-${ci}-${i}`){e.currentTarget.style.background=c.accent+"06";e.currentTarget.style.borderLeftColor=c.accent;}}} onMouseLeave={e=>{if(copied!==`qc-${ci}-${i}`){e.currentTarget.style.background=c.card;e.currentTarget.style.borderLeftColor=c.accent+"35";}}}>
+                  <div className="body-serif" style={{ fontSize:13, color:c.mut, marginBottom:6, lineHeight:1.3 }}>{cmd.label}</div>
+                  <code style={{ fontSize:11.5, color:c.text, fontFamily:font, wordBreak:"break-all", fontFeatureSettings:"'liga','calt','ss01','ss02'" }}>{cmd.cmd}</code>
+                  {copied===`qc-${ci}-${i}` && <div className="label-tech-sm" style={{ color:"#10b981", marginTop:6, display:"flex", alignItems:"center", gap:4 }}><IconCheck /><span>{t.copied}</span></div>}
                 </div>
               ))}
             </div>
