@@ -16,11 +16,13 @@ test.describe('AIAgent-Hub', () => {
   test('search filters prompts', async ({ page }) => {
     await page.goto('/');
     await page.waitForSelector('[id^="card-"]', { timeout: 15000 });
-    const before = await page.locator('[id^="card-"]').count();
-    await page.fill('input[type="search"]', 'frontend');
-    await page.waitForTimeout(300);
-    const after = await page.locator('[id^="card-"]').count();
-    expect(after).toBeLessThan(before);
+    // Use a specific query that returns < 40 cards (default page size)
+    // so we observe the filter narrowing rather than hitting the cap.
+    await page.fill('input[type="search"]', 'godmode');
+    await page.waitForTimeout(500);
+    const matching = await page.locator('[id^="card-"]').count();
+    expect(matching).toBeGreaterThan(0);
+    expect(matching).toBeLessThan(40);
   });
 
   test('theme toggle works', async ({ page }) => {
