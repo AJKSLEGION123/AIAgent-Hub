@@ -78,6 +78,7 @@ const ML = { opus47m:"Claude Opus 4.7 · 1M" };
 const MI = { opus47m:"∞" };
 const font = "'JetBrains Mono','IBM Plex Mono','Fira Code',monospace";
 const fontDisplay = "'Fraunces','Cormorant Garamond','Times New Roman',serif";
+const fontBody = "'Instrument Serif','Spectral','Georgia',serif";
 const alpha = (hex, a) => hex + Math.round(a*255).toString(16).padStart(2,'0');
 // Relative luminance → contrasting text color
 const textOn = (hex) => {
@@ -129,12 +130,19 @@ async function _d(b, onProgress) {
    GLOBAL CSS (tasks: 003, 011, 013, 014, 015, 022, 025, 104)
    ═══════════════════════════════════════════════ */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-.display-serif{font-family:'Fraunces','Cormorant Garamond','Times New Roman',serif;font-variation-settings:'SOFT' 60,'opsz' 144;font-feature-settings:'ss01','ss02'}
+.display-serif{font-family:'Fraunces','Cormorant Garamond','Times New Roman',serif;font-variation-settings:'SOFT' 60,'opsz' 144;font-feature-settings:'ss01','ss02','kern';text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
 .display-italic{font-style:italic;font-variation-settings:'SOFT' 100,'opsz' 144,'wonk' 1}
-.label-tech{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:5px;text-transform:uppercase;font-weight:500}
-.label-tech-sm{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;font-weight:500}
+.body-serif{font-family:'Instrument Serif','Spectral','Georgia',serif;font-feature-settings:'kern','liga';text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+.body-serif-italic{font-family:'Instrument Serif','Spectral','Georgia',serif;font-style:italic;font-feature-settings:'kern'}
+.label-tech{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3.5px;text-transform:uppercase;font-weight:500;font-feature-settings:'tnum','zero'}
+.label-tech-sm{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;font-feature-settings:'tnum','zero'}
+.numeric{font-variant-numeric:tabular-nums;font-feature-settings:'tnum'}
+pre,code{font-feature-settings:'liga','calt','zero','ss01','ss02'}
+h1,h2,h3,h4{text-wrap:balance}
+p{text-wrap:pretty;hyphens:auto;-webkit-hyphens:auto}
+::selection{background:#e86a2a40;color:inherit}
 .rule-double{border:0;border-top:1px solid currentColor;border-bottom:1px solid currentColor;height:3px;opacity:.35}
 .ornament::before{content:"§";font-family:'Fraunces',serif;font-style:italic;opacity:.35;margin-right:6px}
 .grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.04;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -1017,7 +1025,7 @@ function AgentHub({ data, loadTime }) {
               [copyCount, lang==="ru"?"Скопировано":"Copied", "#eab308"],
               [usedCount, lang==="ru"?"Использовано":"Used", "#10b981"],
               [favCount, lang==="ru"?"Избранных":"Favorites", "#eab308"],
-            ].map(([v,l,cl])=><div key={l} style={{ padding:"14px 12px 10px", borderRadius:0, background:"transparent", border:`1px solid ${c.brd}`, textAlign:"left" }}><div className="display-serif" style={{ fontSize:32, fontWeight:300, color:cl, lineHeight:.9, letterSpacing:"-1px", fontVariationSettings:"'SOFT' 30,'opsz' 144" }}>{v}</div><div className="label-tech-sm" style={{ color:c.mut, marginTop:6 }}>{l}</div></div>)}
+            ].map(([v,l,cl])=><div key={l} style={{ padding:"14px 12px 10px", borderRadius:0, background:"transparent", border:`1px solid ${c.brd}`, textAlign:"left" }}><div className="display-serif numeric" style={{ fontSize:32, fontWeight:300, color:cl, lineHeight:.9, letterSpacing:"-1px", fontVariationSettings:"'SOFT' 30,'opsz' 144" }}>{v}</div><div className="label-tech-sm" style={{ color:c.mut, marginTop:6 }}>{l}</div></div>)}
           </div>
           <div style={{ marginBottom:12 }}>
             <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"По моделям":"By model"}</div>
@@ -1089,13 +1097,13 @@ function AgentHub({ data, loadTime }) {
               <h1 className="display-serif masthead-title" style={{ fontSize:64, lineHeight:.95, letterSpacing:"-2.5px", fontWeight:400, margin:0, color:c.ink, fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>
                 <span style={{ color:c.accent, fontStyle:"italic", fontWeight:300 }}>AI</span>Agent<span style={{ color:c.mut }}>·</span>Hub
               </h1>
-              <p className="display-serif display-italic" style={{ fontSize:17, lineHeight:1.55, color:c.mut, marginTop:14, maxWidth:460, fontWeight:300, fontStyle:"italic" }}>
-                {lang==="ru" ? "Полевой справочник автономной разработки c Claude Code — промты, комбо, шпаргалки." : lang==="kk" ? "Claude Code көмегімен автономды әзірлеудің далалық нұсқаулығы." : "A field guide to autonomous development with Claude Code — prompts, combos, cheat sheets."}
+              <p className="body-serif" style={{ fontSize:19, lineHeight:1.4, color:c.mut, marginTop:14, maxWidth:480, fontStyle:"italic" }}>
+                {lang==="ru" ? "Полевой справочник автономной разработки с Claude Code — промты, комбо, шпаргалки." : lang==="kk" ? "Claude Code көмегімен автономды әзірлеудің далалық нұсқаулығы." : "A field guide to autonomous development with Claude Code — prompts, combos, cheat sheets."}
               </p>
             </div>
             {/* Statistical display */}
             <div className="masthead-stat" style={{ textAlign:"right", minWidth:130 }}>
-              <div className="display-serif masthead-stat-num" style={{ fontSize:88, lineHeight:.85, fontWeight:300, letterSpacing:"-4px", color:c.accent, fontVariationSettings:"'SOFT' 30,'opsz' 144" }}>
+              <div className="display-serif masthead-stat-num numeric" style={{ fontSize:88, lineHeight:.85, fontWeight:300, letterSpacing:"-4px", color:c.accent, fontVariationSettings:"'SOFT' 30,'opsz' 144" }}>
                 {stats.total}
               </div>
               <div className="label-tech" style={{ color:c.mut, marginTop:10 }}>{lang==="ru"?"промтов":"prompts"}</div>
@@ -1582,7 +1590,7 @@ function AgentHub({ data, loadTime }) {
                   <div style={{ width:32, height:32, borderRadius:0, background:"transparent", border:0, borderRight:`1px solid ${c.brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, flexShrink:0, paddingRight:10 }}>{p.icon}</div>
                   <div style={{ minWidth:0, flex:1 }}>
                     <div style={{ display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
-                      <span style={{ fontSize:13, fontWeight:700, color:p.ac }}>{debouncedSearch ? <HL text={t.r[p.role]||p.role} q={debouncedSearch} color={p.ac}/> : (t.r[p.role]||p.role)}</span>
+                      <span className="body-serif" style={{ fontSize:17, fontWeight:400, color:p.ac, letterSpacing:-0.1, lineHeight:1.15 }}>{debouncedSearch ? <HL text={t.r[p.role]||p.role} q={debouncedSearch} color={p.ac}/> : (t.r[p.role]||p.role)}</span>
                       <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:MC[p.mk], fontWeight:700, fontFamily:font }}>{ML[p.mk]}</span>
                       {p.type==="task" && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:"#ef4444", fontWeight:700, fontFamily:font }}>· {lang==="ru"?"задача":"task"}</span>}
                       {p.difficulty && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:diffColors[p.difficulty], fontWeight:600, fontFamily:font }} className="hide-mobile">· {p.difficulty}</span>}
@@ -1615,9 +1623,9 @@ function AgentHub({ data, loadTime }) {
               {isO && (
                 <div id={`body-${p.id}`} className="body-enter" style={{ padding:"0 16px 14px" }}>
                   {p.desc && p.desc.length > 5 && (
-                    <div style={{ marginBottom:10, padding:"10px 14px", borderLeft:`2px solid ${p.ac}60`, background:p.ac+"08" }}>
-                      <div className="label-tech-sm" style={{ color:p.ac, marginBottom:4 }}>{lang==="ru"?"Описание":lang==="kk"?"Сипаттама":"Description"}</div>
-                      <div style={{ fontSize:12, color:c.text, lineHeight:1.55, fontFamily:fontDisplay }}>{p.desc}</div>
+                    <div style={{ marginBottom:12, padding:"12px 16px", borderLeft:`2px solid ${p.ac}60`, background:p.ac+"08" }}>
+                      <div className="label-tech-sm" style={{ color:p.ac, marginBottom:6 }}>{lang==="ru"?"Описание":lang==="kk"?"Сипаттама":"Description"}</div>
+                      <div className="body-serif" style={{ fontSize:15, color:c.text, lineHeight:1.5 }}>{p.desc}</div>
                     </div>
                   )}
                   <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>{lang==="ru"?"Полный промт":lang==="kk"?"Толық промт":"Full prompt"}</div>
@@ -1846,11 +1854,11 @@ function AgentHub({ data, loadTime }) {
                 <span style={{ color:c.mut }}>{(cb.ids||[]).length} {lang==="ru"?"агентов":lang==="kk"?"агент":"agents"}</span>
                 {hasConflict && <><span style={{ opacity:.4 }}>·</span><span style={{ color:"#f59e0b", fontWeight:700 }}>⚠ {lang==="ru"?"конфликт":"conflict"}</span></>}
               </div>
-              <h3 className="display-serif" style={{ fontSize:20, fontWeight:500, color:c.ink, margin:0, lineHeight:1.15, letterSpacing:"-.3px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{cb.name}</h3>
+              <h3 className="display-serif" style={{ fontSize:24, fontWeight:400, color:c.ink, margin:0, lineHeight:1.1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144", textWrap:"balance" }}>{cb.name}</h3>
               {/* description block */}
-              <div style={{ margin:"10px 0 12px", padding:"8px 10px", borderLeft:`2px solid ${cb.color}40`, background:cb.color+"08" }}>
-                <div className="label-tech-sm" style={{ color:cb.color, marginBottom:3 }}>{lang==="ru"?"Описание":lang==="kk"?"Сипаттама":"Description"}</div>
-                <p style={{ fontSize:11.5, color:c.text, lineHeight:1.55, margin:0, fontFamily:fontDisplay }}>{cb.desc}</p>
+              <div style={{ margin:"12px 0 14px", padding:"10px 12px", borderLeft:`2px solid ${cb.color}50`, background:cb.color+"08" }}>
+                <div className="label-tech-sm" style={{ color:cb.color, marginBottom:5 }}>{lang==="ru"?"Описание":lang==="kk"?"Сипаттама":"Description"}</div>
+                <p className="body-serif" style={{ fontSize:15, color:c.text, lineHeight:1.45, margin:0 }}>{cb.desc}</p>
               </div>
               {/* difficulty dots */}
               <div style={{ display:"flex", gap:8, marginBottom:10, fontSize:9, fontFamily:font, color:c.dim }}>
