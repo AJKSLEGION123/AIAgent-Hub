@@ -385,6 +385,8 @@ function AgentHub({ data, loadTime }) {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [comboSearch, setComboSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
+  const [tagFilter, setTagFilter] = useState("");
   const [cheatSearch, setCheatSearch] = useState("");
   const [quickSearch, setQuickSearch] = useState("");
   const [favs, setFavs] = useState({});
@@ -803,7 +805,11 @@ function AgentHub({ data, loadTime }) {
     return f;
   }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy, showNew, hideUsed, usedPrompts, pinnedIds, categories]);
 
-  const roles = useMemo(() => [...new Set(P.map(p => p.role))], [P]);
+  const roles = useMemo(() => {
+    const rc = {};
+    P.forEach(p => { rc[p.role] = (rc[p.role]||0) + 1; });
+    return Object.entries(rc).sort((a,b) => b[1] - a[1]).map(([r,n]) => ({ role:r, count:n }));
+  }, [P]);
   // Feat 27: Infinite scroll (must be after list declaration)
   useEffect(() => {
     if (!loadMoreRef.current) return;
@@ -817,7 +823,7 @@ function AgentHub({ data, loadTime }) {
   const allTags = useMemo(() => {
     const tc = {};
     P.forEach(p => (p.tags||[]).forEach(t2 => { tc[t2] = (tc[t2]||0) + 1; }));
-    return Object.entries(tc).sort((a,b) => b[1]-a[1]).slice(0, 25).map(([t2]) => t2);
+    return Object.entries(tc).sort((a,b) => b[1]-a[1]).map(([tag,count]) => ({ tag, count }));
   }, [P]);
 
   const CAT_ICONS = {"AI / LLM":"\u{1F9E0}","Security":"\u{1F6E1}","Testing / QA":"\u{1F9EA}","Performance":"\u26A1","DevOps / CI":"\u2699","Frontend / UI":"\u{1F3A8}","Backend / API":"\u{1F4E6}","Data & Files":"\u{1F4CA}","Integrations":"\u{1F514}","Architecture":"\u{1F3D7}","Documentation":"\u{1F4D6}","Project Setup":"\u{1F680}"};
@@ -1223,16 +1229,57 @@ function AgentHub({ data, loadTime }) {
             <Pill on={fv==="1-2h"} fn={()=>setFv("1-2h")} lb="1-2h" cl="#f59e0b" c={c} />
             <Pill on={fv===">2h"} fn={()=>setFv(">2h")} lb="> 2h" cl="#ef4444" c={c} />
           </div>}
-          {fm==="tag" && <div style={{display:"flex",gap:5,marginBottom:8,flexWrap:"wrap"}}>
-            <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
-            {allTags.map(tag => <Pill key={tag} on={fv===tag} fn={()=>setFv(tag)} lb={tag} cl="#e86a2a" c={c} />)}
-          </div>}
+          {fm==="tag" && (() => {
+            const q = tagFilter.toLowerCase().trim();
+            const filtered = q ? allTags.filter(x => x.tag.toLowerCase().includes(q)) : allTags;
+            const MAX = 60;
+            const shown = filtered.slice(0, MAX);
+            return <div style={{marginBottom:8}}>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+                <input type="search" value={tagFilter} onChange={e=>setTagFilter(e.target.value)} placeholder={lang==="ru"?`Поиск тегов (всего ${allTags.length})...`:`Search tags (${allTags.length} total)...`} style={{flex:1,maxWidth:300,height:28,padding:"0 10px",fontSize:11,fontFamily:font,letterSpacing:0.3,border:0,borderBottom:`1px solid ${c.brd}`,borderRadius:0,background:"transparent",color:c.text,outline:"none"}} />
+                <span className="label-tech-sm" style={{color:c.dim}}>{filtered.length === allTags.length ? `${filtered.length}` : `${filtered.length}/${allTags.length}`}</span>
+                {tagFilter && <button onClick={()=>setTagFilter("")} aria-label={lang==="ru"?"Очистить":"Clear"} style={{width:20,height:20,border:0,background:"none",color:c.dim,cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}}><IconX /></button>}
+              </div>
+              <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+                <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
+                {shown.map(({tag, count}) => <button key={tag} onClick={()=>setFv(tag)} aria-pressed={fv===tag} style={{
+                  display:"inline-flex",alignItems:"center",gap:5,padding:"4px 10px",fontSize:10,letterSpacing:0.3,
+                  fontFamily:font,fontWeight:fv===tag?700:500,border:`1px solid ${fv===tag?"#e86a2a":c.brd}`,borderRadius:0,
+                  background:fv===tag?"#e86a2a15":"transparent",color:fv===tag?"#e86a2a":c.mut,
+                  cursor:"pointer",outline:"none",whiteSpace:"nowrap"
+                }}>#{tag}<span style={{opacity:.55,fontSize:9}}>{count}</span></button>)}
+                {filtered.length > MAX && <span style={{fontSize:10,color:c.dim,alignSelf:"center",padding:"4px 8px"}}>+{filtered.length - MAX} {lang==="ru"?"ещё":"more"}</span>}
+              </div>
+            </div>;
+          })()}
         </div>
 
-        {fm==="role" && <div style={{display:"flex",gap:5,marginBottom:12,flexWrap:"wrap"}}>
-          <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
-          {roles.map(r=>{const p=P.find(x=>x.role===r);return <Pill key={r} on={fv===r} fn={()=>setFv(r)} lb={t.r[r]||r} cl={p?.ac} c={c}/>;})}
-        </div>}
+        {fm==="role" && (() => {
+          const q = roleFilter.toLowerCase().trim();
+          const filtered = q ? roles.filter(r => r.role.toLowerCase().includes(q) || (t.r[r.role]||"").toLowerCase().includes(q)) : roles;
+          const MAX = 60;
+          const shown = filtered.slice(0, MAX);
+          return <div style={{marginBottom:12}}>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+              <input type="search" value={roleFilter} onChange={e=>setRoleFilter(e.target.value)} placeholder={lang==="ru"?`Поиск ролей (всего ${roles.length})...`:`Search roles (${roles.length} total)...`} style={{flex:1,maxWidth:300,height:28,padding:"0 10px",fontSize:11,fontFamily:font,letterSpacing:0.3,border:0,borderBottom:`1px solid ${c.brd}`,borderRadius:0,background:"transparent",color:c.text,outline:"none"}} />
+              <span className="label-tech-sm" style={{color:c.dim}}>{filtered.length === roles.length ? `${filtered.length}` : `${filtered.length}/${roles.length}`}</span>
+              {roleFilter && <button onClick={()=>setRoleFilter("")} aria-label={lang==="ru"?"Очистить":"Clear"} style={{width:20,height:20,border:0,background:"none",color:c.dim,cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}}><IconX /></button>}
+            </div>
+            <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+              <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
+              {shown.map(({role:r, count:n})=>{
+                const p=P.find(x=>x.role===r);
+                return <button key={r} onClick={()=>setFv(r)} aria-pressed={fv===r} style={{
+                  display:"inline-flex",alignItems:"center",gap:6,padding:"4px 10px",fontSize:10,letterSpacing:0.5,
+                  fontFamily:font,fontWeight:fv===r?700:500,border:`1px solid ${fv===r?(p?.ac||c.accent):c.brd}`,borderRadius:0,
+                  background:fv===r?(p?.ac||c.accent)+"15":"transparent",color:fv===r?(p?.ac||c.accent):c.mut,
+                  cursor:"pointer",outline:"none",transition:"all .15s",whiteSpace:"nowrap"
+                }}>{t.r[r]||r}<span style={{opacity:.55,fontSize:9}}>{n}</span></button>;
+              })}
+              {filtered.length > MAX && <span style={{fontSize:10,color:c.dim,alignSelf:"center",padding:"4px 8px"}}>+{filtered.length - MAX} {lang==="ru"?"ещё":"more"}</span>}
+            </div>
+          </div>;
+        })()}
         {fm==="type" && <div style={{display:"flex",gap:5,marginBottom:12,flexWrap:"wrap"}}>
           <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
           <Pill on={fv==="role"} fn={()=>setFv("role")} lb={lang==="ru"?"Роли":"Roles"} cl="#10b981" c={c} />
