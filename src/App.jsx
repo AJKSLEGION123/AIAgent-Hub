@@ -70,8 +70,8 @@ const T = {
    THEME & CONSTANTS (task 2,5: style consolidation)
    ═══════════════════════════════════════════════ */
 const TH = {
-  dark: { bg:"#0a0806", bg2:"#120e09", card:"#15110b", cardH:"#1c1811", brd:"#221d15", brdH:"#2e281e", text:"#ece3ce", mut:"#a09584", dim:"#6e6656", surf:"#120e09", glow:"rgba(232,106,42,0.05)", meta:"#0a0806", accent:"#e86a2a", ink:"#f5efdd", onAccent:"#0a0806" },
-  light: { bg:"#f5f0e6", bg2:"#ebe5d6", card:"#fffcf4", cardH:"#f8f3e6", brd:"#d9cfb8", brdH:"#b8ab90", text:"#1a140a", mut:"#57503e", dim:"#8a826c", surf:"#f0e9d6", glow:"rgba(232,106,42,0.08)", meta:"#f5f0e6", accent:"#a84a12", ink:"#0a0806", onAccent:"#f5efdd" },
+  dark: { bg:"#0a0806", bg2:"#120e09", card:"#15110b", cardH:"#1c1811", brd:"#221d15", brdH:"#2e281e", text:"#ece3ce", mut:"#b3a794", dim:"#8a816d", surf:"#120e09", glow:"rgba(232,106,42,0.05)", meta:"#0a0806", accent:"#e86a2a", ink:"#f5efdd", onAccent:"#0a0806" },
+  light: { bg:"#f5f0e6", bg2:"#ebe5d6", card:"#fffcf4", cardH:"#f8f3e6", brd:"#d9cfb8", brdH:"#b8ab90", text:"#1a140a", mut:"#4a4434", dim:"#6d6550", surf:"#f0e9d6", glow:"rgba(232,106,42,0.08)", meta:"#f5f0e6", accent:"#a84a12", ink:"#0a0806", onAccent:"#f5efdd" },
 };
 const MC = { opus47m:"#d4a574" };
 const ML = { opus47m:"Claude Opus 4.7 · 1M" };
@@ -1077,7 +1077,7 @@ function AgentHub({ data, loadTime }) {
       {/* Warm glow */}
       <div style={{ position:"fixed", top:-40, left:"50%", transform:"translateX(-50%)", width:720, height:340, background:`radial-gradient(ellipse, ${c.glow} 0%, transparent 65%)`, pointerEvents:"none", zIndex:0 }} />
 
-      <div id="main-content" style={{ maxWidth:880, margin:"0 auto", padding:"32px 20px 80px", position:"relative", zIndex:1 }}>
+      <main id="main-content" style={{ maxWidth:880, margin:"0 auto", padding:"32px 20px 80px", position:"relative", zIndex:1, display:"block" }}>
 
         {/* ══════════════════ EDITORIAL MASTHEAD ══════════════════ */}
         <header style={{ position:"relative", paddingTop:32, paddingBottom:28, marginBottom:36, color:c.text }}>
@@ -1142,7 +1142,7 @@ function AgentHub({ data, loadTime }) {
               {[{v:85,Icon:(p)=><svg {...p} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l1.5-5L8 12M5.8 10h1.4M10 8h4"/></svg>,t:lang==="ru"?"Меньше":"Smaller"},
                 {v:100,Icon:(p)=><svg {...p} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 13l2-7 2 7M5 11h2M10 7v6M10 7h2M9 13h2"/></svg>,t:lang==="ru"?"Обычный":"Normal"},
                 {v:115,Icon:(p)=><svg {...p} width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 14l3-10 3 10M4.2 11h3.6M10 5v9M10 5h4"/></svg>,t:lang==="ru"?"Больше":"Larger"}].map(({v,Icon,t:tt}) => (
-                <button key={v} onClick={()=>setFontSize(v)} aria-pressed={fontSize===v} title={tt} role="radio" aria-checked={fontSize===v} style={{ width:32, height:30, border:"none", background:fontSize===v?(c.accent+"18"):"transparent", color:fontSize===v?c.accent:c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"background .15s ease, color .15s ease" }}><Icon/></button>
+                <button key={v} onClick={()=>setFontSize(v)} title={tt} role="radio" aria-checked={fontSize===v} aria-label={tt} style={{ width:32, height:30, border:"none", background:fontSize===v?(c.accent+"18"):"transparent", color:fontSize===v?c.accent:c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"background .15s ease, color .15s ease" }}><Icon/></button>
               ))}
             </div>
           </div>
@@ -1589,7 +1589,7 @@ function AgentHub({ data, loadTime }) {
             }}>
               {/* Header */}
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px", gap:8 }} className="pad-mobile">
-                <div onClick={()=>toggle(p.id)} style={{ display:"flex", alignItems:"center", gap:10, flex:1, minWidth:0, cursor:"pointer" }} role="button" aria-expanded={isO} aria-controls={`body-${p.id}`}>
+                <div onClick={()=>toggle(p.id)} tabIndex={0} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(p.id)}}} style={{ display:"flex", alignItems:"center", gap:10, flex:1, minWidth:0, cursor:"pointer" }} role="button" aria-expanded={isO} {...(isO?{'aria-controls':`body-${p.id}`}:{})}>
                   <div style={{ width:32, height:32, borderRadius:0, background:"transparent", border:0, borderRight:`1px solid ${c.brd}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, flexShrink:0, paddingRight:10 }}>{p.icon}</div>
                   <div style={{ minWidth:0, flex:1 }}>
                     <div style={{ display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
@@ -2092,7 +2092,7 @@ function AgentHub({ data, loadTime }) {
           return (
             <div key={cfg.id} style={{ marginBottom:8, border:`1px solid ${isO?cfg.accent+"35":c.brd}`, borderRadius:0, background:c.card, overflow:"hidden", transition:"all .2s" }}>
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 16px", gap:8 }}>
-                <div onClick={()=>toggle(cfg.id)} style={{ display:"flex", alignItems:"center", gap:10, flex:1, cursor:"pointer" }} role="button" aria-expanded={isO}>
+                <div onClick={()=>toggle(cfg.id)} tabIndex={0} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(cfg.id)}}} style={{ display:"flex", alignItems:"center", gap:10, flex:1, cursor:"pointer" }} role="button" aria-expanded={isO}>
                   <div style={{ width:36, height:36, borderRadius:0, background:cfg.accent+"12", border:`1px solid ${cfg.accent}25`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17 }}>{cfg.icon}</div>
                   <div>
                     <div style={{ display:"flex", alignItems:"center", gap:8 }}>
@@ -2383,10 +2383,10 @@ function AgentHub({ data, loadTime }) {
               </div>
             ))}
           </div>
-          <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AIAgent-Hub v9.1 · {P.length} {lang==="ru"?pl(P.length,"промт","промта","промтов"):t.prompts} · {(COMBOS[lang]||COMBOS.ru).length} {lang==="ru"?pl((COMBOS[lang]||COMBOS.ru).length,"комбо","комбо","комбо"):"combos"} · {stats.roles} {lang==="ru"?pl(stats.roles,"роль","роли","ролей"):"roles"}{loadTime ? ` · ${loadTime}ms` : ""}{copyCount > 0 ? ` · ${copyCount} ${lang==="ru"?"скопировано":"copied"}` : ""}</div>
+          <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AIAgent-Hub v12 · {P.length} {lang==="ru"?pl(P.length,"промт","промта","промтов"):t.prompts} · {(COMBOS[lang]||COMBOS.ru).length} {lang==="ru"?pl((COMBOS[lang]||COMBOS.ru).length,"комбо","комбо","комбо"):"combos"} · {stats.roles} {lang==="ru"?pl(stats.roles,"роль","роли","ролей"):"roles"}{loadTime ? ` · ${loadTime}ms` : ""}{copyCount > 0 ? ` · ${copyCount} ${lang==="ru"?"скопировано":"copied"}` : ""}</div>
           {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>}
         </div>
-      </div>
+      </main>
 
       {/* Cycle 3: FAB for quick copy on mobile */}
       {(() => {
