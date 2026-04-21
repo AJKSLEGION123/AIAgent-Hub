@@ -1862,18 +1862,24 @@ function AgentHub({ data, loadTime }) {
                 <button onClick={(e)=>{
                   e.stopPropagation();
                   const agents = (cb.ids||[]).map(id => pGet(id)).filter(Boolean);
-                  let script = "#!/bin/bash\n# Team: " + cb.name + "\n\n";
-                  agents.forEach(a => {
-                    const launcher = a.mk==="opus47m"?"claude --dangerously-skip-permissions":"claude --dangerously-skip-permissions";
-                    script += `# ${(t.r[a.role]||a.role)} (${a.m})\n# ${launcher}\n\n`;
+                  const header = lang==="ru"
+                    ? `# ${cb.name}\n\n> ${cb.desc}\n\n**Агенты:** ${agents.length} · **Claude Opus 4.7 · 1M context**\n\n---\n\n`
+                    : `# ${cb.name}\n\n> ${cb.desc}\n\n**Agents:** ${agents.length} · **Claude Opus 4.7 · 1M context**\n\n---\n\n`;
+                  let md = header;
+                  agents.forEach((a, idx) => {
+                    const title = t.r[a.role]||a.role;
+                    const sect = lang==="ru"
+                      ? `## ${idx+1}. ${a.icon} ${title}\n\n- **Сложность:** ${a.difficulty||"—"}\n- **Время:** ${a.time||"—"}\n- **Команда:** \`${a.m}\`\n\n${a.desc ? `> ${a.desc}\n\n` : ""}\`\`\`\n${a.text}\n\`\`\`\n\n`
+                      : `## ${idx+1}. ${a.icon} ${title}\n\n- **Difficulty:** ${a.difficulty||"—"}\n- **Time:** ${a.time||"—"}\n- **Command:** \`${a.m}\`\n\n${a.desc ? `> ${a.desc}\n\n` : ""}\`\`\`\n${a.text}\n\`\`\`\n\n`;
+                    md += sect;
                   });
-                  cp("launch-"+i, script);
-                }} style={{ padding:"7px 12px", fontSize:9, letterSpacing:1.8, textTransform:"uppercase", borderRadius:0,
-                  border:`1px solid ${copied===("launch-"+i)?"#10b981":c.brd}`,
+                  cp("md-combo-"+i, md, true);
+                }} title={lang==="ru"?"Скопировать как Markdown документ (вставь в Notion/Obsidian/README)":"Copy as Markdown document (paste into Notion/Obsidian/README)"} style={{ padding:"7px 12px", fontSize:9, letterSpacing:1.8, textTransform:"uppercase", borderRadius:0,
+                  border:`1px solid ${copied===("md-combo-"+i)?"#10b981":c.brd}`,
                   background:"transparent",
-                  color:copied===("launch-"+i)?"#10b981":c.mut,
+                  color:copied===("md-combo-"+i)?"#10b981":c.mut,
                   cursor:"pointer", textAlign:"center", fontWeight:600, fontFamily:font, transition:"all .15s", outline:"none" }}>
-                  {copied===("launch-"+i) ? "✓" : (lang==="ru"?"Скрипт":lang==="kk"?"Скрипт":"Script")}
+                  {copied===("md-combo-"+i) ? "✓" : "MD"}
                 </button>
               </div>
             </div>
