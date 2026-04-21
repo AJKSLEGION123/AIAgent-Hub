@@ -6,24 +6,38 @@ const src = readFileSync('src/App.jsx', 'utf8');
 const m = src.match(/const Z = "([^"]+)"/);
 const data = JSON.parse(inflateSync(Buffer.from(m[1], 'base64')).toString('utf8'));
 
-describe('AUTONOMY-v3 wrapper', () => {
-  it('every prompt contains [AUTONOMY-v3] marker', () => {
-    const missing = data.P.filter(p => !p.text?.includes('[AUTONOMY-v3]'));
+describe('AUTONOMY-v4 wrapper', () => {
+  it('every prompt contains [AUTONOMY-v4] marker', () => {
+    const missing = data.P.filter(p => !p.text?.includes('[AUTONOMY-v4]'));
     expect(missing.length).toBe(0);
   });
 
-  it('no prompt carries legacy [AUTONOMY-v1] or [AUTONOMY-v2] marker', () => {
-    const legacy = data.P.filter(p => p.text?.includes('[AUTONOMY-v1]') || p.text?.includes('[AUTONOMY-v2]'));
+  it('no prompt carries legacy [AUTONOMY-v1/v2/v3] marker', () => {
+    const legacy = data.P.filter(p =>
+      p.text?.includes('[AUTONOMY-v1]') ||
+      p.text?.includes('[AUTONOMY-v2]') ||
+      p.text?.includes('[AUTONOMY-v3]')
+    );
     expect(legacy.length).toBe(0);
   });
 
-  it('every prompt includes ОБЪЁМ РАБОТЫ scope-of-work clause', () => {
-    const missing = data.P.filter(p => !p.text?.includes('ОБЪЁМ РАБОТЫ'));
+  it('every prompt names АРСЕНАЛ tool section', () => {
+    const missing = data.P.filter(p => !p.text?.includes('АРСЕНАЛ'));
     expect(missing.length).toBe(0);
   });
 
-  it('every prompt grants explicit ПОЛНЫЕ ПРАВА in v3', () => {
-    const missing = data.P.filter(p => !p.text?.includes('ПОЛНЫЕ ПРАВА'));
+  it('every prompt grants ВСЕ ИНСТРУМЕНТЫ explicitly', () => {
+    const missing = data.P.filter(p => !p.text?.includes('ВСЕ ИНСТРУМЕНТЫ'));
+    expect(missing.length).toBe(0);
+  });
+
+  it('every prompt mentions Browser MCP', () => {
+    const missing = data.P.filter(p => !p.text?.includes('Browser MCP'));
+    expect(missing.length).toBe(0);
+  });
+
+  it('every prompt retains ОБЪЁМ РАБОТЫ scope-of-work clause', () => {
+    const missing = data.P.filter(p => !p.text?.includes('ОБЪЁМ РАБОТЫ'));
     expect(missing.length).toBe(0);
   });
 
@@ -44,6 +58,13 @@ describe('Combo completion directive', () => {
   it('every EN combo desc mentions "full autonomy"', () => {
     const missing = (data.COMBOS?.en || []).filter(c => !c.desc?.includes('full autonomy'));
     expect(missing.length).toBe(0);
+  });
+
+  it('∞ Perpetual Improvement combo mentions ALL TOOLS / ВСЕ ИНСТРУМЕНТЫ', () => {
+    const ru = (data.COMBOS?.ru || []).find(c => c.name === '∞ Perpetual Improvement');
+    const en = (data.COMBOS?.en || []).find(c => c.name === '∞ Perpetual Improvement');
+    expect(ru?.desc).toContain('ВСЕ ИНСТРУМЕНТЫ');
+    expect(en?.desc).toContain('ALL TOOLS');
   });
 });
 

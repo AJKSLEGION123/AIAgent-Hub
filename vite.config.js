@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     // Bundle embeds 10k+ prompts as compressed Z blob for offline-first PWA —
     // single-chunk delivery is the intended trade-off over code-splitting.
-    chunkSizeWarningLimit: 1500,
+    chunkSizeWarningLimit: 2000,
   },
   test: {
     environment: 'jsdom',
