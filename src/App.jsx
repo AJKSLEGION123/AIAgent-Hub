@@ -476,17 +476,22 @@ function AgentHub({ data, loadTime }) {
         if (s.used) setUsedPrompts(s.used);
         if (s.hist) setSearchHist(s.hist);
         if (s.cc) setCopyCounters(s.cc);
+        if (s.viewMode) setViewMode(s.viewMode);
+        if (typeof s.compactMode === "boolean") setCompactMode(s.compactMode);
+        if (s.fontSize) setFontSize(s.fontSize);
+        if (s.stackOverride) setStackOverride(s.stackOverride);
+        if (s.promptLang) setPromptLang(s.promptLang);
       }
     } catch {}
   }, []);
 
   useEffect(() => {
     try {
-      const payload = JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist, cc:copyCounters });
+      const payload = JSON.stringify({ theme, lang, favs, used:usedPrompts, hist:searchHist, cc:copyCounters, viewMode, compactMode, fontSize, stackOverride, promptLang });
       if (payload.length > 4 * 1024 * 1024) { console.warn("AIAgent-Hub: localStorage near limit"); }
       localStorage.setItem("aiagent-hub-settings", payload);
     } catch {}
-  }, [theme, lang, favs, usedPrompts, searchHist, copyCounters]);
+  }, [theme, lang, favs, usedPrompts, searchHist, copyCounters, viewMode, compactMode, fontSize, stackOverride, promptLang]);
 
   // Feat 5: Scroll progress (task 3: throttled via rAF)
   useEffect(() => {
@@ -1463,7 +1468,10 @@ function AgentHub({ data, loadTime }) {
         {/* Task 76: Import Custom Prompt */}
         {showImport && (
           <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:0, border:`2px dashed ${c.brd}`, background:c.bg2 }}>
-            <div style={{ fontSize:12, fontWeight:700, color:c.text, marginBottom:8 }}>📥 {lang==="ru"?"Импорт промта":"Import Prompt"}</div>
+            <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
+              <span style={{ color:c.accent, display:"inline-flex" }}><IconUpload /></span>
+              <span className="label-tech-sm" style={{ color:c.mut }}>{lang==="ru"?"Импорт промта":"Import Prompt"}</span>
+            </div>
             <textarea value={importText} onChange={e=>setImportText(e.target.value)} placeholder={lang==="ru"?"Вставь текст промта здесь...":"Paste prompt text here..."} style={{ width:"100%", height:120, padding:12, fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.text, outline:"none", resize:"vertical", boxSizing:"border-box" }} />
             {importText.trim().length > 50 && (
               <div style={{ marginTop:8, display:"flex", gap:8 }}>
@@ -1478,7 +1486,7 @@ function AgentHub({ data, loadTime }) {
         {!showConstructor && !showImport && (
           <div style={{ display:"flex", gap:6, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
             <button onClick={()=>setShowConstructor(true)} aria-label={lang==="ru"?"Конструктор промта":"Prompt Constructor"} title={lang==="ru"?"Конструктор промта":"Prompt Constructor"} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:6, padding:"5px 12px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:700, fontFamily:font, border:`1px dashed #e86a2a60`, borderRadius:0, background:"transparent", color:"#e86a2a", cursor:"pointer", outline:"none" }}><IconPencil />{lang==="ru"?"Конструктор":lang==="kk"?"Конструктор":"Constructor"}</button>
-            <button onClick={()=>setShowImport(true)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px dashed ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>📥 {lang==="ru"?"Импорт":lang==="kk"?"Импорт":"Import"}</button>
+            <button onClick={()=>setShowImport(true)} aria-label={lang==="ru"?"Импорт промта":"Import prompt"} title={lang==="ru"?"Импорт промта":"Import prompt"} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:6, padding:"4px 12px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:700, fontFamily:font, border:`1px dashed ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}><IconUpload />{lang==="ru"?"Импорт":lang==="kk"?"Импорт":"Import"}</button>
             <div style={{ width:1, height:16, background:c.brd, margin:"0 2px" }} className="hide-mobile" />
             {/* Task 93+94: Prompt language */}
             <select value={promptLang} onChange={e=>setPromptLang(e.target.value)} aria-label="Prompt language" style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${promptLang!=="original"?"#f97316":c.brd}`, borderRadius:0, background:promptLang!=="original"?"#f9731608":c.card, color:promptLang!=="original"?"#f97316":c.mut, cursor:"pointer", outline:"none" }}>
