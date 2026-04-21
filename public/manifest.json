@@ -1,16 +1,18 @@
 {
   "name": "AIAgent-Hub",
   "short_name": "AIAgentHub",
-  "description": "Мультиагентная система разработки — 165 промтов для Claude, Gemini, Codex",
+  "description": "10 036 промтов для Claude Code · Opus 4.7 · 1M — атлас автономной разработки",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#060609",
-  "theme_color": "#060609",
+  "background_color": "#0a0806",
+  "theme_color": "#0a0806",
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml"
     }
-  ]
+  ],
+  "categories": ["productivity", "developer", "utilities"],
+  "lang": "ru"
 }
