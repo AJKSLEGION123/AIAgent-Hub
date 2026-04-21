@@ -989,9 +989,9 @@ function AgentHub({ data, loadTime }) {
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
             {[
               [stats.total, lang==="ru"?"Промтов":"Prompts", "#e86a2a"],
-              [stats.models, lang==="ru"?"Моделей":"Models", "#f97316"],
-              [stats.roles, lang==="ru"?"Ролей":"Roles", "#c4541d"],
-              [`~${stats.totalHours}h`, lang==="ru"?"Время":"Time", "#06b6d4"],
+              [(COMBOS[lang]||COMBOS.ru).length, lang==="ru"?"Комбо":"Combos", "#f97316"],
+              [Object.keys(CHEAT).length, lang==="ru"?"Шпаргалок":"Cheats", "#c4541d"],
+              [Object.keys(categories.counts).length, lang==="ru"?"Категорий":"Categories", "#06b6d4"],
               [`~${(stats.totalTokens/1000).toFixed(0)}K`, "Tokens", "#10b981"],
               [copyCount, lang==="ru"?"Скопировано":"Copied", "#eab308"],
               [usedCount, lang==="ru"?"Использовано":"Used", "#10b981"],
@@ -1078,7 +1078,7 @@ function AgentHub({ data, loadTime }) {
                 {stats.total}
               </div>
               <div className="label-tech" style={{ color:c.mut, marginTop:10 }}>{lang==="ru"?"промтов":"prompts"}</div>
-              <div className="label-tech-sm" style={{ color:c.dim, marginTop:8 }}>~{Math.round(stats.totalTokens/1000)}K tok · {stats.roles} roles{usedCount>0?` · ✓${usedCount}`:""}</div>
+              <div className="label-tech-sm" style={{ color:c.dim, marginTop:8 }}>{(COMBOS[lang]||COMBOS.ru).length} {lang==="ru"?"комбо":"combos"} · {Object.keys(CHEAT).length} {lang==="ru"?"шпаргалок":"cheats"} · ~{Math.round(stats.totalTokens/1000)}K tok{usedCount>0?` · ✓${usedCount}`:""}</div>
             </div>
           </div>
 
@@ -1140,8 +1140,8 @@ function AgentHub({ data, loadTime }) {
           ))}
           <div style={{ flex:1, minWidth:20 }} />
           <div style={{ display:"flex", alignItems:"baseline", gap:8 }} className="hide-mobile">
-            <span className="label-tech-sm" style={{ color:c.dim }}>{lang==="ru"?"ролей":"roles"}</span>
-            <span style={{ fontSize:16, fontWeight:400, color:c.text, fontFamily:fontDisplay }}>{stats.roles}</span>
+            <span className="label-tech-sm" style={{ color:c.dim }}>{lang==="ru"?"категорий":"categories"}</span>
+            <span style={{ fontSize:16, fontWeight:400, color:c.text, fontFamily:fontDisplay }}>{Object.keys(categories.counts).length}</span>
           </div>
         </div>
 
