@@ -1185,6 +1185,35 @@ function AgentHub({ data, loadTime }) {
           );})}
         </div>
 
+        {/* ── CATEGORY GRID (landing, shown when no filters active) ── */}
+        {!hasFilters && !debouncedSearch && (
+          <div style={{ marginBottom:24 }}>
+            <div style={{ display:"flex", alignItems:"baseline", justifyContent:"space-between", marginBottom:10 }}>
+              <span className="label-tech-sm" style={{ color:c.mut }}>{lang==="ru"?"Обзор по категориям":"Browse by category"}</span>
+              <span style={{ fontSize:9, color:c.dim, fontFamily:font }}>{lang==="ru"?`${Object.keys(categories.counts).length} категорий · ${P.length} промтов`:`${Object.keys(categories.counts).length} categories · ${P.length} prompts`}</span>
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(170px, 1fr))", gap:6 }}>
+              {Object.entries(categories.counts).sort((a,b)=>b[1]-a[1]).map(([cat, n]) => {
+                const col = CAT_COLORS[cat] || "#e86a2a";
+                return (
+                  <button key={cat} onClick={()=>{ setFm("category"); setFv(cat); window.scrollTo({top:0, behavior:"smooth"}); }} style={{
+                    display:"flex", alignItems:"center", gap:10, padding:"14px 14px", textAlign:"left",
+                    border:`1px solid ${c.brd}`, borderLeft:`3px solid ${col}`, borderRadius:0,
+                    background:"transparent", cursor:"pointer", outline:"none",
+                    transition:"background .2s ease, border-color .2s ease"
+                  }} onMouseEnter={e=>{e.currentTarget.style.background=`${col}08`;e.currentTarget.style.borderColor=col+"60";}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor=c.brd;e.currentTarget.style.borderLeftColor=col;}}>
+                    <span style={{ fontSize:22, lineHeight:1, flexShrink:0, opacity:.85 }}>{CAT_ICONS[cat]||"◈"}</span>
+                    <div style={{ minWidth:0, flex:1 }}>
+                      <div style={{ fontSize:11, color:col, fontWeight:700, fontFamily:font, letterSpacing:0.3, marginBottom:2, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{cat}</div>
+                      <div className="label-tech-sm" style={{ color:c.dim }}>{n}</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* ── STICKY SEARCH + FILTERS (tasks 012, 035) ── */}
         <div className="sticky-bar" style={{ background:alpha(c.bg,.85) }}>
           {/* Search */}
