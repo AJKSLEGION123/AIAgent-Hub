@@ -13,6 +13,7 @@ import { TH, MC, ML, MI, pl } from "./constants.js";
 import { T } from "./translations.js";
 import { decompress } from "./utils/decompress.ts";
 import { Z } from "./data.js";
+import { detectLanguage } from "./utils/i18n.ts";
 
 // TH/MC/ML/MI/pl extracted to ./constants.js (iter118).
 // T (translations ru/en/kk) extracted to ./translations.js (iter119).
@@ -40,6 +41,7 @@ export default function App() {
   const [loadTime, setLoadTime] = useState(null);
   const dataRef = useRef(null);
   const startTime = useRef(performance.now());
+  const bootLang = detectLanguage();
   
   useEffect(() => {
     if (dataRef.current) { setData(dataRef.current); return; }
@@ -52,9 +54,9 @@ export default function App() {
     <div style={{minHeight:"100vh",background:"#060609",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:font,color:"#ddddef",textAlign:"center",padding:32}}>
       <div>
         <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>AIAgent-Hub</div>
-        <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>Ошибка загрузки данных</div>
+        <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>{bootLang==="ru"?"Ошибка загрузки данных":bootLang==="kk"?"Деректерді жүктеу қатесі":"Failed to load data"}</div>
         <div style={{fontSize:11,color:"#5e5e78",marginBottom:16}}>{err?.message}</div>
-        <button onClick={()=>{setErr(null);setLoadPct(0);decompress(Z,(pct)=>setLoadPct(Math.round(pct*100))).then(d=>{dataRef.current=d;setData(d)}).catch(e=>setErr(e))}} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:0,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>Обновить</button>
+        <button onClick={()=>{setErr(null);setLoadPct(0);decompress(Z,(pct)=>setLoadPct(Math.round(pct*100))).then(d=>{dataRef.current=d;setData(d)}).catch(e=>setErr(e))}} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:0,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>{bootLang==="ru"?"Обновить":bootLang==="kk"?"Жаңарту":"Reload"}</button>
       </div>
     </div>
   );
@@ -65,7 +67,7 @@ export default function App() {
       <div style={{maxWidth:860,margin:"0 auto",padding:"32px 16px"}}>
         <div style={{textAlign:"center",marginBottom:32}}>
           <div style={{fontSize:28,fontWeight:800,color:"#ddddef",marginBottom:8}}>AIAgent-Hub</div>
-          <div style={{fontSize:11,color:"#5e5e78",letterSpacing:2,marginBottom:16}}>загрузка промтов...</div>
+          <div style={{fontSize:11,color:"#5e5e78",letterSpacing:2,marginBottom:16}}>{bootLang==="ru"?"загрузка промтов...":bootLang==="kk"?"промттар жүктелуде...":"loading prompts..."}</div>
           <div style={{width:200,height:4,background:"#1a1a28",borderRadius:2,overflow:"hidden",margin:"0 auto"}}>
             <div style={{width:loadPct+"%",height:"100%",background:"linear-gradient(90deg,#e86a2a,#c4541d)",borderRadius:2,transition:"width .3s ease"}} />
           </div>
