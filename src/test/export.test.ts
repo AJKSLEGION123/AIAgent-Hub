@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { exportMarkdown, exportCSV, exportHTML } from '../utils/export';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { exportMarkdown, exportCSV, exportHTML, downloadFile } from '../utils/export';
 import type { Prompt } from '../types';
 
 const mockPrompt: Prompt = {
@@ -84,5 +84,45 @@ describe('exportHTML', () => {
     const html = exportHTML([mockPrompt], roleNames);
     expect(html).toContain('#react');
     expect(html).toContain('#typescript');
+  });
+});
+
+describe('downloadFile', () => {
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it('creates a Blob, anchor, clicks it, and revokes the URL', () => {
+    const createUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
+    const revokeUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    const clickSpy = vi.fn();
+    const createElement = vi.spyOn(document, 'createElement').mockImplementation((tag: string) => {
+      if (tag === 'a') {
+        return { href: '', download: '', click: clickSpy } as unknown as HTMLAnchorElement;
+      }
+      return document.createElement(tag);
+    });
+
+    downloadFile('hello world', 'test.txt', 'text/plain');
+
+    expect(createUrl).toHaveBeenCalledTimes(1);
+    const blobArg = createUrl.mock.calls[0][0] as Blob;
+    expect(blobArg).toBeInstanceOf(Blob);
+    expect(blobArg.type).toBe('text/plain');
+    expect(createElement).toHaveBeenCalledWith('a');
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+    expect(revokeUrl).toHaveBeenCalledWith('blob:mock-url');
+  });
+
+  it('sets the anchor download attribute to the supplied filename', () => {
+    vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:x');
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    const anchor: { href: string; download: string; click: () => void } = {
+      href: '', download: '', click: vi.fn(),
+    };
+    vi.spyOn(document, 'createElement').mockReturnValue(anchor as unknown as HTMLAnchorElement);
+
+    downloadFile('content', 'prompts-export.md', 'text/markdown');
+
+    expect(anchor.href).toBe('blob:x');
+    expect(anchor.download).toBe('prompts-export.md');
   });
 });
