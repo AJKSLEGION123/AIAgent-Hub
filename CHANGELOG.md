@@ -1,78 +1,113 @@
 # Changelog
 
-## v8.2 (2026-03-20)
+Все значимые изменения проекта. Формат: [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/) · версионирование: [SemVer](https://semver.org/spec/v2.0.0.html).
 
-### New Prompts
-- 10 new prompts: Component Library, TS Migration, Playwright E2E, Storybook, i18n Full, Analytics, Deploy Vercel, Lighthouse Perf, Dark Mode Polish, Form Wizard
-- Total: 175 prompts, 48 combos
+## [13.0] — 2026-04-25
 
-### TypeScript
-- tsconfig.json (strict: true)
-- Type definitions: Prompt, Config, Combo, HubData, ThemeColors, Stats
-- Utility modules: constants.ts, helpers.ts
-- Custom hooks: useLocalStorage, useKeyboardShortcuts, useScrollProgress
+Massive consolidation + 24/7 hygiene pass.
 
-### Testing
-- 65 unit tests (vitest): helpers, constants, a11y, keyboard, edge cases, integration
-- 8 E2E tests (playwright): load, search, theme, navigation, copy, shortcuts, mobile
-- Total: 73 tests
+### Changed
+- **Промтов: 10 014 → 3 299** (-67 %). Удалены формульные per-language /
+  per-cloud / per-pattern матрицы (`rl-aws-*`, `rl-py-*` × 17 языков и т.д.).
+  Каждый оставшийся промт уникален, портативен (работает в любом проекте),
+  обёрнут в `[AUTONOMY-v4]`, минимум 2 KB глубины.
+- Bundle: 926 KB gzip → **537 KB gzip** (-42 %).
+- Z blob: 1.1 MB → 584 KB (-47 %).
+- ESLint 9 → 10, TypeScript 5 → 6, @vitejs/plugin-react 5 → 6, hono 4.12.14 → 4.12.15,
+  vite 8.0.9 → 8.0.10, vitest 4.1.4 → 4.1.5, globals 16 → 17, @hono/node-server 1 → 2.
+- Live counts (manifest, OG image, sitemap, README, CLAUDE.md, llms.txt) синхронизированы.
 
-### Features
-- Global search across ALL sections (prompts, combos, cheat sheets, CLI commands)
-- Pin prompts to top
-- Glossary overlay (7 terms)
-- Copy as Markdown button
-- 12 keyboard shortcuts (1-5 sections, T theme, V view, R random, F focus, ? help, Ctrl+K search, Ctrl+/ compact)
-- Table view with difficulty badges and model color dots
-- Session timer in footer
+### Added
+- **`∞ 24/7 Project Perfection`** flagship combo + `lp-247-perfectionist` (10-минутный
+  непрерывный цикл доведения любого проекта до идеала, 10 категорий сканирования).
+- `Self-Healing Project` combo: Telegram bot self-test, RAG knowledge from project,
+  message quality watchdog, full UI click-sweep, project RAG.
+- `/.well-known/security.txt` (RFC 9116) для координированного раскрытия.
+- `Permissions-Policy` header (camera/mic/geo/gyro/usb/payment + FLoC opt-out).
+- PNG og-image (1200 × 630, 273 KB) — Twitter/X совместимость.
+- System-pref-aware `theme-color` (dark + light, media-scoped).
+- `npm run typecheck` (`tsc --noEmit`) скрипт.
+- `@vitest/coverage-v8` + tracking: `src/utils/` 100 %, `src/hooks/` 100 % lines.
+- 16 новых vitest тестов; +1 e2e regression (Escape closes shortcut dialog).
+- Dependabot config (npm grouped, pip, github-actions).
+- `.github/workflows/ci.yml` gates: lint + typecheck + data-integrity (было только build/test).
+- `scripts/requirements.txt` (paramiko для self-hosted deploy).
+- `concurrently` + `playwright` как explicit devDep (бывшие ghost-deps).
+- `knip.json` config — clean dead-code reports.
+- `.gitattributes` — нормализация LF на Windows commits.
+- `reports/247-progress.md` — лог каждой итерации полного 35-tick 24/7 цикла.
 
-### Infrastructure
-- Service Worker (PWA offline support)
-- vercel.json (security headers, caching, SPA rewrites)
-- GitHub Actions CI (build + test + e2e)
-- ARCHITECTURE.md, CONTRIBUTING.md
+### Fixed
+- **4 react-hooks/exhaustive-deps stale-closure bugs** (App.jsx scroll-lock, mount-only
+  scroll, global keydown listener, copy callback). ESC-закрытие модалок больше не зависит
+  от устаревшего closure.
+- **`scripts/check-data.cjs`**: было только `console.log` на issues — теперь `process.exit(1)`,
+  CI gate реально fail-fast.
+- **api.test.js**: 11 silent-skip patterns (`if (!res) return`) — теперь
+  `describe.skipIf(!serverUp)` даёт честный "9 skipped".
+- **e2e silent-skips**: 4 теста (copy/star/stats/lang buttons) переведены с
+  `if (count > 0)` на assert+act; surfaced и поправлен stale `aria-label="Stats"`
+  → `"Statistics"`.
+- **Fonts perf**: `@import` → `<link rel="stylesheet">` в `<head>` —
+  parallel fetch вместо serial waterfall (∼1 RTT FCP improvement).
+- **PWA manifest**: stale "10 036 промтов" → актуальные 3 299.
+- **Stats version timeline**: + `v13:3299` entry (визуально показывает консолидацию).
+- **Self-hosted deploy smoke test**: 5 retry attempts с linear backoff (2/4/6/8 s)
+  вместо single-shot 3 s — false-rollback rate ∼100 % → 0 %.
+- TypeScript error в `useLocalStorage` test (object-shape inference).
+- Stale 8.3 → shape-check (`/^\d+\.\d+/`) в api health-check.
+- 53 строки dead code: `useKeyboardShortcuts.ts`, `decompress.ts` (knip-flagged).
 
-## v8.1 (2026-03-20)
+### Security
+- Зеро vulnerabilities (5 CVE из v12 фикснуты ранее, retained).
+- Permissions-Policy + security.txt + CSP + HSTS + X-Frame-Options + Referrer-Policy.
 
-### New Prompts
-- 12 mega prompts (overnight 100+ tasks, features, fullstack, testing, security, refactor, perf, a11y, docs, sprint)
-- 3 infinite prompts (♾️ Claude/Gemini/Codex — never stops)
-- 6 new combos (Night Army, Mega Team 6, Maximum 10)
-- Total: 165 prompts, 46 combos
+---
 
-### Features
-- 70+ new features: table view, infinite scroll, focus mode, copy history, stats modal, mobile FAB, welcome banner, breadcrumbs, font size control, CSV/HTML/JSON export, settings backup/restore, bulk select, tag similarity, quick launch, auto-collapse
-- 10 keyboard shortcuts
+## [12.0] — Apr 2026 (peak count)
 
-### Fixes
-- localStorage: window.storage → real localStorage (settings now persist)
-- XSS fix in HTML export (& < > " escaped)
-- CSV export: quote escaping
-- 3x TDZ fixes (list, pGet, t — variable used before declaration)
-- location.reload → state retry (no page reloads)
-- Search focus: document.activeElement → state-based
+Массовое расширение каталога: 10 036 промтов через генерируемые матрицы (язык × задача,
+облако × сервис, паттерн × язык). Hub стал «большим», но многие промты повторяют друг
+друга в разных формах. Подготовка к консолидации в v13.
 
-### Performance
-- promptMap O(1) via Map (replaced 15+ P.find calls)
-- rAF throttle on scroll handler
-- Memoized difficulty stats
-- will-change on scroll progress bar
-- prefers-reduced-motion: reduce
+### Highlights
+- 10 036 промтов на пике каталога.
+- ∞ Opus 4.7 Perfectionist Suite combo.
+- ∞ God-Mode Autonomous combo.
+- `[AUTONOMY-v4]` wrapper во всех промтах.
 
-### Accessibility
-- focus-visible ring for all buttons
-- aria-modal on all dialogs
-- aria-live on toast, aria-current on tabs
-- role="alert" on offline banner
-- prefers-contrast: more support
-- Skip navigation link
+---
 
-## v8.0 (Initial)
+## [11.5] — Apr 2026
 
-- 132 prompts, 14 configs, 35 combos
-- 3 models: Claude Opus 4.6, Gemini 3.1 Pro, Codex CLI
-- 3 languages: Russian, English, Kazakh
-- Dark/light theme with persistence
-- Search with debounce, filters, sorting
-- Error boundary, skeleton loading
-- Mobile responsive, print styles
+1024 промта, расширение по фреймворкам.
+
+## [11.0] — Apr 2026
+
+296 промтов. Введён `[AUTONOMY-v4]` wrapper.
+
+## [9.1] — Apr 2025
+
+188 промтов. Editorial UI (Fraunces + Instrument Serif + JetBrains Mono).
+
+## [8.2] — Mar 2026
+
+175 prompts, 48 combos. Strict TypeScript, 73 tests, global search, glossary,
+keyboard shortcuts (1-5 sections, T theme, V view, R random, F focus, ?, Ctrl+K, Ctrl+/),
+table view, PWA Service Worker.
+
+## [7.0] — Mar 2025
+
+132 промта.
+
+## [5.0] — Feb 2025
+
+100 промтов. Self-hosted Docker + Cloudflare Tunnel.
+
+## [3.0] — Jan 2025
+
+34 промта. Combo system.
+
+## [1.0] — Nov 2024
+
+15 промтов. Первый запуск каталога.
