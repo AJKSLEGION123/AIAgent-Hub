@@ -1,6 +1,6 @@
 # AIAgent-Hub v12
 
-**10 009 промтов · 74 комбо · 30 шпаргалок · 108 CLI-команд** для Claude Code + Opus 4.7 · 1M context.
+**10 013 промтов · 75 комбо · 30 шпаргалок · 108 CLI-команд** для Claude Code + Opus 4.7 · 1M context.
 
 Полевой справочник автономной разработки. Каждый промт готов к копированию в Claude Code, содержит фазу полной разведки проекта и **[AUTONOMY-v4]** wrapper — даёт агенту полные права + арсенал (Browser MCP, все MCP servers, skills, plugins, shell, web) + auto-commit/push/deploy после каждого улучшения + браузерную верификацию post-deploy + бесконечный цикл улучшений.
 
@@ -23,8 +23,8 @@ claude --model claude-opus-4-7[1m]
 
 | Раздел | Количество |
 |---|---|
-| Промты | **10 009** |
-| Воркфлоу-комбо | **74** |
+| Промты | **10 013** |
+| Воркфлоу-комбо | **75** |
 | Шпаргалки | **30** |
 | CLI-команды | **108** |
 | Config-шаблоны | **13** |
@@ -32,9 +32,9 @@ claude --model claude-opus-4-7[1m]
 
 ## Содержимое
 
-**Промты (10 009):** 20 языков × 35 задач, 40 фреймворков × 10 операций, 15 БД × 12 операций, AWS/GCP/Azure/Cloudflare × сервисы, паттерны проектирования, алгоритмы, тестирование, безопасность, performance, e-commerce, SaaS, analytics, CMS, auth, платежи, observability, web3, DX. Плюс **∞ Opus 4.7 Perfectionist Suite** + **∞ God-Mode Autonomous** — премиум-промты с полной автономией и всеми инструментами для любого проекта.
+**Промты (10 013):** 20 языков × 35 задач, 40 фреймворков × 10 операций, 15 БД × 12 операций, AWS/GCP/Azure/Cloudflare × сервисы, паттерны проектирования, алгоритмы, тестирование, безопасность, performance, e-commerce, SaaS, analytics, CMS, auth, платежи, observability, web3, DX. Плюс **∞ Opus 4.7 Perfectionist Suite** + **∞ God-Mode Autonomous** + **Self-Healing Project** (Telegram-бот авто-аудит, RAG-знание из проекта, watchdog качества сообщений, full click-sweep) — премиум-промты с полной автономией и всеми инструментами.
 
-**Комбо (74):** ∞ Perpetual Improvement, AI Product Launch, Next.js Production, E-commerce Launch, SaaS Bootstrap, Zero-Trust Security, Observability Stack, Mobile MVP, Data Pipeline, Performance Triage, Incident Response Playbook, Event-Driven Architecture, Multi-Tenant SaaS, Full-Stack AI Agent, CI/CD Modernization, Testing Pyramid Rollout и др.
+**Комбо (75):** ∞ Perpetual Improvement, AI Product Launch, Next.js Production, E-commerce Launch, SaaS Bootstrap, Zero-Trust Security, Observability Stack, Mobile MVP, Data Pipeline, Performance Triage, Incident Response Playbook, Event-Driven Architecture, Multi-Tenant SaaS, Full-Stack AI Agent, CI/CD Modernization, Testing Pyramid Rollout и др.
 
 **Шпаргалки (30):** Claude Code, Git, npm/pnpm, Docker, Testing, TypeScript, React, Prisma, Tailwind CSS, SQL, Python, Go, Rust, Kubernetes, Redis, Nginx, Next.js, Cargo, curl, openssl, ffmpeg, jq, awk, Homebrew, Terraform, GitHub Actions, Kafka, psql, Linux perf.
 
