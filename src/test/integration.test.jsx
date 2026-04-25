@@ -51,3 +51,8 @@ describe('Responsive', () => {
     unmount();
   });
 });
+
+// Note: search/filter integration regressions live in e2e/search-special-chars.spec.js
+// (Playwright). Tried jsdom-based integration here, but jsdom's DecompressionStream
+// shim doesn't fully match browser semantics — App stays in loading state. Real
+// browser env is required to exercise App.jsx's inline filter beyond data utils.
