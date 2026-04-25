@@ -1,10 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
 const API = 'http://localhost:3001/api';
 let token = null;
+let serverUp = false;
 
-// Note: these tests require the API server to be running
-// Skip if server not available
 async function fetchJSON(url, options = {}) {
   try {
     const res = await fetch(url, {
@@ -17,10 +16,18 @@ async function fetchJSON(url, options = {}) {
   }
 }
 
-describe('API Server', () => {
+// Probe once. If the dev API server isn't running, mark the entire suite
+// skipped via describe.skipIf — that way vitest reports "skipped" instead of
+// "passed" and we don't get the silent-pass pattern that masked the iter20
+// stale version assertion.
+beforeAll(async () => {
+  const res = await fetchJSON(`${API}/health`);
+  serverUp = !!res && res.status === 200;
+});
+
+describe.skipIf(() => !serverUp)('API Server (live)', () => {
   it('health check', async () => {
     const res = await fetchJSON(`${API}/health`);
-    if (!res) return; // Server not running
     expect(res.status).toBe(200);
     expect(res.data.status).toBe('ok');
     // version is server-defined; assert shape (X.Y) so this test stops drifting
@@ -33,14 +40,12 @@ describe('API Server', () => {
       method: 'POST',
       body: JSON.stringify({ username: user, password: 'test123456' }),
     });
-    if (!res) return;
     expect(res.status).toBe(200);
     expect(res.data.token).toBeDefined();
     token = res.data.token;
   });
 
   it('login with credentials', async () => {
-    if (!token) return;
     const user = `login-${Date.now()}`;
     await fetchJSON(`${API}/register`, {
       method: 'POST',
@@ -50,7 +55,6 @@ describe('API Server', () => {
       method: 'POST',
       body: JSON.stringify({ username: user, password: 'test123456' }),
     });
-    if (!res) return;
     expect(res.status).toBe(200);
     expect(res.data.token).toBeDefined();
   });
@@ -65,7 +69,6 @@ describe('API Server', () => {
       method: 'POST',
       body: JSON.stringify({ username: user, password: 'test123456' }),
     });
-    if (!res) return;
     expect(res.status).toBe(409);
   });
 
@@ -74,25 +77,26 @@ describe('API Server', () => {
       method: 'POST',
       body: JSON.stringify({ username: 'short', password: '12' }),
     });
-    if (!res) return;
     expect(res.status).toBe(400);
   });
 
   it('create public prompt', async () => {
-    if (!token) return;
+    if (!token) {
+      // depends on the register-new-user test running first; if that didn't
+      // happen for any reason, fail loud rather than silent-skip
+      throw new Error('precondition: token from register-new-user test required');
+    }
     const res = await fetchJSON(`${API}/prompts`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify({ role: 'test', title: 'Test', text: 'Test prompt', is_public: true }),
     });
-    if (!res) return;
     expect(res.status).toBe(201);
     expect(res.data.id).toMatch(/^u-/);
   });
 
   it('list public prompts', async () => {
     const res = await fetchJSON(`${API}/prompts`);
-    if (!res) return;
     expect(res.status).toBe(200);
     expect(res.data.total).toBeGreaterThanOrEqual(0);
   });
@@ -102,13 +106,11 @@ describe('API Server', () => {
       method: 'POST',
       body: JSON.stringify({ role: 'x', title: 'x', text: 'x' }),
     });
-    if (!res) return;
     expect(res.status).toBe(401);
   });
 
   it('stats endpoint works', async () => {
     const res = await fetchJSON(`${API}/stats`);
-    if (!res) return;
     expect(res.status).toBe(200);
     expect(res.data).toHaveProperty('prompts');
     expect(res.data).toHaveProperty('users');
