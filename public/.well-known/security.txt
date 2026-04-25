@@ -1,0 +1,5 @@
+Contact: mailto:pavelte382@gmail.com
+Expires: 2027-04-25T00:00:00.000Z
+Preferred-Languages: ru, en
+Canonical: https://ai-agent-hub.net/.well-known/security.txt
+Policy: https://github.com/AJKSLEGION123/AIAgent-Hub/blob/master/SECURITY.md
