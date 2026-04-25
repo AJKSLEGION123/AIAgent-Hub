@@ -1,10 +1,24 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { detectLanguage, nextLanguage, langLabel, formatNumber } from '../utils/i18n';
 
 describe('detectLanguage', () => {
   it('returns a valid language key', () => {
     const lang = detectLanguage();
     expect(['ru', 'en', 'kk']).toContain(lang);
+  });
+
+  it('falls back to ru when navigator.language access throws', () => {
+    const origDescriptor = Object.getOwnPropertyDescriptor(Navigator.prototype, 'language')
+      ?? Object.getOwnPropertyDescriptor(navigator, 'language');
+    Object.defineProperty(navigator, 'language', {
+      get() { throw new Error('blocked'); },
+      configurable: true,
+    });
+    try {
+      expect(detectLanguage()).toBe('ru');
+    } finally {
+      if (origDescriptor) Object.defineProperty(navigator, 'language', origDescriptor);
+    }
   });
 });
 
@@ -51,5 +65,16 @@ describe('formatNumber', () => {
   it('handles negative numbers', () => {
     const formatted = formatNumber(-42, 'en');
     expect(formatted).toContain('42');
+  });
+
+  it('falls back to plain String(n) when Intl.NumberFormat throws', () => {
+    const orig = Intl.NumberFormat;
+    // @ts-expect-error overriding for fallback-path coverage
+    Intl.NumberFormat = function () { throw new Error('intl-broken'); };
+    try {
+      expect(formatNumber(42, 'en')).toBe('42');
+    } finally {
+      Intl.NumberFormat = orig;
+    }
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { ErrorBoundary } from '../ErrorBoundary.jsx';
 
 const Throw = () => { throw new Error('boom'); };
@@ -29,5 +29,23 @@ describe('ErrorBoundary', () => {
     const details = container.querySelector('details');
     expect(details).toBeTruthy();
     expect(details.textContent).toContain('boom');
+  });
+
+  it('reset() handler reloads window on Reload click', () => {
+    const reloadMock = vi.fn();
+    const origLocation = window.location;
+    Object.defineProperty(window, 'location', {
+      value: { ...origLocation, reload: reloadMock },
+      writable: true,
+      configurable: true,
+    });
+    try {
+      render(<ErrorBoundary><Throw /></ErrorBoundary>);
+      const btn = screen.getByRole('button');
+      fireEvent.click(btn);
+      expect(reloadMock).toHaveBeenCalledTimes(1);
+    } finally {
+      Object.defineProperty(window, 'location', { value: origLocation, writable: true, configurable: true });
+    }
   });
 });
