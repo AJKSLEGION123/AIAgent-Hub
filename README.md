@@ -59,7 +59,7 @@ claude --model claude-opus-4-7[1m]
 - **Palette:** espresso `#0a0806` + cream `#ece3ce` + burnt orange `#e86a2a`
 - **Data:** zlib+base64 blob в `src/App.jsx` (`const Z`)
 - **API:** Hono + SQLite (api/server.cjs)
-- **Tests:** Vitest (220 unit) + Playwright (E2E)
+- **Tests:** Vitest (~250 unit, 9 skipped without local API) + Playwright (E2E)
 - **Deploy:** Vercel auto + self-hosted Docker через `scripts/ssh-deploy-docker.py`
 
 ## Dev
@@ -69,7 +69,7 @@ git clone https://github.com/AJKSLEGION123/AIAgent-Hub.git
 cd AIAgent-Hub
 npm install
 npm run dev          # localhost:5173
-npm test             # 220 unit tests
+npm test             # 242 passing + 9 skipped (api offline) — vitest
 npm run build        # production -> dist/
 node scripts/check-data.cjs   # data integrity check
 ```

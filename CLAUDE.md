@@ -24,7 +24,7 @@
 
 ## Project
 - **Name:** AIAgent-Hub
-- **Purpose:** 10 009 промтов + 74 комбо + 30 шпаргалок + 108 CLI команд для Claude Code с моделью Opus 4.7 (1M context)
+- **Purpose:** 3 299 портативных промтов + 76 комбо + 30 шпаргалок + 108 CLI команд для Claude Code с моделью Opus 4.7 (1M context). После массивной консолидации (с 10 014 → 3 299) каждый промт уникален, [AUTONOMY-v4], работает в любом проекте.
 - **Stack:** React 19 + Vite 8 + inline styles + Hono API + SQLite + Vitest
 - **Port:** 5173 (dev), 3000 (Docker/production)
 - **Live:** https://ai-agent-hub.net (Vercel) + pm.lanmaster.kz (self-hosted via Cloudflare Tunnel)
@@ -34,7 +34,7 @@
 ```bash
 npm run dev      # Dev server localhost:5173
 npm run build    # Production build → dist/
-npm test         # 220 unit tests (vitest)
+npm test         # 242 passing + 9 skipped (api offline) — vitest
 npm run test:e2e # E2E tests (playwright)
 
 node scripts/check-data.cjs                 # data integrity check
