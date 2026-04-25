@@ -15,5 +15,14 @@ export default defineConfig({
     globals: true,
     setupFiles: './src/test/setup.js',
     exclude: ['e2e/**', 'node_modules/**'],
+    coverage: {
+      // Ratchet thresholds for actively-tested modules. Keeps iter62 +
+      // iter97/98 coverage work from regressing. App.jsx is intentionally
+      // covered by e2e (jsdom can't run DecompressionStream).
+      thresholds: {
+        'src/utils/**': { lines: 100, statements: 100, functions: 100 },
+        'src/hooks/**': { lines: 100, statements: 100, functions: 100 },
+      },
+    },
   },
 })

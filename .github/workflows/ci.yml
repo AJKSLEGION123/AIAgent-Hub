@@ -32,6 +32,8 @@ jobs:
 
       - run: npm run build
       - run: npm test
+      - name: Coverage thresholds (utils + hooks must stay 100%)
+        run: npm run test:coverage
 
       - name: Install Playwright
         run: npx playwright install --with-deps chromium

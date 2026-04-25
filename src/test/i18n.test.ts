@@ -20,6 +20,34 @@ describe('detectLanguage', () => {
       if (origDescriptor) Object.defineProperty(navigator, 'language', origDescriptor);
     }
   });
+
+  it('detects Kazakh from navigator.language="kk-KZ"', () => {
+    const origDescriptor = Object.getOwnPropertyDescriptor(Navigator.prototype, 'language')
+      ?? Object.getOwnPropertyDescriptor(navigator, 'language');
+    Object.defineProperty(navigator, 'language', {
+      get() { return 'kk-KZ'; },
+      configurable: true,
+    });
+    try {
+      expect(detectLanguage()).toBe('kk');
+    } finally {
+      if (origDescriptor) Object.defineProperty(navigator, 'language', origDescriptor);
+    }
+  });
+
+  it('detects Russian from navigator.language="ru-RU"', () => {
+    const origDescriptor = Object.getOwnPropertyDescriptor(Navigator.prototype, 'language')
+      ?? Object.getOwnPropertyDescriptor(navigator, 'language');
+    Object.defineProperty(navigator, 'language', {
+      get() { return 'ru-RU'; },
+      configurable: true,
+    });
+    try {
+      expect(detectLanguage()).toBe('ru');
+    } finally {
+      if (origDescriptor) Object.defineProperty(navigator, 'language', origDescriptor);
+    }
+  });
 });
 
 describe('nextLanguage', () => {
@@ -56,6 +84,14 @@ describe('formatNumber', () => {
   it('formats numbers for English locale', () => {
     const formatted = formatNumber(1234567, 'en');
     expect(formatted).toContain(',');
+  });
+
+  it('formats numbers for Kazakh locale', () => {
+    const formatted = formatNumber(1234567, 'kk');
+    // Kazakh kk-KZ uses space group separator like Russian. Just assert it
+    // contains the digits and isn't equal to the English comma-formatted form.
+    expect(formatted.replace(/\s/g, '')).toBe('1234567');
+    expect(formatted).not.toContain(',');
   });
 
   it('handles zero', () => {

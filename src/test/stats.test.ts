@@ -29,6 +29,15 @@ describe('calculateStats', () => {
     expect(stats.totalHours).toBe(5);
   });
 
+  it('skips prompts with non-parseable time (no h/m unit)', () => {
+    const noTime = mp('rl-broken', 'claude', 'role', 'beginner', '???', [], 'no time');
+    const withGood = mp('rl-good', 'claude', 'role', 'beginner', '~1h', [], 'one hour');
+    const stats = calculateStats([noTime, withGood]);
+    // Only "rl-good" contributes to totalTime — "rl-broken" hits the early-return.
+    expect(stats.totalHours).toBe(0); // 1h rounded to nearest 5 = 0
+    expect(stats.total).toBe(2); // both still counted in total
+  });
+
   it('calculates token estimate', () => {
     const stats = calculateStats(prompts);
     expect(stats.totalTokens).toBeGreaterThan(0);

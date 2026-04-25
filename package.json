@@ -39,6 +39,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "test:e2e": "npx playwright test",
     "test:all": "vitest run && npx playwright test",
     "knip": "knip",
