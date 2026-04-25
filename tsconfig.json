@@ -12,6 +12,11 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
+    // TODO consider noUncheckedIndexedAccess: surfaces 17 real-but-narrow
+    // index-undefined warnings (regex .exec() group access, array .find()
+    // results in tests). Each requires a per-call ?? guard or non-null
+    // assertion — too risky for a single cron-tick fix; tracked in
+    // reports/247-progress.md iter65.
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
