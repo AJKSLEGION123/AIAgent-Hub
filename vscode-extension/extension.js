@@ -43,7 +43,7 @@ function activate(context) {
 
   // Copy specific prompt
   context.subscriptions.push(vscode.commands.registerCommand('aiagent-hub.copy', async () => {
-    const id = await vscode.window.showInputBox({ prompt: 'Enter prompt ID (e.g. c-fe)' });
+    const id = await vscode.window.showInputBox({ prompt: 'Enter prompt ID (e.g. rl-feat, lp-247-perfectionist)' });
     if (!id) return;
     const p = prompts.find(x => x.id === id);
     if (!p) { vscode.window.showErrorMessage(`Prompt ${id} not found`); return; }
