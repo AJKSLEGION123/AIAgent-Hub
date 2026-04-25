@@ -17,9 +17,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter80 fixed FAQ cluster (6 lines, 12 ternaries).
+// Baseline: count after iter81 fixed changelog (4) + glossary (7) clusters.
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 145;
+const BASELINE = 134;
 
 const files = ['src/App.jsx'];
 let total = 0;
