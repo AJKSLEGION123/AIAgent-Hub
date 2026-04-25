@@ -25,6 +25,8 @@ jobs:
         run: npm run typecheck
       - name: Data integrity
         run: node scripts/check-data.cjs
+      - name: Dead code (knip)
+        run: npm run knip
 
       - run: npm run build
       - run: npm test
