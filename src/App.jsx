@@ -1473,10 +1473,10 @@ function AgentHub({ data, loadTime }) {
                 const allText = buildPromptBundle(compareIds);
                 cp("bulk-export", allText, true);
               }} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid #e86a2a`, borderRadius:0, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
-                {copied==="bulk-export"?t.copied:(lang==="ru"?"Скопировать все":"Copy all")} ({compareIds.length})
+                {copied==="bulk-export"?t.copied:(lang==="ru"?"Скопировать все":lang==="kk"?"Барлығын көшіру":"Copy all")} ({compareIds.length})
               </button>
-              <button onClick={()=>setCompareIds(list.map(p=>p.id))} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Выбрать все":"Select all"}</button>
-              <button onClick={()=>setCompareIds([])} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Снять все":"Deselect"}</button>
+              <button onClick={()=>setCompareIds(list.map(p=>p.id))} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Выбрать все":lang==="kk"?"Барлығын таңдау":"Select all"}</button>
+              <button onClick={()=>setCompareIds([])} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Снять все":lang==="kk"?"Бәрін алып тастау":"Deselect"}</button>
               <button onClick={()=>{setCompareIds([]);setCompareMode(false)}} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"}</button>
             </div>
           </div>
@@ -1485,11 +1485,11 @@ function AgentHub({ data, loadTime }) {
         {/* Task 78: Prompt of the day */}
         {!hasFilters && !showFavsOnly && potd && (
           <div style={{ marginBottom:12, padding:"10px 14px", borderRadius:0, border:`1px solid ${potd.ac}30`, background:`linear-gradient(135deg, ${potd.ac}06, ${potd.ac}02)` }}>
-            <div style={{ fontSize:9, fontWeight:700, color:potd.ac, letterSpacing:4, textTransform:"uppercase", marginBottom:4, fontFamily:font }}>⊛ {lang==="ru"?"Промт дня":"Prompt of the day"}</div>
+            <div style={{ fontSize:9, fontWeight:700, color:potd.ac, letterSpacing:4, textTransform:"uppercase", marginBottom:4, fontFamily:font }}>⊛ {lang==="ru"?"Промт дня":lang==="kk"?"Күн промты":"Prompt of the day"}</div>
             <div style={{ display:"flex", alignItems:"center", gap:8, justifyContent:"space-between" }}>
               <div style={{ fontSize:11, fontWeight:600, color:c.text }}>{potd.icon} {t.r[potd.role]||potd.role} <span style={{ fontSize:9, color:c.mut, fontWeight:400 }}>({ML[potd.mk]})</span></div>
               <div style={{ display:"flex", gap:4 }}>
-                <button onClick={()=>{setExpanded(e=>({...e,[potd.id]:true}));setTimeout(()=>document.getElementById("card-"+potd.id)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${potd.ac}40`, borderRadius:0, background:"transparent", color:potd.ac, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Открыть":"Open"}</button>
+                <button onClick={()=>{setExpanded(e=>({...e,[potd.id]:true}));setTimeout(()=>document.getElementById("card-"+potd.id)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${potd.ac}40`, borderRadius:0, background:"transparent", color:potd.ac, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Открыть":lang==="kk"?"Ашу":"Open"}</button>
                 <button onClick={()=>cp(potd.id,potd.text)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, fontWeight:600, border:`1px solid ${potd.ac}`, borderRadius:0, background:potd.ac, color:textOn(potd.ac), cursor:"pointer", outline:"none" }}>{copied===potd.id?t.copied:t.copy}</button>
               </div>
             </div>
@@ -1499,12 +1499,12 @@ function AgentHub({ data, loadTime }) {
         {/* Task 66: Prompt Constructor */}
         {showConstructor && (
           <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:0, border:`2px solid #e86a2a40`, background:"#e86a2a06" }}>
-            <div style={{ fontSize:10, letterSpacing:4, textTransform:"uppercase", fontWeight:700, color:"#e86a2a", marginBottom:12, fontFamily:font }}>✎ {lang==="ru"?"Конструктор промта":"Prompt Constructor"}</div>
+            <div style={{ fontSize:10, letterSpacing:4, textTransform:"uppercase", fontWeight:700, color:"#e86a2a", marginBottom:12, fontFamily:font }}>✎ {lang==="ru"?"Конструктор промта":lang==="kk"?"Промт конструкторы":"Prompt Constructor"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }} className="stack-mobile">
               <div>
                 <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:6 }}>{lang==="ru"?"Роль":lang==="kk"?"Рөл":"Role"}</div>
                 <select value={constructorRole} onChange={e=>setConstructorRole(e.target.value)} style={{ width:"100%", padding:"6px 10px", fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.text, outline:"none" }}>
-                  <option value="">{lang==="ru"?"Выбери роль...":"Choose role..."}</option>
+                  <option value="">{lang==="ru"?"Выбери роль...":lang==="kk"?"Рөлді таңда...":"Choose role..."}</option>
                   {["frontend","backend","fullstack","tester","designer","devops","reviewer"].map(r => (
                     <option key={r} value={r}>{t.r[r]||r}</option>
                   ))}

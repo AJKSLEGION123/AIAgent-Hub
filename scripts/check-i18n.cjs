@@ -21,9 +21,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter89 fixed import dialog + search-loading clusters (7 sites).
+// Baseline: count after iter90 fixed bulk-export + POTD + constructor (7 sites).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 55;
+const BASELINE = 48;
 
 const files = ['src/App.jsx'];
 let binaryTotal = 0;
