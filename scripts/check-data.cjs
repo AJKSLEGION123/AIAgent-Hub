@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Data-integrity gate for the catalog. Validates the compressed Z blob
- * inside src/App.jsx:
+ * inside src/data.js (was src/App.jsx until iter122):
  *   - Prompts have all required fields
  *   - No duplicate prompt IDs
  *   - Combos have name/color/ids and references resolve
@@ -82,7 +82,7 @@ function validateData(data) {
 }
 
 /**
- * Decompress catalog data from src/App.jsx Z blob.
+ * Decompress catalog data from the Z blob (default: src/data.js, formerly inline in src/App.jsx).
  * @param {string} appJsxPath
  * @returns {object} parsed data
  */
@@ -94,7 +94,7 @@ function loadCatalogFromAppJsx(appJsxPath) {
 }
 
 function main() {
-  const data = loadCatalogFromAppJsx('src/App.jsx');
+  const data = loadCatalogFromAppJsx('src/data.js');
 
   console.log('=== DATA INTEGRITY CHECK ===');
   console.log('Prompts:', data.P.length);

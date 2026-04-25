@@ -12,9 +12,13 @@ const C = { reset:'\x1b[0m', bold:'\x1b[1m', dim:'\x1b[2m', red:'\x1b[31m', gree
 const cl = (color, text) => `${C[color]}${text}${C.reset}`;
 
 function loadData() {
+  // Z blob moved from src/App.jsx → src/data.js in iter122. Try the new
+  // location first; fall back to the old one for git-bisect compatibility.
+  const dataPath = path.join(__dirname, '..', 'src', 'data.js');
   const appPath = path.join(__dirname, '..', 'src', 'App.jsx');
-  if (!fs.existsSync(appPath)) { console.error(cl('red', 'Error: src/App.jsx not found')); process.exit(1); }
-  const src = fs.readFileSync(appPath, 'utf8');
+  const sourcePath = fs.existsSync(dataPath) ? dataPath : appPath;
+  if (!fs.existsSync(sourcePath)) { console.error(cl('red', 'Error: catalog source not found')); process.exit(1); }
+  const src = fs.readFileSync(sourcePath, 'utf8');
   const match = src.match(/const Z = "([^"]+)"/);
   if (!match) { console.error(cl('red', 'Error: Data not found')); process.exit(1); }
   return JSON.parse(inflateSync(Buffer.from(match[1], 'base64')).toString('utf8'));

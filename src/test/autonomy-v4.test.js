@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { inflateSync } from 'node:zlib';
 
-const src = readFileSync('src/App.jsx', 'utf8');
+// Z blob moved from src/App.jsx → src/data.js in iter122
+const src = readFileSync('src/data.js', 'utf8');
 const m = src.match(/const Z = "([^"]+)"/);
 const data = JSON.parse(inflateSync(Buffer.from(m[1], 'base64')).toString('utf8'));
 
