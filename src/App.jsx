@@ -856,8 +856,9 @@ function AgentHub({ data, loadTime }) {
       });
     }
     if (debouncedSearch.trim()) {
-      const q = debouncedSearch.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-      const words = q.split(/\s+/).filter(Boolean);
+      // No regex escape — query is used in String.prototype.includes(), not regex.
+      // Escaping here corrupts substring matches for ".", "()", "*", "?", etc.
+      const words = debouncedSearch.toLowerCase().split(/\s+/).filter(Boolean);
       f = f.filter(p => {
         const hay = (p.text + " " + p.role + " " + p.m + " " + (t.r[p.role]||"") + " " + p.id + " " + (p.tags||[]).join(" ")).toLowerCase();
         return words.every(w => hay.includes(w));

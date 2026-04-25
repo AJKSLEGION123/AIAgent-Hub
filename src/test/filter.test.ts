@@ -109,6 +109,18 @@ describe('filterPrompts', () => {
     // unknown value → return true → keeps all that have a parseable time
     expect(result.length).toBeGreaterThan(0);
   });
+
+  it('search with special chars matches as plain substring (no regex escape)', () => {
+    // Regression for App.jsx iter67: search code used to .replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+    // which broke substring matching since the query was used in String.includes(), not RegExp.
+    // The utility was always correct — this test guards against re-introducing the bug.
+    const dotted = mp('rl-dot', 'claude', 'role', 'command', 'beginner', '~1h', ['v1.2'], 'tagged version v1.2 release');
+    const parens = mp('rl-paren', 'claude', 'role', 'command', 'beginner', '~1h', ['react'], 'use useState() in component');
+    const corpus = [...prompts, dotted, parens];
+
+    expect(filterPrompts(corpus, { ...defaultOpts, search: 'v1.2' }).map(p => p.id)).toContain('rl-dot');
+    expect(filterPrompts(corpus, { ...defaultOpts, search: 'useState()' }).map(p => p.id)).toContain('rl-paren');
+  });
 });
 
 describe('sortPrompts', () => {
