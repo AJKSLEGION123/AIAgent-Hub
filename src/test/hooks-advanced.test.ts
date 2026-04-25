@@ -125,4 +125,20 @@ describe('useScrollProgress', () => {
     expect(removeSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
     removeSpy.mockRestore();
   });
+
+  it('uses rAF ticking guard — coalesces multiple scroll events into one rAF', () => {
+    // Two synchronous scroll events while ticking=true should NOT queue 2 rAFs.
+    const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 0);
+    renderHook(() => useScrollProgress());
+
+    window.dispatchEvent(new Event('scroll'));
+    window.dispatchEvent(new Event('scroll'));
+    window.dispatchEvent(new Event('scroll'));
+
+    // The hook's ticking guard means only the FIRST scroll-event-handler call
+    // requests an rAF; subsequent calls early-return because ticking=true.
+    expect(rafSpy).toHaveBeenCalledTimes(1);
+
+    rafSpy.mockRestore();
+  });
 });
