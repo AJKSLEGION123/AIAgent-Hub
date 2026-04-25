@@ -52,6 +52,17 @@ test.describe('Features', () => {
     await expect(page.locator('[role="dialog"]')).toBeVisible({ timeout: 3000 });
   });
 
+  // Iter1 stale-closure regression: keydown effect's deps array was
+  // [section, toggle], freezing all 8 modal-state vars. ESC silently
+  // failed to close ANY modal. iter16 added regression for shortcuts.
+  // Now extending to two more modals to cement the fix.
+  test('Escape closes the stats dialog (iter1 stale-closure regression)', async ({ page }) => {
+    await page.locator('button[aria-label="Statistics"]').click();
+    await expect(page.locator('[role="dialog"]')).toBeVisible({ timeout: 3000 });
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[role="dialog"]')).not.toBeVisible({ timeout: 3000 });
+  });
+
   test('language switch cycles', async ({ page }) => {
     // Find the language toggle button (contains EN, KK, or RU text, width ~36-48px)
     const langBtn = page.locator('button').filter({ hasText: /^(EN|KK|RU)$/ }).first();

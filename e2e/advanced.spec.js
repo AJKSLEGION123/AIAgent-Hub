@@ -8,10 +8,21 @@ test.describe('Advanced Features', () => {
 
   test('glossary opens', async ({ page }) => {
     const glossaryBtn = page.locator('button[aria-label="Glossary"]');
-    if (await glossaryBtn.count() > 0) {
-      await glossaryBtn.click();
-      await expect(page.locator('[role="dialog"][aria-label="Glossary"]')).toBeVisible({ timeout: 3000 });
-    }
+    // Glossary toggle is always in the toolbar — fail loud if missing
+    // (iter24 lesson: silent-skip pattern hides locator typos).
+    await expect(glossaryBtn).toBeVisible({ timeout: 5000 });
+    await glossaryBtn.click();
+    await expect(page.locator('[role="dialog"][aria-label="Glossary"]')).toBeVisible({ timeout: 3000 });
+  });
+
+  // Iter1 stale-closure regression for the third modal — Glossary's ESC
+  // path was the most visible victim because the dialog occupies most of
+  // the viewport and "press Escape" is the natural way out.
+  test('Escape closes the glossary dialog (iter1 stale-closure regression)', async ({ page }) => {
+    await page.locator('button[aria-label="Glossary"]').click();
+    await expect(page.locator('[role="dialog"][aria-label="Glossary"]')).toBeVisible({ timeout: 3000 });
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[role="dialog"][aria-label="Glossary"]')).not.toBeVisible({ timeout: 3000 });
   });
 
   test('prompt of the day is visible', async ({ page }) => {
