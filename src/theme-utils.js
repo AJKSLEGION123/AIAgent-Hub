@@ -29,3 +29,18 @@ export const textOn = (hex) => {
   const L = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
   return L > 0.18 ? '#0a0806' : '#ffffff';
 };
+
+/** Difficulty-level palette. Frozen to prevent accidental mutation. */
+export const DIFFICULTY_COLORS = Object.freeze({
+  beginner: '#10b981',     // green-500
+  intermediate: '#f59e0b', // amber-500
+  advanced: '#ef4444',     // red-500
+});
+
+/**
+ * Pick the difficulty-dot color, or the caller-provided fallback for
+ * unknown / missing difficulty values. iter132 hoisted this out of an
+ * inline lambda inside AgentHub()'s combo-card map iteration to avoid
+ * per-render allocation.
+ */
+export const diffDot = (diff, fallback) => DIFFICULTY_COLORS[diff] ?? fallback;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { font, fontDisplay, alpha, textOn } from '../theme-utils.js';
+import { font, fontDisplay, alpha, textOn, diffDot, DIFFICULTY_COLORS } from '../theme-utils.js';
 
 describe('font / fontDisplay constants', () => {
   it('font is a CSS font-family stack with mono fallbacks', () => {
@@ -65,5 +65,39 @@ describe('textOn() — relative-luminance contrast picker', () => {
     expect(textOn('#dc2626')).toBe('#ffffff'); // red-600
     expect(textOn('#c026d3')).toBe('#ffffff'); // fuchsia-600
     expect(textOn('#475569')).toBe('#ffffff'); // slate-500/600
+  });
+});
+
+describe('diffDot() — difficulty-level color picker', () => {
+  it('maps beginner to green', () => {
+    expect(diffDot('beginner', '#888')).toBe('#10b981');
+  });
+
+  it('maps intermediate to amber', () => {
+    expect(diffDot('intermediate', '#888')).toBe('#f59e0b');
+  });
+
+  it('maps advanced to red', () => {
+    expect(diffDot('advanced', '#888')).toBe('#ef4444');
+  });
+
+  it('returns the caller fallback for unknown difficulty', () => {
+    expect(diffDot('expert', '#888')).toBe('#888');
+    expect(diffDot('—', '#999')).toBe('#999');
+  });
+
+  it('returns the caller fallback for null/undefined input', () => {
+    expect(diffDot(undefined, '#888')).toBe('#888');
+    expect(diffDot(null, '#888')).toBe('#888');
+    expect(diffDot('', '#888')).toBe('#888');
+  });
+
+  it('exposes the palette as a frozen constant', () => {
+    expect(Object.isFrozen(DIFFICULTY_COLORS)).toBe(true);
+    expect(DIFFICULTY_COLORS).toEqual({
+      beginner: '#10b981',
+      intermediate: '#f59e0b',
+      advanced: '#ef4444',
+    });
   });
 });

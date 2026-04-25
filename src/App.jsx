@@ -6,7 +6,7 @@ import {
   IconExpand, IconCollapse, IconFocus, IconPin, IconPinOutline, IconLink,
   IconList, IconCards,
 } from "./icons.jsx";
-import { font, fontDisplay, alpha, textOn } from "./theme-utils.js";
+import { font, fontDisplay, alpha, textOn, diffDot } from "./theme-utils.js";
 import { Pill, CBtn, Toast, EmptyState, HL } from "./components.jsx";
 import { ErrorBoundary } from "./ErrorBoundary.jsx";
 import { TH, MC, ML, MI, pl } from "./constants.js";
@@ -1610,7 +1610,6 @@ function AgentHub({ data, loadTime }) {
             const roles = agents.map(a=>a.role);
             const hasConflict = roles.length !== new Set(roles).size;
             const diffCount = agents.reduce((acc,a)=>{ acc[a.difficulty||"—"]=(acc[a.difficulty||"—"]||0)+1; return acc; },{});
-            const diffDot = (diff) => ({beginner:"#10b981",intermediate:"#f59e0b",advanced:"#ef4444"}[diff]||c.dim);
             return (
             <div key={i} className="card-enter combo-card" style={{
               display:"flex", flexDirection:"column",
@@ -1636,7 +1635,7 @@ function AgentHub({ data, loadTime }) {
               <div style={{ display:"flex", gap:8, marginBottom:10, fontSize:9, fontFamily:font, color:c.dim }}>
                 {Object.entries(diffCount).map(([diff,n]) => (
                   <span key={diff} style={{ display:"inline-flex", alignItems:"center", gap:4 }}>
-                    <span style={{ width:6, height:6, background:diffDot(diff), display:"inline-block" }} />
+                    <span style={{ width:6, height:6, background:diffDot(diff, c.dim), display:"inline-block" }} />
                     {n}
                   </span>
                 ))}
