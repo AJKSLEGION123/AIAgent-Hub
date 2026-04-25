@@ -9,7 +9,10 @@ const path = require('path');
   const { chromium } = require('playwright');
   const svg = fs.readFileSync(path.resolve('public/favicon.svg'), 'utf8');
 
-  const sizes = [192, 512];
+  // 180 — Apple touch icon (iOS Add-to-Home-Screen, ipad)
+  // 192 — Android launcher (PWA install)
+  // 512 — splash screen + adaptive launcher fallback
+  const sizes = [180, 192, 512];
   const browser = await chromium.launch();
 
   for (const size of sizes) {
