@@ -42,7 +42,8 @@
     "test:e2e": "npx playwright test",
     "test:all": "vitest run && npx playwright test",
     "knip": "knip",
-    "check": "npm run lint && npm run typecheck && npm run knip && node scripts/check-data.cjs && npm test && npm run build",
+    "check-i18n": "node scripts/check-i18n.cjs",
+    "check": "npm run lint && npm run typecheck && npm run knip && node scripts/check-data.cjs && npm run check-i18n && npm test && npm run build",
     "api": "node api/server.cjs",
     "dev:all": "concurrently \"npm run dev\" \"npm run api\""
   },

@@ -27,6 +27,8 @@ jobs:
         run: node scripts/check-data.cjs
       - name: Dead code (knip)
         run: npm run knip
+      - name: i18n binary-ternary baseline
+        run: npm run check-i18n
 
       - run: npm run build
       - run: npm test

@@ -1317,7 +1317,7 @@ function AgentHub({ data, loadTime }) {
 
           {/* Filters */}
           <div style={{ display:"flex", gap:6, marginBottom:8, flexWrap:"wrap" }}>
-            {[{k:"all",l:t.all},{k:"category",l:lang==="ru"?"Категории":"Categories"},{k:"model",l:t.byModel},{k:"role",l:t.byRole},{k:"type",l:t.byType},{k:"difficulty",l:lang==="ru"?"Сложность":"Difficulty"},{k:"time",l:lang==="ru"?"Время":"Time"},{k:"tag",l:lang==="ru"?"Теги":"Tags"}].map(f =>
+            {[{k:"all",l:t.all},{k:"category",l:lang==="ru"?"Категории":"Categories"},{k:"model",l:t.byModel},{k:"role",l:t.byRole},{k:"type",l:t.byType},{k:"difficulty",l:lang==="ru"?"Сложность":lang==="kk"?"Күрделілік":"Difficulty"},{k:"time",l:lang==="ru"?"Время":"Time"},{k:"tag",l:lang==="ru"?"Теги":"Tags"}].map(f =>
               <Pill key={f.k} on={fm===f.k} fn={()=>{setFm(f.k);setFv("all");}} lb={f.l} c={c} />
             )}
             {hasFilters && <button onClick={clearFilters} style={{ padding:"6px 2px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:600, border:0, borderBottom:`1.5px solid #ef4444`, background:"transparent", color:"#ef4444", cursor:"pointer", outline:"none", marginRight:12 }}>✕ {lang==="ru"?"Сброс":"Reset"}</button>}
@@ -1858,15 +1858,15 @@ function AgentHub({ data, loadTime }) {
         {/* Task 122: Difficulty distribution — segmented bar */}
         {(() => {
           const diffs = [
-            {k:"beginner",l:lang==="ru"?"Начальный":"Beginner",cl:"#10b981"},
-            {k:"intermediate",l:lang==="ru"?"Средний":"Intermediate",cl:"#f59e0b"},
-            {k:"advanced",l:lang==="ru"?"Продвинутый":"Advanced",cl:"#ef4444"},
+            {k:"beginner",l:lang==="ru"?"Начальный":lang==="kk"?"Бастапқы":"Beginner",cl:"#10b981"},
+            {k:"intermediate",l:lang==="ru"?"Средний":lang==="kk"?"Орташа":"Intermediate",cl:"#f59e0b"},
+            {k:"advanced",l:lang==="ru"?"Продвинутый":lang==="kk"?"Жетілдірілген":"Advanced",cl:"#ef4444"},
           ];
           const counts = diffs.map(d => ({ ...d, n: P.filter(p=>p.difficulty===d.k).length }));
           const total = counts.reduce((s,d)=>s+d.n, 0) || 1;
           return (
             <div style={{ display:"flex", gap:12, marginBottom:20, alignItems:"center", flexWrap:"wrap" }}>
-              <span className="label-tech-sm" style={{ color:c.mut }}>{lang==="ru"?"Сложность":"Difficulty"}</span>
+              <span className="label-tech-sm" style={{ color:c.mut }}>{lang==="ru"?"Сложность":lang==="kk"?"Күрделілік":"Difficulty"}</span>
               <div style={{ display:"flex", flex:1, minWidth:200, height:4, background:c.brd, overflow:"hidden" }}>
                 {counts.map(d => (
                   <div key={d.k} title={`${d.l}: ${d.n} (${Math.round(d.n/total*100)}%)`} style={{ width:`${d.n/total*100}%`, height:"100%", background:d.cl, transition:"width .2s ease" }} />
@@ -2199,7 +2199,7 @@ function AgentHub({ data, loadTime }) {
                 </div>
               ))}
               <div style={{ fontSize:10 }}>
-                <span style={{ color:c.mut, fontWeight:600 }}>{lang==="ru"?"Сложность":"Difficulty"}</span>
+                <span style={{ color:c.mut, fontWeight:600 }}>{lang==="ru"?"Сложность":lang==="kk"?"Күрделілік":"Difficulty"}</span>
                 <span style={{ color:"#10b981", marginLeft:6 }}>●{stats.byDifficulty?.beginner||0}</span>
                 <span style={{ color:"#f59e0b", marginLeft:4 }}>●{stats.byDifficulty?.intermediate||0}</span>
                 <span style={{ color:"#ef4444", marginLeft:4 }}>●{stats.byDifficulty?.advanced||0}</span>
