@@ -38,6 +38,12 @@ describe('buildBundle', () => {
     expect(bundle).toContain('FEATURE');
     expect(bundle).not.toContain('═══ API');
   });
+
+  it('falls back to p.role when roleNames lookup misses', () => {
+    const bundle = buildBundle(prompts, {}); // empty roleNames
+    expect(bundle).toContain('═══ FEATURE'); // uppercase("feature") = "FEATURE"
+    expect(bundle).toContain('═══ API'); // uppercase("api") = "API"
+  });
 });
 
 describe('buildLaunchScript', () => {
@@ -57,6 +63,19 @@ describe('buildLaunchScript', () => {
     const extraPrompt = makePrompt('sm-simplify', 'claude', 'simplify', '~1h', 'text');
     const script = buildLaunchScript([extraPrompt], { simplify: 'Simplify' });
     expect(script).toContain('claude --dangerously-skip-permissions');
+  });
+
+  it('falls back to p.mk when launcher is unknown', () => {
+    const exotic = makePrompt('rl-x', 'unknown-model', 'r', '~1h', 'text');
+    const script = buildLaunchScript([exotic], { r: 'Role' });
+    // unknown mk falls through to using mk itself as the "launcher" string
+    expect(script).toContain('# unknown-model');
+  });
+
+  it('falls back to p.role in script when roleNames lookup misses', () => {
+    const script = buildLaunchScript(prompts, {});
+    expect(script).toContain('# feature'); // raw role string
+    expect(script).toContain('# api');
   });
 });
 
