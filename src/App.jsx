@@ -977,7 +977,7 @@ function AgentHub({ data, loadTime }) {
         const dp = pGet(showDiff);
         if (!dp || !dp.compact) return null;
         return <div onClick={()=>setShowDiff(null)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.8)", zIndex:9992, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-          <div role="dialog" aria-modal="true" aria-label="Diff" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:900, width:"100%", maxHeight:"90vh", overflowY:"auto", fontFamily:font }}>
+          <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Сравнение":lang==="kk"?"Салыстыру":"Diff"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:900, width:"100%", maxHeight:"90vh", overflowY:"auto", fontFamily:font }}>
             <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{dp.icon} {t.r[dp.role]||dp.role} — {lang==="ru"?"Сравнение":lang==="kk"?"Салыстыру":"Diff"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
               <div>
@@ -996,7 +996,7 @@ function AgentHub({ data, loadTime }) {
 
       {/* Cycle 9: Glossary overlay */}
       {showGlossary && <div onClick={()=>setShowGlossary(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-        <div role="dialog" aria-modal="true" aria-label="Glossary" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:480, width:"100%", maxHeight:"80vh", overflowY:"auto", fontFamily:font }}>
+        <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Глоссарий":lang==="kk"?"Глоссарий":"Glossary"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:480, width:"100%", maxHeight:"80vh", overflowY:"auto", fontFamily:font }}>
           <div style={{ marginBottom:18, paddingBottom:12, borderBottom:`1px solid ${c.brd}` }}>
             <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>§ Reference</div>
             <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Глоссарий":lang==="kk"?"Глоссарий":"Glossary"}</div>
@@ -1043,7 +1043,7 @@ function AgentHub({ data, loadTime }) {
 
       {/* Feat 18: Focus mode */}
       {focusPrompt && <div onClick={()=>setFocusPrompt(null)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.85)", zIndex:9991, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-        <div role="dialog" aria-modal="true" aria-label="Focus mode" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${focusPrompt.ac}40`, borderRadius:0, padding:"24px 28px", maxWidth:720, width:"100%", maxHeight:"90vh", overflowY:"auto", fontFamily:font }}>
+        <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Режим фокуса":lang==="kk"?"Фокус режимі":"Focus mode"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${focusPrompt.ac}40`, borderRadius:0, padding:"24px 28px", maxWidth:720, width:"100%", maxHeight:"90vh", overflowY:"auto", fontFamily:font }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:16 }}>
             <div style={{ display:"flex", alignItems:"center", gap:10 }}>
               <span style={{ fontSize:24 }}>{focusPrompt.icon}</span>
@@ -1170,24 +1170,24 @@ function AgentHub({ data, loadTime }) {
 
           {/* Control row */}
           <div style={{ display:"flex", justifyContent:"flex-end", gap:6, marginTop:14, flexWrap:"wrap" }}>
-            <button onClick={()=>setShowStats(true)} aria-label="Statistics" title={lang==="ru"?"Статистика":lang==="kk"?"Статистика":"Statistics"} className="nav-btn" data-active={showStats} style={{ borderColor: showStats?c.accent:c.brd, color: showStats?c.accent:c.text }}>
+            <button onClick={()=>setShowStats(true)} aria-label={lang==="ru"?"Статистика":lang==="kk"?"Статистика":"Statistics"} title={lang==="ru"?"Статистика":lang==="kk"?"Статистика":"Statistics"} className="nav-btn" data-active={showStats} style={{ borderColor: showStats?c.accent:c.brd, color: showStats?c.accent:c.text }}>
               <IconStats />
             </button>
-            <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":lang==="kk"?"Көшіру тарихы":"Copy history"} className="nav-btn" data-active={showCopyHistory} style={{ borderColor: showCopyHistory?c.accent:c.brd, color: showCopyHistory?c.accent:c.text }}>
+            <button onClick={()=>setShowCopyHistory(true)} aria-label={lang==="ru"?"История копирования":lang==="kk"?"Көшіру тарихы":"Copy history"} title={lang==="ru"?"История копирования":lang==="kk"?"Көшіру тарихы":"Copy history"} className="nav-btn" data-active={showCopyHistory} style={{ borderColor: showCopyHistory?c.accent:c.brd, color: showCopyHistory?c.accent:c.text }}>
               <IconLog />
               {copyCount>0 && <span className="dot" style={{ background:c.accent, color:c.onAccent }}>{copyCount}</span>}
             </button>
-            <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":lang==="kk"?"Глоссарий":"Glossary"} className="nav-btn" data-active={showGlossary} style={{ borderColor: showGlossary?c.accent:c.brd, color: showGlossary?c.accent:c.text }}>
+            <button onClick={()=>setShowGlossary(true)} aria-label={lang==="ru"?"Глоссарий":lang==="kk"?"Глоссарий":"Glossary"} title={lang==="ru"?"Глоссарий":lang==="kk"?"Глоссарий":"Glossary"} className="nav-btn" data-active={showGlossary} style={{ borderColor: showGlossary?c.accent:c.brd, color: showGlossary?c.accent:c.text }}>
               <IconBook />
             </button>
-            <button onClick={()=>setShowShortcuts(true)} aria-label="Keyboard shortcuts" title={lang==="ru"?"Горячие клавиши (?)":lang==="kk"?"Хоткейлер (?)":"Keyboard shortcuts (?)"} className="nav-btn" data-active={showShortcuts} style={{ borderColor: showShortcuts?c.accent:c.brd, color: showShortcuts?c.accent:c.text }}>
+            <button onClick={()=>setShowShortcuts(true)} aria-label={lang==="ru"?"Горячие клавиши":lang==="kk"?"Хоткейлер":"Keyboard shortcuts"} title={lang==="ru"?"Горячие клавиши (?)":lang==="kk"?"Хоткейлер (?)":"Keyboard shortcuts (?)"} className="nav-btn" data-active={showShortcuts} style={{ borderColor: showShortcuts?c.accent:c.brd, color: showShortcuts?c.accent:c.text }}>
               <IconKeyboard />
               <span className="kbd-hint" style={{ color: showShortcuts?c.accent:c.dim }}>?</span>
             </button>
             <button onClick={()=>setTheme(theme==="dark"?"light":"dark")} aria-label={theme==="dark"?(lang==="ru"?"Светлая тема":lang==="kk"?"Жарық тақырып":"Light theme"):(lang==="ru"?"Тёмная тема":lang==="kk"?"Қараңғы тақырып":"Dark theme")} title={theme==="dark"?(lang==="ru"?"Светлая тема (T)":lang==="kk"?"Жарық тақырып (T)":"Light theme (T)"):(lang==="ru"?"Тёмная тема (T)":lang==="kk"?"Қараңғы тақырып (T)":"Dark theme (T)")} className="nav-btn" data-active={theme==="light"} style={{ borderColor: theme==="light"?c.accent:c.brd, color: theme==="light"?c.accent:c.text }}>
               {theme==="dark" ? <IconMoon /> : <IconSun />}
             </button>
-            <button onClick={nextLang} aria-label="Switch language" title={lang==="ru"?"Сменить язык":lang==="kk"?"Тілді ауыстыру":"Switch language"} className="nav-btn" style={{ borderColor:c.accent, color:c.accent, width:"auto", padding:"0 10px", gap:6, display:"inline-flex", alignItems:"center", justifyContent:"center", fontFamily:font, fontSize:10, letterSpacing:2, textTransform:"uppercase", fontWeight:700 }}>
+            <button onClick={nextLang} aria-label={lang==="ru"?"Сменить язык":lang==="kk"?"Тілді ауыстыру":"Switch language"} title={lang==="ru"?"Сменить язык":lang==="kk"?"Тілді ауыстыру":"Switch language"} className="nav-btn" style={{ borderColor:c.accent, color:c.accent, width:"auto", padding:"0 10px", gap:6, display:"inline-flex", alignItems:"center", justifyContent:"center", fontFamily:font, fontSize:10, letterSpacing:2, textTransform:"uppercase", fontWeight:700 }}>
               <IconLang />
               <span>{langLabel}</span>
             </button>
@@ -1231,7 +1231,7 @@ function AgentHub({ data, loadTime }) {
         </div>
 
         {/* ══════════════ EDITORIAL TAB BAR ══════════════ */}
-        <nav role="tablist" aria-label="Sections" style={{ display:"flex", gap:28, marginBottom:28, overflowX:"auto", borderBottom:`1px solid ${c.brd}`, paddingBottom:0 }}>
+        <nav role="tablist" aria-label={lang==="ru"?"Разделы":lang==="kk"?"Бөлімдер":"Sections"} style={{ display:"flex", gap:28, marginBottom:28, overflowX:"auto", borderBottom:`1px solid ${c.brd}`, paddingBottom:0 }}>
           {[
             { k:"prompts", l:lang==="ru"?"Промты":lang==="kk"?"Промттер":"Prompts", n:P.length },
             { k:"combos", l:lang==="ru"?"Комбо":lang==="kk"?"Комбо":"Combos", n:(COMBOS[lang]||COMBOS.ru).length },
@@ -1574,7 +1574,7 @@ function AgentHub({ data, loadTime }) {
             <button onClick={()=>setShowImport(true)} aria-label={lang==="ru"?"Импорт промта":"Import prompt"} title={lang==="ru"?"Импорт промта":"Import prompt"} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:6, padding:"4px 12px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:700, fontFamily:font, border:`1px dashed ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}><IconUpload />{lang==="ru"?"Импорт":lang==="kk"?"Импорт":"Import"}</button>
             <div style={{ width:1, height:16, background:c.brd, margin:"0 2px" }} className="hide-mobile" />
             {/* Task 93+94: Prompt language */}
-            <select value={promptLang} onChange={e=>setPromptLang(e.target.value)} aria-label="Prompt language" style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${promptLang!=="original"?"#f97316":c.brd}`, borderRadius:0, background:promptLang!=="original"?"#f9731608":c.card, color:promptLang!=="original"?"#f97316":c.mut, cursor:"pointer", outline:"none" }}>
+            <select value={promptLang} onChange={e=>setPromptLang(e.target.value)} aria-label={lang==="ru"?"Язык промта":lang==="kk"?"Промт тілі":"Prompt language"} style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${promptLang!=="original"?"#f97316":c.brd}`, borderRadius:0, background:promptLang!=="original"?"#f9731608":c.card, color:promptLang!=="original"?"#f97316":c.mut, cursor:"pointer", outline:"none" }}>
               <option value="original">🌐 Original</option>
               <option value="en">🇬🇧 English output</option>
             </select>
@@ -1583,7 +1583,7 @@ function AgentHub({ data, loadTime }) {
               {compactMode ? "⇣ Compact" : "≡ Full"}
             </button>
             {/* Task 58: Stack override */}
-            <select value={stackOverride} onChange={e=>setStackOverride(e.target.value)} aria-label="Stack override" style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${stackOverride?"#c4541d":c.brd}`, borderRadius:0, background:stackOverride?"#c4541d08":c.card, color:stackOverride?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}>
+            <select value={stackOverride} onChange={e=>setStackOverride(e.target.value)} aria-label={lang==="ru"?"Замена стека":lang==="kk"?"Стек ауыстыру":"Stack override"} style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${stackOverride?"#c4541d":c.brd}`, borderRadius:0, background:stackOverride?"#c4541d08":c.card, color:stackOverride?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}>
               <option value="">◎ {lang==="ru"?"Стек":lang==="kk"?"Стек":"Stack"}: Auto</option>
               <option value="React + Next.js + TypeScript">React + Next.js</option>
               <option value="Vue + Nuxt + TypeScript">Vue + Nuxt</option>
@@ -1660,12 +1660,12 @@ function AgentHub({ data, loadTime }) {
                 <div style={{ display:"flex", gap:6, flexShrink:0, alignItems:"center" }}>
                   {/* Task 75: Used indicator */}
                   {/* Feat 18: Focus mode button */}
-                  <button onClick={(e)=>{e.stopPropagation();setFocusPrompt(p)}} aria-label="Focus" title="Focus mode (F)" className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}><IconFocus /></button>
+                  <button onClick={(e)=>{e.stopPropagation();setFocusPrompt(p)}} aria-label={lang==="ru"?"Фокус":lang==="kk"?"Фокус":"Focus"} title="Focus mode (F)" className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}><IconFocus /></button>
                   {copyCounters[p.id] > 0 && <span style={{ fontSize:8, color:c.dim, fontWeight:600 }} title={lang==="ru"?`Скопировано ${copyCounters[p.id]}x`:lang==="kk"?`Көшірілді ${copyCounters[p.id]}x`:`Copied ${copyCounters[p.id]}x`}>×{copyCounters[p.id]}</span>}
                   {isUsed && <span style={{ fontSize:10, color:"#10b981" }} title={lang==="ru"?"Использован":lang==="kk"?"Қолданылған":"Used"}>✓</span>}
                   {/* Task 69: Compare checkbox */}
                   {compareMode && <button onClick={(e)=>{e.stopPropagation();setCompareIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} style={{ width:24, height:24, borderRadius:0, border:`1px solid ${compareIds.includes(p.id)?"#c4541d":c.brd}`, background:compareIds.includes(p.id)?"#c4541d":"transparent", color:compareIds.includes(p.id)?"#fff":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center" }}>{compareIds.includes(p.id)?"✓":""}</button>}
-                  <button onClick={(e)=>{e.stopPropagation();setPinnedIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} aria-label="Pin" title={lang==="ru"?"Закрепить наверху":lang==="kk"?"Жоғарыға бекіту":"Pin to top"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${pinnedIds.includes(p.id)?"#e86a2a40":c.brd}`, background:pinnedIds.includes(p.id)?"#e86a2a12":"transparent", color:pinnedIds.includes(p.id)?"#e86a2a":c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{pinnedIds.includes(p.id)?<IconPin/>:<IconPinOutline/>}</button>
+                  <button onClick={(e)=>{e.stopPropagation();setPinnedIds(ids=>ids.includes(p.id)?ids.filter(x=>x!==p.id):[...ids,p.id])}} aria-label={lang==="ru"?"Закрепить":lang==="kk"?"Бекіту":"Pin"} title={lang==="ru"?"Закрепить наверху":lang==="kk"?"Жоғарыға бекіту":"Pin to top"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${pinnedIds.includes(p.id)?"#e86a2a40":c.brd}`, background:pinnedIds.includes(p.id)?"#e86a2a12":"transparent", color:pinnedIds.includes(p.id)?"#e86a2a":c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{pinnedIds.includes(p.id)?<IconPin/>:<IconPinOutline/>}</button>
                   <button onClick={(e)=>{e.stopPropagation();toggleFav(p.id)}} aria-label={favs[p.id]?(lang==="ru"?"Убрать":lang==="kk"?"Алып тастау":"Remove"):(lang==="ru"?"Избранное":lang==="kk"?"Таңдаулы":"Favorite")} aria-pressed={!!favs[p.id]} style={{ width:28, height:28, borderRadius:0, border:`1px solid ${favs[p.id]?"#eab30840":c.brd}`, background:favs[p.id]?"#eab30812":"transparent", color:favs[p.id]?"#eab308":c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{favs[p.id]?<IconStar/>:<IconStarOutline/>}</button>
                   <button onClick={(e)=>{e.stopPropagation();toggle(p.id)}} aria-expanded={isO} className="hide-mobile" style={{ padding:"4px 12px", fontSize:9, letterSpacing:2, textTransform:"uppercase", fontWeight:600, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>{isO ? t.hide : t.show}</button>
                   <CBtn id={p.id} txt={compactMode && p.compact ? p.compact : p.text} cl={p.ac} sm copied={copied} cp={cp} t={t} bg={c.onAccent} />
@@ -2443,7 +2443,7 @@ function AgentHub({ data, loadTime }) {
             ))}
           </div>
           <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AIAgent-Hub v12 · {P.length} {lang==="ru"?pl(P.length,"промт","промта","промтов"):lang==="kk"?"промт":t.prompts} · {(COMBOS[lang]||COMBOS.ru).length} {lang==="ru"?pl((COMBOS[lang]||COMBOS.ru).length,"комбо","комбо","комбо"):lang==="kk"?"комбо":"combos"} · {stats.roles} {lang==="ru"?pl(stats.roles,"роль","роли","ролей"):lang==="kk"?"рөлдер":"roles"}{loadTime ? ` · ${loadTime}ms` : ""}{copyCount > 0 ? ` · ${copyCount} ${lang==="ru"?"скопировано":lang==="kk"?"көшірілді":"copied"}` : ""}</div>
-          {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":lang==="kk"?"Жоғары":"Top"}</button>}
+          {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label={lang==="ru"?"Наверх":lang==="kk"?"Жоғары":"Scroll to top"} style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":lang==="kk"?"Жоғары":"Top"}</button>}
         </div>
       </main>
 
