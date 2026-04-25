@@ -557,7 +557,7 @@ function AgentHub({ data, loadTime }) {
     const hasOverlay = showShortcuts || focusPrompt || showStats || showCopyHistory || showDiff || showGlossary;
     document.body.style.overflow = hasOverlay ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [showShortcuts, focusPrompt, showStats, showCopyHistory, showDiff]);
+  }, [showShortcuts, focusPrompt, showStats, showCopyHistory, showDiff, showGlossary]);
 
   // Feat 16: First visit welcome
   useEffect(() => {
@@ -598,6 +598,8 @@ function AgentHub({ data, loadTime }) {
     } else {
       try { history.replaceState(null, "", "#" + section); } catch {}
     }
+    // mount-only initial scroll — `section` read here is the captured initial value, not subsequent changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   useEffect(() => {
@@ -713,7 +715,7 @@ function AgentHub({ data, loadTime }) {
     };
     window.addEventListener("keydown", fn);
     return () => window.removeEventListener("keydown", fn);
-  }, [section, toggle]);
+  }, [section, toggle, P, focusPrompt, isFirstVisit, showCopyHistory, showDiff, showGlossary, showShortcuts, showStats]);
 
   const t = T[lang] || T.en; const c = TH[theme];
   // Task 92: kk falls back to en for role names
@@ -747,7 +749,7 @@ function AgentHub({ data, loadTime }) {
     setToastKey(k => k + 1);
     setTimeout(() => setCopied(null), 1600);
     setTimeout(() => setToast(null), 1700);
-  }, [t, copied, P, modifyPrompt]);
+  }, [t, copied, pGet, modifyPrompt]);
 
   // Task 49: Save search to history
   useEffect(() => {
