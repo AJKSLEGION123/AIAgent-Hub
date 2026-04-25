@@ -17,9 +17,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter81 fixed changelog (4) + glossary (7) clusters.
+// Baseline: count after iter82 fixed shortcuts (11) + Close buttons (8 via replace_all).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 134;
+const BASELINE = 115;
 
 const files = ['src/App.jsx'];
 let total = 0;

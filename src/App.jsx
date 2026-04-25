@@ -987,7 +987,7 @@ function AgentHub({ data, loadTime }) {
                 <pre style={{ fontSize:9, lineHeight:1.6, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", padding:12, background:c.surf, borderRadius:0, border:`1px solid #10b98120`, maxHeight:400, overflowY:"auto" }}>{dp.compact}</pre>
               </div>
             </div>
-            <button onClick={()=>setShowDiff(null)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:0, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+            <button onClick={()=>setShowDiff(null)} style={{ marginTop:16, width:"100%", padding:"8px", fontSize:11, fontFamily:font, fontWeight:600, border:`1px solid ${c.brd}`, borderRadius:0, background:c.surf, color:c.text, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"}</button>
           </div>
         </div>;
       })()}
@@ -1011,7 +1011,7 @@ function AgentHub({ data, loadTime }) {
             <div className="label-tech-sm" style={{ color:c.accent, marginBottom:4 }}>{term}</div>
             <div className="body-serif" style={{ fontSize:15, color:c.text, lineHeight:1.4 }}>{desc}</div>
           </div>)}
-          <button onClick={()=>setShowGlossary(false)} style={{ marginTop:18, width:"100%", padding:"10px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.accent}`, borderRadius:0, background:"transparent", color:c.accent, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+          <button onClick={()=>setShowGlossary(false)} style={{ marginTop:18, width:"100%", padding:"10px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.accent}`, borderRadius:0, background:"transparent", color:c.accent, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"}</button>
         </div>
       </div>}
 
@@ -1023,19 +1023,19 @@ function AgentHub({ data, loadTime }) {
             <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Горячие клавиши":"Shortcuts"}</div>
           </div>
           {[
-            ["Ctrl+K",lang==="ru"?"Фокус на поиск":"Focus search"],
-            ["Escape",lang==="ru"?"Закрыть / очистить":"Close / clear"],
-            ["↑ / ↓",lang==="ru"?"Навигация по карточкам":"Navigate cards"],
-            ["Enter",lang==="ru"?"Открыть/закрыть карточку":"Toggle card"],
-            ["F",lang==="ru"?"Focus mode (на карточке)":"Focus mode (on card)"],
-            ["1-5",lang==="ru"?"Секции (Промты/Команды/CLI/Quick/Setup)":"Sections"],
-            ["T",lang==="ru"?"Переключить тему":"Toggle theme"],
-            ["V",lang==="ru"?"Карточки/таблица":"Card/table view"],
-            ["R",lang==="ru"?"Случайный промт":"Random prompt"],
-            ["Ctrl+/",lang==="ru"?"Compact mode":"Compact mode"],
-            ["?",lang==="ru"?"Показать/скрыть подсказки":"Toggle this overlay"],
+            ["Ctrl+K",lang==="ru"?"Фокус на поиск":lang==="kk"?"Іздеуге назар":"Focus search"],
+            ["Escape",lang==="ru"?"Закрыть / очистить":lang==="kk"?"Жабу / тазалау":"Close / clear"],
+            ["↑ / ↓",lang==="ru"?"Навигация по карточкам":lang==="kk"?"Карточкалар бойынша навигация":"Navigate cards"],
+            ["Enter",lang==="ru"?"Открыть/закрыть карточку":lang==="kk"?"Карточканы ашу/жабу":"Toggle card"],
+            ["F",lang==="ru"?"Focus mode (на карточке)":lang==="kk"?"Focus режим (карточкада)":"Focus mode (on card)"],
+            ["1-5",lang==="ru"?"Секции (Промты/Команды/CLI/Quick/Setup)":lang==="kk"?"Бөлімдер (Промттер/Командалар/CLI/Quick/Баптау)":"Sections"],
+            ["T",lang==="ru"?"Переключить тему":lang==="kk"?"Тақырыпты ауыстыру":"Toggle theme"],
+            ["V",lang==="ru"?"Карточки/таблица":lang==="kk"?"Карточкалар/кесте":"Card/table view"],
+            ["R",lang==="ru"?"Случайный промт":lang==="kk"?"Кездейсоқ промт":"Random prompt"],
+            ["Ctrl+/",lang==="ru"?"Compact mode":lang==="kk"?"Compact режим":"Compact mode"],
+            ["?",lang==="ru"?"Показать/скрыть подсказки":lang==="kk"?"Кеңестерді көрсету/жасыру":"Toggle this overlay"],
           ].map(([k,d])=><div key={k} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 0", borderBottom:`1px solid ${c.brd}` }}><kbd style={{ padding:"4px 10px", borderRadius:0, background:c.surf, border:`1px solid ${c.brd}`, borderBottom:`2px solid ${c.brd}`, fontSize:11, color:c.text, fontFamily:font, fontWeight:700, letterSpacing:0.5 }}>{k}</kbd><span className="body-serif" style={{ fontSize:15, color:c.text, textAlign:"right", lineHeight:1.3 }}>{d}</span></div>)}
-          <button onClick={()=>setShowShortcuts(false)} style={{ marginTop:18, width:"100%", padding:"10px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.accent}`, borderRadius:0, background:"transparent", color:c.accent, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+          <button onClick={()=>setShowShortcuts(false)} style={{ marginTop:18, width:"100%", padding:"10px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.accent}`, borderRadius:0, background:"transparent", color:c.accent, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"}</button>
         </div>
       </div>}
 
@@ -1100,7 +1100,7 @@ function AgentHub({ data, loadTime }) {
             {Object.entries(copyCounters).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([pid,n])=>{const pp=pGet(pid);return pp?<div key={pid} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"3px 0", fontSize:10 }}><span style={{ color:pp.ac }}>{pp.icon} {t.r[pp.role]||pp.role}</span><span style={{ color:c.dim }}>×{n}</span></div>:null})}
           </div>}
           {(() => { try { const used = localStorage.getItem("aiagent-hub-settings"); return used ? <div className="label-tech-sm" style={{ color:c.dim, marginTop:10 }}>⇩ localStorage · {(used.length/1024).toFixed(1)} KB</div> : null; } catch { return null; } })()}
-          <button onClick={()=>setShowStats(false)} style={{ marginTop:18, width:"100%", padding:"10px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.accent}`, borderRadius:0, background:"transparent", color:c.accent, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+          <button onClick={()=>setShowStats(false)} style={{ marginTop:18, width:"100%", padding:"10px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.accent}`, borderRadius:0, background:"transparent", color:c.accent, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"}</button>
         </div>
       </div>}
 
@@ -1116,7 +1116,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ fontSize:11, fontWeight:600, color:c.text }}>{h.icon} {h.name}</div>
             <div style={{ fontSize:9, color:c.dim, marginTop:2 }}>{h.time}</div>
           </div>)}
-          <button onClick={()=>setShowCopyHistory(false)} style={{ marginTop:18, width:"100%", padding:"10px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.accent}`, borderRadius:0, background:"transparent", color:c.accent, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+          <button onClick={()=>setShowCopyHistory(false)} style={{ marginTop:18, width:"100%", padding:"10px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.accent}`, borderRadius:0, background:"transparent", color:c.accent, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"}</button>
         </div>
       </div>}
 
@@ -1477,7 +1477,7 @@ function AgentHub({ data, loadTime }) {
               </button>
               <button onClick={()=>setCompareIds(list.map(p=>p.id))} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Выбрать все":"Select all"}</button>
               <button onClick={()=>setCompareIds([])} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Снять все":"Deselect"}</button>
-              <button onClick={()=>{setCompareIds([]);setCompareMode(false)}} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+              <button onClick={()=>{setCompareIds([]);setCompareMode(false)}} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"}</button>
             </div>
           </div>
         )}
@@ -1544,7 +1544,7 @@ function AgentHub({ data, loadTime }) {
                 </button>
               </div>
             )}
-            <button onClick={()=>setShowConstructor(false)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+            <button onClick={()=>setShowConstructor(false)} style={{ padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"}</button>
           </div>
         )}
 
@@ -1561,7 +1561,7 @@ function AgentHub({ data, loadTime }) {
                 <button onClick={()=>{cp("imported", importText); setToast(lang==="ru"?"Промт скопирован":"Prompt copied"); setShowImport(false); setImportText("");}} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #10b981", borderRadius:0, background:"#10b981", color:"#fff", cursor:"pointer", outline:"none" }}>{lang==="ru"?"Скопировать":"Copy"} ({Math.round(importText.length/4)} tokens)</button>
               </div>
             )}
-            <button onClick={()=>{setShowImport(false);setImportText("")}} style={{ marginTop:8, padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":"Close"}</button>
+            <button onClick={()=>{setShowImport(false);setImportText("")}} style={{ marginTop:8, padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"}</button>
           </div>
         )}
 
