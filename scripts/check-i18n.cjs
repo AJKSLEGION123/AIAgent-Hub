@@ -17,9 +17,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter86 fixed stats card (6) + filter pills (6).
+// Baseline: count after iter87 fixed card-action buttons (6 sites + 1 bogus ternary).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 71;
+const BASELINE = 65;
 
 const files = ['src/App.jsx'];
 let total = 0;
