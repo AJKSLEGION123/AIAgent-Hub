@@ -14,13 +14,13 @@ test.describe('Features', () => {
 
   test('favorite toggle', async ({ page }) => {
     const starBtn = page.locator('[id^="card-"]').first().locator('button[aria-pressed]').first();
-    if (await starBtn.count() > 0) {
-      const before = await starBtn.getAttribute('aria-pressed');
-      await starBtn.click();
-      await page.waitForTimeout(200);
-      const after = await starBtn.getAttribute('aria-pressed');
-      expect(after).not.toBe(before);
-    }
+    // Each card has a favorite-toggle button — fail loud if missing.
+    await expect(starBtn).toBeVisible({ timeout: 5000 });
+    const before = await starBtn.getAttribute('aria-pressed');
+    await starBtn.click();
+    await page.waitForTimeout(200);
+    const after = await starBtn.getAttribute('aria-pressed');
+    expect(after).not.toBe(before);
   });
 
   test('table view toggle', async ({ page }) => {
@@ -44,23 +44,24 @@ test.describe('Features', () => {
   });
 
   test('stats modal opens', async ({ page }) => {
-    const statsBtn = page.locator('button[aria-label="Stats"]');
-    if (await statsBtn.count() > 0) {
-      await statsBtn.click();
-      await expect(page.locator('[role="dialog"]')).toBeVisible({ timeout: 3000 });
-    }
+    // Source uses aria-label="Statistics" (App.jsx:1119); previous selector
+    // "Stats" never matched, so the silent-skip pattern hid that mismatch.
+    const statsBtn = page.locator('button[aria-label="Statistics"]');
+    await expect(statsBtn).toBeVisible({ timeout: 5000 });
+    await statsBtn.click();
+    await expect(page.locator('[role="dialog"]')).toBeVisible({ timeout: 3000 });
   });
 
   test('language switch cycles', async ({ page }) => {
     // Find the language toggle button (contains EN, KK, or RU text, width ~36-48px)
     const langBtn = page.locator('button').filter({ hasText: /^(EN|KK|RU)$/ }).first();
-    if (await langBtn.count() > 0) {
-      const initial = await langBtn.textContent();
-      await langBtn.click();
-      await page.waitForTimeout(300);
-      const after = await langBtn.textContent();
-      expect(after).not.toBe(initial);
-    }
+    // Language toggle is always in the toolbar — fail loud if missing.
+    await expect(langBtn).toBeVisible({ timeout: 5000 });
+    const initial = await langBtn.textContent();
+    await langBtn.click();
+    await page.waitForTimeout(300);
+    const after = await langBtn.textContent();
+    expect(after).not.toBe(initial);
   });
 
   test('scroll progress bar appears', async ({ page }) => {

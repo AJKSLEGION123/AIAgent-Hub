@@ -45,12 +45,12 @@ test.describe('AIAgent-Hub', () => {
     await page.goto('/');
     await page.waitForSelector('[id^="card-"]', { timeout: 15000 });
     const firstCard = page.locator('[id^="card-"]').first();
-    const copyBtn = firstCard.locator('button:has-text("Копировать"), button:has-text("Copy")');
-    if (await copyBtn.count() > 0) {
-      await copyBtn.first().click();
-      // Toast renders at top of viewport (.toast class), not inside the card
-      await expect(page.locator('.toast')).toBeVisible({ timeout: 3000 });
-    }
+    const copyBtn = firstCard.locator('button:has-text("Копировать"), button:has-text("Copy")').first();
+    // Every prompt card has a copy button — fail loud if not.
+    await expect(copyBtn).toBeVisible({ timeout: 5000 });
+    await copyBtn.click();
+    // Toast renders at top of viewport (.toast class), not inside the card
+    await expect(page.locator('.toast')).toBeVisible({ timeout: 3000 });
   });
 
   test('keyboard shortcut ? opens overlay', async ({ page }) => {
