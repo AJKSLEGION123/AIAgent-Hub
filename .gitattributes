@@ -1,0 +1,14 @@
+# Normalize line endings to LF in the repo regardless of dev OS.
+# Eliminates the 'LF will be replaced by CRLF' warnings on Windows commits.
+# Existing committed line endings are preserved until those files are touched.
+
+# Auto-detect text vs binary, force LF for text on commit
+* text=auto eol=lf
+
+# Explicit text rules so .git/index always stores LF
+*.{js,jsx,ts,tsx,mjs,cjs} text eol=lf
+*.{md,json,html,css,yml,yaml,toml,ini,txt,svg} text eol=lf
+*.{sh,py} text eol=lf
+
+# Binary — never line-end-translate
+*.{png,jpg,jpeg,gif,webp,avif,ico,woff,woff2,ttf,eot,zip,gz,br,wasm,db,sqlite} binary
