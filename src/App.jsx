@@ -2215,6 +2215,7 @@ function AgentHub({ data, loadTime }) {
                     { v:"v11", n:296, d:"Apr 2026" },
                     { v:"v11.5", n:1024, d:"Apr 2026" },
                     { v:"v12", n:10036, d:"Apr 2026" },
+                    { v:"v13", n:3299, d:"Apr 2026" },
                   ];
                   const maxN = data[data.length-1].n;
                   const step = 580 / (data.length - 1);
