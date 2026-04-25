@@ -37,6 +37,30 @@ Massive consolidation + 24/7 hygiene pass.
 - `.gitattributes` — нормализация LF на Windows commits.
 - `reports/247-progress.md` — лог каждой итерации полного 35-tick 24/7 цикла.
 
+### i18n (iter76-96, 21-iter campaign)
+- **Kazakh fallback на 179 → 0 sites в App.jsx**. Все binary `lang==="ru"?ru:en`
+  ternaries заменены на 3-way `lang==="ru"?ru:lang==="kk"?kk:en`. Kazakh users
+  (kk locale) теперь видят родной язык вместо English fallback на UI surfaces:
+  section labels, sort dropdown, filter pills, FAQ, glossary, keyboard shortcuts
+  dialog, copy history, landing hero, expanded prompt cards, footer plurals.
+- `scripts/check-i18n.cjs` — два check: binary-ternary baseline-ceiling
+  (soft-fail при regression) + bogus identical-branch hard-fail (`?\s*"X"\s*:\s*"\1"`
+  backreference detects `cond ? "X" : "X"` dead code, 4 instances caught and removed).
+- Multi-line lookahead (10 строк) для ternaries split across lines.
+- Wired into `npm run check` chain (7 gates) + .github/workflows/ci.yml.
+- Side-effect a11y fix: theme-button `aria-label` was Russian-only — fixed to
+  lang-conditional 3-way (iter85).
+
+### Tests (iter72-98)
+- e2e regression coverage для App.jsx-only bugs (jsdom can't run DecompressionStream):
+  - search special-char queries (`v1.2`, `fix()`, `*.ts`) — iter72
+  - NEW filter pill + per-card NEW badge — iter73
+  - html.lang + document.title sync on language toggle — iter74
+- Unit-test coverage для custom CI gate scripts (iter97-98):
+  - check-i18n.cjs: 15 tests (binary detection, lookahead, bogus, regex shape)
+  - check-data.cjs: 19 tests (prompts, combos, configs, related/prereqs, cheats)
+- Test count trajectory: 235 → 279 (+44 in iter72-98).
+
 ### Fixed
 - **4 react-hooks/exhaustive-deps stale-closure bugs** (App.jsx scroll-lock, mount-only
   scroll, global keydown listener, copy callback). ESC-закрытие модалок больше не зависит
