@@ -67,7 +67,7 @@ describe('getTagCounts', () => {
   it('sorts by popularity (desc)', () => {
     const tags = getTagCounts(prompts);
     for (let i = 1; i < tags.length; i++) {
-      expect(tags[i - 1][1]).toBeGreaterThanOrEqual(tags[i][1]);
+      expect(tags[i - 1]![1]).toBeGreaterThanOrEqual(tags[i]![1]);
     }
   });
 

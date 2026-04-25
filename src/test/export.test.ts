@@ -104,7 +104,7 @@ describe('downloadFile', () => {
     downloadFile('hello world', 'test.txt', 'text/plain');
 
     expect(createUrl).toHaveBeenCalledTimes(1);
-    const blobArg = createUrl.mock.calls[0][0] as Blob;
+    const blobArg = createUrl.mock.calls[0]![0] as Blob;
     expect(blobArg).toBeInstanceOf(Blob);
     expect(blobArg.type).toBe('text/plain');
     expect(createElement).toHaveBeenCalledWith('a');

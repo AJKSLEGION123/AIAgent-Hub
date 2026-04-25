@@ -34,7 +34,7 @@ describe('buildBundle', () => {
   });
 
   it('handles single prompt', () => {
-    const bundle = buildBundle([prompts[0]], roleNames);
+    const bundle = buildBundle([prompts[0]!], roleNames);
     expect(bundle).toContain('FEATURE');
     expect(bundle).not.toContain('═══ API');
   });

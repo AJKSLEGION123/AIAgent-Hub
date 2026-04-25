@@ -35,7 +35,7 @@ describe('filterPrompts', () => {
   it('filters by role', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, mode: 'role', value: 'feature' });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('rl-feat');
+    expect(result[0]!.id).toBe('rl-feat');
   });
 
   it('filters by type', () => {
@@ -46,7 +46,7 @@ describe('filterPrompts', () => {
   it('filters by difficulty', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, mode: 'difficulty', value: 'advanced' });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('rv-pr');
+    expect(result[0]!.id).toBe('rv-pr');
   });
 
   it('filters by tag', () => {
@@ -57,7 +57,7 @@ describe('filterPrompts', () => {
   it('filters by time <1h', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, mode: 'time', value: '<1h' });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('sm-new');
+    expect(result[0]!.id).toBe('sm-new');
   });
 
   it('filters by time 1-2h', () => {
@@ -73,7 +73,7 @@ describe('filterPrompts', () => {
   it('multi-word search', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, search: 'claude api' });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('rl-api');
+    expect(result[0]!.id).toBe('rl-api');
   });
 
   it('filters favorites only', () => {
@@ -84,7 +84,7 @@ describe('filterPrompts', () => {
   it('filters NEW only', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, showNew: true });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('sm-new');
+    expect(result[0]!.id).toBe('sm-new');
   });
 
   it('hides used prompts', () => {
@@ -95,7 +95,7 @@ describe('filterPrompts', () => {
   it('filters by time >2h', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, mode: 'time', value: '>2h' });
     expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('rv-pr');
+    expect(result[0]!.id).toBe('rv-pr');
   });
 
   it('time filter excludes prompts whose time has no h/m unit', () => {
@@ -119,23 +119,23 @@ describe('sortPrompts', () => {
 
   it('sorts by name', () => {
     const sorted = sortPrompts(prompts, 'name', defaultOpts.roleNames);
-    expect(sorted[0].role).toBe('api');
+    expect(sorted[0]!.role).toBe('api');
   });
 
   it('sorts by length (longest first)', () => {
     const sorted = sortPrompts(prompts, 'length', defaultOpts.roleNames);
-    expect(sorted[0].text.length).toBeGreaterThanOrEqual(sorted[1].text.length);
+    expect(sorted[0]!.text.length).toBeGreaterThanOrEqual(sorted[1]!.text.length);
   });
 
   it('sorts by time (longest first)', () => {
     const sorted = sortPrompts(prompts, 'time', defaultOpts.roleNames);
-    expect(sorted[0].time).toBe('~3h');
+    expect(sorted[0]!.time).toBe('~3h');
   });
 
   it('sorts by model', () => {
     const sorted = sortPrompts(prompts, 'model', defaultOpts.roleNames);
-    expect(sorted[0].mk).toBe('claude');
-    expect(sorted[sorted.length - 1].mk).toBe('claude');
+    expect(sorted[0]!.mk).toBe('claude');
+    expect(sorted[sorted.length - 1]!.mk).toBe('claude');
   });
 
   it('falls through to identity sort on unknown sortBy', () => {

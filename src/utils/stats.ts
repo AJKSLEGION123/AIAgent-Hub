@@ -5,7 +5,8 @@ export function calculateStats(prompts: Prompt[]): Stats {
   const totalTime = prompts.reduce((acc, p) => {
     const m = p.time?.match(/(\d+\.?\d*)(h|m)/);
     if (!m) return acc;
-    return acc + (m[2] === "h" ? parseFloat(m[1]) * 60 : parseFloat(m[1]));
+    // Both groups guaranteed-present on successful match (required captures).
+    return acc + (m[2]! === "h" ? parseFloat(m[1]!) * 60 : parseFloat(m[1]!));
   }, 0);
 
   const totalChars = prompts.reduce((a, p) => a + p.text.length, 0);

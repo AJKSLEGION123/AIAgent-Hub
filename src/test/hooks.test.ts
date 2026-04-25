@@ -50,7 +50,7 @@ describe('useLocalStorage', () => {
       const huge = 'x'.repeat(5_000_000);
       renderHook(() => useLocalStorage('huge-key', huge));
       expect(warnSpy).toHaveBeenCalled();
-      const message = warnSpy.mock.calls[0][0];
+      const message = warnSpy.mock.calls[0]![0];
       expect(String(message)).toMatch(/near limit/);
       expect(String(message)).toContain('huge-key');
     } finally {

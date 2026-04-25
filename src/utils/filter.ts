@@ -35,7 +35,9 @@ export function filterPrompts(
     f = f.filter(p => {
       const m = p.time?.match(/(\d+\.?\d*)(h|m)/);
       if (!m) return false;
-      const hrs = m[2] === "h" ? parseFloat(m[1]) : parseFloat(m[1]) / 60;
+      // Both groups (1=digits, 2=unit) are guaranteed-present when match
+      // succeeds — the regex has both as required captures.
+      const hrs = m[2]! === "h" ? parseFloat(m[1]!) : parseFloat(m[1]!) / 60;
       if (options.value === "<1h") return hrs < 1;
       if (options.value === "1-2h") return hrs >= 1 && hrs <= 2;
       if (options.value === ">2h") return hrs > 2;
@@ -66,7 +68,7 @@ export function sortPrompts(
     case "name": return sorted.sort((a, b) => (roleNames[a.role] || a.role).localeCompare(roleNames[b.role] || b.role));
     case "length": return sorted.sort((a, b) => b.text.length - a.text.length);
     case "time": return sorted.sort((a, b) => {
-      const gt = (s: string) => { const m = s?.match(/(\d+\.?\d*)(h|m)/); return m ? (m[2] === "h" ? parseFloat(m[1]) * 60 : parseFloat(m[1])) : 0; };
+      const gt = (s: string) => { const m = s?.match(/(\d+\.?\d*)(h|m)/); return m ? (m[2]! === "h" ? parseFloat(m[1]!) * 60 : parseFloat(m[1]!)) : 0; };
       return gt(b.time) - gt(a.time);
     });
     case "model": return sorted.sort((a, b) => a.mk.localeCompare(b.mk));

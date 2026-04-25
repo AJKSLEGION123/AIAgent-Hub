@@ -36,7 +36,8 @@ export function totalTime(prompts: Prompt[]): number {
   return prompts.reduce((acc, p) => {
     const match = p.time?.match(/(\d+\.?\d*)(h|m)/);
     if (!match) return acc;
-    return acc + (match[2] === "h" ? parseFloat(match[1]) * 60 : parseFloat(match[1]));
+    // Both groups guaranteed-present on successful match (required captures).
+    return acc + (match[2]! === "h" ? parseFloat(match[1]!) * 60 : parseFloat(match[1]!));
   }, 0);
 }
 
