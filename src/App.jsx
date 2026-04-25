@@ -1884,7 +1884,7 @@ function AgentHub({ data, loadTime }) {
           );
         })()}
 
-        {comboSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{comboSearch}" — {(COMBOS[lang]||COMBOS.ru).filter(cb => (cb.name + " " + cb.desc + " " + (cb.ids||[]).map(id=>{const p=pGet(id);return p?(t.r[p.role]||p.role):""}).join(" ")).toLowerCase().includes(comboSearch.toLowerCase())).length} / {(COMBOS[lang]||COMBOS.ru).length}</div>}
+        {comboSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":lang==="kk"?"Сүзгі":"Filter"}: "{comboSearch}" — {(COMBOS[lang]||COMBOS.ru).filter(cb => (cb.name + " " + cb.desc + " " + (cb.ids||[]).map(id=>{const p=pGet(id);return p?(t.r[p.role]||p.role):""}).join(" ")).toLowerCase().includes(comboSearch.toLowerCase())).length} / {(COMBOS[lang]||COMBOS.ru).length}</div>}
         {comboSearch && (COMBOS[lang]||COMBOS.ru).filter(cb => (cb.name + " " + cb.desc + " " + (cb.ids||[]).map(id=>{const p=pGet(id);return p?(t.r[p.role]||p.role):""}).join(" ")).toLowerCase().includes(comboSearch.toLowerCase())).length === 0 && <EmptyState c={c} lang={lang} />}
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(280px, 1fr))", gap:12 }}>
           {(COMBOS[lang]||COMBOS.ru).filter(cb => !comboSearch || (cb.name + " " + cb.desc + " " + (cb.ids||[]).map(id=>{const p=pGet(id);return p?(t.r[p.role]||p.role):""}).join(" ")).toLowerCase().includes(comboSearch.toLowerCase())).map((cb, i) => {
@@ -1992,7 +1992,7 @@ function AgentHub({ data, loadTime }) {
             {cheatSearch && <button onClick={()=>setCheatSearch("")} style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:12, padding:0, lineHeight:1 }}>×</button>}
           </div>
         </div>
-        {cheatSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{cheatSearch}"</div>}
+        {cheatSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":lang==="kk"?"Сүзгі":"Filter"}: "{cheatSearch}"</div>}
         {cheatSearch && Object.values(CHEAT).every(sheet => (sheet.cmds||[]).filter(c2 => (c2.cmd + " " + c2.desc).toLowerCase().includes(cheatSearch.toLowerCase())).length === 0) && <EmptyState c={c} lang={lang} />}
         {Object.entries(CHEAT).map(([key, sheet]) => {
           const filteredCmds = cheatSearch ? sheet.cmds.filter(c2 => (c2.cmd + " " + c2.desc).toLowerCase().includes(cheatSearch.toLowerCase())) : sheet.cmds;
@@ -2033,7 +2033,7 @@ function AgentHub({ data, loadTime }) {
             {quickSearch && <button onClick={()=>setQuickSearch("")} style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:12, padding:0, lineHeight:1 }}>×</button>}
           </div>
         </div>
-        {quickSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":"Filter"}: "{quickSearch}"</div>}
+        {quickSearch && <div style={{ fontSize:10, color:c.dim, marginBottom:8 }}>{lang==="ru"?"Фильтр":lang==="kk"?"Сүзгі":"Filter"}: "{quickSearch}"</div>}
         {quickSearch && (QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).every(cat => (cat.cmds||[]).filter(cmd => (cmd.cmd + " " + cmd.label).toLowerCase().includes(quickSearch.toLowerCase())).length === 0) && <EmptyState c={c} lang={lang} />}
         {(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).map((cat, ci) => {
           const cmds = cat.cmds || [];
@@ -2349,7 +2349,7 @@ function AgentHub({ data, loadTime }) {
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
             border:`1.5px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut,
             cursor:"pointer", transition:"all .15s", outline:"none",
-          }}>{lang==="ru"?"Экспорт .md":"Export .md"} ({section==="prompts"&&hasFilters?list.length:P.length})</button>
+          }}>{lang==="ru"?"Экспорт .md":lang==="kk"?"Экспорт .md":"Export .md"} ({section==="prompts"&&hasFilters?list.length:P.length})</button>
           {/* Feat 19: CSV export */}
           <button onClick={() => {
             const items = section==="prompts" && hasFilters ? list : P;
@@ -2364,7 +2364,7 @@ function AgentHub({ data, loadTime }) {
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
             border:`1.5px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut,
             cursor:"pointer", transition:"all .15s", outline:"none",
-          }}>{lang==="ru"?"Экспорт CSV":"Export CSV"}</button>
+          }}>{lang==="ru"?"Экспорт CSV":lang==="kk"?"Экспорт CSV":"Export CSV"}</button>
           <button onClick={() => {
             const json = JSON.stringify(data, null, 2);
             const blob = new Blob([json], { type:"application/json" });
@@ -2373,7 +2373,7 @@ function AgentHub({ data, loadTime }) {
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
             border:`1.5px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut,
             cursor:"pointer", transition:"all .15s", outline:"none",
-          }}>{lang==="ru"?"Экспорт JSON":"Export JSON"}</button>
+          }}>{lang==="ru"?"Экспорт JSON":lang==="kk"?"Экспорт JSON":"Export JSON"}</button>
           {/* Export as self-contained HTML */}
           <button onClick={() => {
             const items = section==="prompts" && hasFilters ? list : P;
@@ -2390,7 +2390,7 @@ function AgentHub({ data, loadTime }) {
             padding:"8px 24px", fontSize:11, fontFamily:font, fontWeight:600,
             border:`1.5px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut,
             cursor:"pointer", transition:"all .15s", outline:"none",
-          }}>{lang==="ru"?"Экспорт HTML":"Export HTML"}</button>
+          }}>{lang==="ru"?"Экспорт HTML":lang==="kk"?"Экспорт HTML":"Export HTML"}</button>
           {/* Feat 36: Settings backup/restore */}
           <button onClick={() => {
             try {
