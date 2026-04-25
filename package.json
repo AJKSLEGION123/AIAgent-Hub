@@ -2,6 +2,31 @@
   "name": "aiagent-hub",
   "private": true,
   "version": "0.0.0",
+  "description": "Полевой справочник автономной разработки с Claude Code: 3 299 портативных промтов, 76 комбо, 30 шпаргалок, 108 CLI-команд.",
+  "homepage": "https://ai-agent-hub.net",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AJKSLEGION123/AIAgent-Hub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AJKSLEGION123/AIAgent-Hub/issues"
+  },
+  "license": "MIT",
+  "author": "Pavel <pavelte382@gmail.com>",
+  "keywords": [
+    "claude-code",
+    "claude",
+    "anthropic",
+    "ai-prompts",
+    "prompt-engineering",
+    "llm",
+    "developer-tools",
+    "react",
+    "vite"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "bin": {
     "aiagent-hub": "./cli/index.cjs"
