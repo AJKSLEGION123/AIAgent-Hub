@@ -9,6 +9,7 @@ import {
 import { font, fontDisplay, alpha, textOn } from "./theme-utils.js";
 import { Pill, CBtn, Toast, EmptyState, HL } from "./components.jsx";
 import { ErrorBoundary } from "./ErrorBoundary.jsx";
+import { TH, MC, ML, MI, pl } from "./constants.js";
 
 /* ═══════════════════════════════════════════════
    TRANSLATIONS
@@ -76,19 +77,8 @@ const T = {
   },
 };
 
-/* ═══════════════════════════════════════════════
-   THEME & CONSTANTS (task 2,5: style consolidation)
-   ═══════════════════════════════════════════════ */
-const TH = {
-  dark: { bg:"#0a0806", bg2:"#120e09", card:"#15110b", cardH:"#1c1811", brd:"#221d15", brdH:"#2e281e", text:"#ece3ce", mut:"#b3a794", dim:"#8a816d", surf:"#120e09", glow:"rgba(232,106,42,0.05)", meta:"#0a0806", accent:"#e86a2a", ink:"#f5efdd", onAccent:"#0a0806" },
-  light: { bg:"#f5f0e6", bg2:"#ebe5d6", card:"#fffcf4", cardH:"#f8f3e6", brd:"#d9cfb8", brdH:"#b8ab90", text:"#1a140a", mut:"#4a4434", dim:"#6d6550", surf:"#f0e9d6", glow:"rgba(232,106,42,0.08)", meta:"#f5f0e6", accent:"#a84a12", ink:"#0a0806", onAccent:"#f5efdd" },
-};
-const MC = { opus47m:"#d4a574" };
-const ML = { opus47m:"Claude Opus 4.7 · 1M" };
-const MI = { opus47m:"∞" };
-// Typography stacks + color helpers extracted to ./theme-utils.js (iter114).
-/** Russian pluralization: pl(5,"модель","модели","моделей") → "моделей" */
-const pl = (n, one, few, many) => { const m=Math.abs(n)%100, d=m%10; return d===1&&m!==11?one:d>=2&&d<=4&&(m<12||m>14)?few:many; };
+// TH/MC/ML/MI/pl extracted to ./constants.js (iter118).
+// Typography stacks + color helpers in ./theme-utils.js (iter114).
 
 /* ═══════════════════════════════════════════════
    COMPRESSED DATA
