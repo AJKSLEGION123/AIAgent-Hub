@@ -31,7 +31,7 @@
   <text x="80" y="300" fill="#b3a794" font-family="'Instrument Serif','Georgia',serif" font-size="30" font-style="italic">Полевой справочник автономной разработки с Claude Code.</text>
 
   <!-- Big stat -->
-  <text x="80" y="475" fill="#e86a2a" font-family="'Fraunces','Times New Roman',serif" font-size="220" font-weight="300" letter-spacing="-6">10 014</text>
+  <text x="80" y="475" fill="#e86a2a" font-family="'Fraunces','Times New Roman',serif" font-size="220" font-weight="300" letter-spacing="-6">3 299</text>
 
   <!-- Stat label -->
   <text x="80" y="520" fill="#a09584" font-family="'JetBrains Mono',monospace" font-size="16" letter-spacing="6">ПРОМТОВ ДЛЯ CLAUDE OPUS 4.7 · 1M CONTEXT</text>

@@ -1,6 +1,6 @@
 # AIAgent-Hub v12
 
-**10 014 промтов · 75 комбо · 30 шпаргалок · 108 CLI-команд** для Claude Code + Opus 4.7 · 1M context.
+**3 299 портативных промтов · 76 комбо · 30 шпаргалок · 108 CLI-команд** для Claude Code + Opus 4.7 · 1M context. Все промты работают с любым проектом — после массивной консолидации (с 10 014) каждый уникален и [AUTONOMY-v4].
 
 Полевой справочник автономной разработки. Каждый промт готов к копированию в Claude Code, содержит фазу полной разведки проекта и **[AUTONOMY-v4]** wrapper — даёт агенту полные права + арсенал (Browser MCP, все MCP servers, skills, plugins, shell, web) + auto-commit/push/deploy после каждого улучшения + браузерную верификацию post-deploy + бесконечный цикл улучшений.
 
@@ -23,7 +23,7 @@ claude --model claude-opus-4-7[1m]
 
 | Раздел | Количество |
 |---|---|
-| Промты | **10 014** |
+| Промты | **3 299** |
 | Воркфлоу-комбо | **76** |
 | Шпаргалки | **30** |
 | CLI-команды | **108** |
@@ -32,9 +32,9 @@ claude --model claude-opus-4-7[1m]
 
 ## Содержимое
 
-**Промты (10 014):** 20 языков × 35 задач, 40 фреймворков × 10 операций, 15 БД × 12 операций, AWS/GCP/Azure/Cloudflare × сервисы, паттерны проектирования, алгоритмы, тестирование, безопасность, performance, e-commerce, SaaS, analytics, CMS, auth, платежи, observability, web3, DX. Плюс **∞ Opus 4.7 Perfectionist Suite** + **∞ God-Mode Autonomous** + **Self-Healing Project** (Telegram-бот авто-аудит, RAG-знание из проекта, watchdog качества сообщений, full click-sweep) — премиум-промты с полной автономией и всеми инструментами.
+**Промты (3 299):** качественное портативное ядро — каждый промт работает с любым проектом. AI/LLM, security, performance, testing, DevOps, frontend, backend, mobile, SaaS, e-commerce, observability, AWS/GCP/Azure, k8s, БД, паттерны. Все обёрнуты в **[AUTONOMY-v4]**. Флагманы: **lp-247-perfectionist** (24/7 цикл доведения проекта до идеала), **rl-godmode** (god-mode), **rl-rag-project-knowledge** (RAG-знание из самого проекта), **lp-tg-self-heal**, **lp-message-quality**, **lp-full-click-test**.
 
-**Комбо (76):** ∞ 24/7 Project Perfection (флагман — портативный 24/7 цикл для любого проекта), ∞ Perpetual Improvement, AI Product Launch, Next.js Production, E-commerce Launch, SaaS Bootstrap, Zero-Trust Security, Observability Stack, Mobile MVP, Data Pipeline, Performance Triage, Incident Response Playbook, Event-Driven Architecture, Multi-Tenant SaaS, Full-Stack AI Agent, CI/CD Modernization, Testing Pyramid Rollout и др.
+**Комбо (76):** ∞ 24/7 Project Perfection (флагман — портативный 24/7 цикл для любого проекта), ∞ Perpetual Improvement, ∞ Opus 4.7 Perfectionist Suite, Self-Healing Project, ∞ Perpetual Improvement, AI Product Launch, Next.js Production, E-commerce Launch, SaaS Bootstrap, Zero-Trust Security, Observability Stack, Mobile MVP, Data Pipeline, Performance Triage, Incident Response Playbook, Event-Driven Architecture, Multi-Tenant SaaS, Full-Stack AI Agent, CI/CD Modernization, Testing Pyramid Rollout и др.
 
 **Шпаргалки (30):** Claude Code, Git, npm/pnpm, Docker, Testing, TypeScript, React, Prisma, Tailwind CSS, SQL, Python, Go, Rust, Kubernetes, Redis, Nginx, Next.js, Cargo, curl, openssl, ffmpeg, jq, awk, Homebrew, Terraform, GitHub Actions, Kafka, psql, Linux perf.
 
