@@ -34,22 +34,41 @@
 ```bash
 npm run dev      # Dev server localhost:5173
 npm run build    # Production build → dist/
-npm test         # 242 passing + 9 skipped (api offline) — vitest
+npm test         # vitest (api.test.js skips when API offline — expected)
+npm run check    # lint + typecheck + knip + check-data + check-i18n + test + build
 npm run test:e2e # E2E tests (playwright)
 
 node scripts/check-data.cjs                 # data integrity check
+node scripts/check-i18n.cjs                 # i18n hard-fail gates (iter124+)
 python scripts/ssh-deploy-docker.py deploy  # self-hosted deploy
 python scripts/ssh-deploy-docker.py rollback
 ```
 
 ## Architecture
-- `src/App.jsx` — single-file SPA (~2200 lines). UI, state, Z decompression.
-- `src/App.jsx:90` — `const Z = "..."` — compressed data blob (zlib + base64)
-- `src/App.jsx:73` — `TH.dark` / `TH.light` — theme tokens including `onAccent` for auto-contrast
-- `src/App.jsx:76` — `MC/ML/MI` — single model: `opus47m` = "Claude Opus 4.7 · 1M"
-- `src/App.jsx:80` — `font` / `fontDisplay` / `fontBody` — 3-tier typography
-- `src/App.jsx:84` — `alpha()` + `textOn()` — color helpers (WCAG luminance for contrast)
-- `src/App.jsx:205`+ — inline SVG icon components (`IconStats`, `IconLog`, etc.)
+SPA was a single 2.4k-line `App.jsx` until iter113–122 extracted concerns
+into focused modules. App.jsx is still the orchestrator (~2.2k lines:
+imports, App() boot wrapper, AgentHub() main UI) but now imports from:
+
+- `src/data.js` — `export const Z = "..."` — compressed catalog blob
+  (~600KB raw, code-split via dynamic `import("./data.js")` since iter125)
+- `src/icons.jsx` — inline SVG icon components (`IconStats`, `IconLog`, …)
+- `src/theme-utils.js` — `font` / `fontDisplay` typography stacks +
+  `alpha()` / `textOn()` (WCAG-luminance auto-contrast)
+- `src/components.jsx` — `Pill` / `CBtn` / `Toast` / `EmptyState` / `HL`
+- `src/constants.js` — `TH` (dark/light tokens) / `MC`/`ML`/`MI` (model
+  maps, single model `opus47m`) / `pl()` Russian pluralization
+- `src/translations.js` — `T = { ru, en, kk }` role-translation maps
+- `src/app-styles.css` — extracted from inline `<style>` template
+- `src/utils/decompress.ts` — async decompress helper (Web Streams)
+- `src/utils/i18n.ts` — `detectLanguage()` for boot-UI lang choice
+- `src/hooks/useLocalStorage.ts` — typed wrapper with quota warnings
+- `src/ErrorBoundary.jsx` — lang-aware ErrorBoundary (replaced inline)
+
+`src/utils/**` and `src/hooks/**` are locked at 100% coverage thresholds
+in `vite.config.js`. App.jsx is intentionally e2e-tested (jsdom can't run
+DecompressionStream).
+
+Other entry points:
 - `api/server.cjs` — Hono API server (auth, CRUD, SQLite)
 - `api/db.cjs` — SQLite database setup
 - `cli/index.cjs` — CLI tool (list, show, search, copy, export)
@@ -69,7 +88,7 @@ python scripts/ssh-deploy-docker.py rollback
 - **NO** indigo/purple, NO rounded corners > 2px, NO generic SaaS aesthetic
 
 ## Data Format
-Prompts compressed inside `const Z`. Each entry:
+Prompts compressed inside `const Z` (in `src/data.js` since iter122). Each entry:
 ```ts
 {
   id: "rl-xxx" | "fd-xxx" | ...,     // prefix encodes command
@@ -93,10 +112,14 @@ To extend data: create `scripts/add-batch<N>.cjs` modeled on archived examples.
 
 ## Key Patterns
 - **Prompt IDs:** `rl-*` (ralph-loop), `fd-*` (feature-dev), `rv-*` (review-pr), `cr-*` (code-review), `sm-*` (simplify), `cm-*` (commit), `lp-*` (loop)
-- **Role translations:** `t.r[role]` with `||role` fallback; add to both `ru` + `en` + `kk` in `T` object
-- **All data fields need defaults:** destructuring at line ~299 has `CHEAT={}`, `QUICK_CMDS={ru:[],en:[]}`, etc.
+- **Role translations:** `t.r[role]` with `||role` fallback; add to all three of `ru` + `en` + `kk` in `T` (`src/translations.js`)
+- **All data fields need defaults** in the destructuring inside `AgentHub()`: `CHEAT={}`, `QUICK_CMDS={ru:[],en:[]}`, etc.
 - **Combo has both `.ids` and `.agents`** — set both to same array
 - **All prompts wrapped with `[AUTONOMY-v4]`** preamble (evolved from v1→v2→v3→v4 via `scripts/archive/upgrade-autonomy-v*.cjs`)
+- **i18n hard-fail gates** (`scripts/check-i18n.cjs`, all locked at 0):
+  binary ru-only ternaries with no kk fallback, identical-branch ternaries,
+  locale-blind aria-label/title/placeholder/alt literals, Cyrillic JSX text
+  content (`<tag>Текст</tag>` shape) — all fail CI immediately
 
 ## UI polish patterns
 - Use `textOn(hex)` for auto-contrast text on colored backgrounds
@@ -107,9 +130,9 @@ To extend data: create `scripts/add-batch<N>.cjs` modeled on archived examples.
 - Use inline SVG icons (Icon* components) instead of emoji for nav/buttons
 
 ## Anti-patterns
-- Don't modify compressed Z string directly — use scripts
-- Don't add data fields without defaults in destructuring at line ~299
-- Don't forget role translations in `ru` + `en` + `kk` `t.r` objects
+- Don't modify the compressed Z string in `src/data.js` directly — use scripts
+- Don't add data fields without defaults in `AgentHub()`'s destructuring
+- Don't forget role translations in all three of `ru` + `en` + `kk` `T.r` maps
 - Don't use emoji as UI icons — use inline SVG from `Icon*` components
 - Don't hardcode `#fff` / `#000` text color on accent backgrounds — use `textOn(cl)` or `c.onAccent`
 - Don't use `border-radius > 2px` on cards/buttons — editorial aesthetic is sharp
