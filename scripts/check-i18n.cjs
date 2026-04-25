@@ -35,13 +35,24 @@ const BOGUS_TERNARY = /\?\s*"([^"]*)"\s*:\s*"\1"/g;
 // misattributing kk fallbacks from unrelated nearby ternaries.
 const DEFAULT_LOOKAHEAD = 10;
 
+// Hard-fail: locale-blind aria-label / title literal strings. iter85 caught
+// the theme-button Russian-only aria-label; iter109 caught 13 English-only
+// dialog/button labels; iter110 caught one of each direction. Class-fix:
+// any aria-label or title with a literal Cyrillic or Latin-letter string
+// (not a JSX expression) bypasses the runtime lang switch.
+//
+// Matches: aria-label="<at-least-one-letter-A-Za-zА-Яа-я>"  with a literal
+// non-empty value. Excluded by accident: empty string aria-labels (uncommon)
+// and pure-symbol/single-char ones (which we don't want to flag anyway).
+const LOCALE_BLIND_LABEL = /(?:aria-label|title)="([A-Za-zА-Яа-я][^"]{0,200})"/g;
+
 /**
  * Analyze source content for i18n violations. Pure function — no I/O.
  * @param {string} content - file source
  * @param {object} [opts]
  * @param {number} [opts.lookahead=10] - lines to scan ahead for kk fallback
  * @param {string} [opts.file] - filename for offender records
- * @returns {{binaryOffenders: Array, bogusOffenders: Array}}
+ * @returns {{binaryOffenders: Array, bogusOffenders: Array, localeBlindOffenders: Array}}
  */
 function analyzeContent(content, opts = {}) {
   const lookahead = opts.lookahead ?? DEFAULT_LOOKAHEAD;
@@ -49,6 +60,7 @@ function analyzeContent(content, opts = {}) {
   const lines = content.split('\n');
   const binaryOffenders = [];
   const bogusOffenders = [];
+  const localeBlindOffenders = [];
 
   lines.forEach((line, i) => {
     if (/lang===['"]ru['"]\s*\?/.test(line) && !/lang===['"]kk['"]/.test(line)) {
@@ -63,21 +75,27 @@ function analyzeContent(content, opts = {}) {
     while ((m = BOGUS_TERNARY.exec(line)) !== null) {
       bogusOffenders.push({ file, line: i + 1, match: m[0], text: line.trim() });
     }
+    LOCALE_BLIND_LABEL.lastIndex = 0;
+    while ((m = LOCALE_BLIND_LABEL.exec(line)) !== null) {
+      localeBlindOffenders.push({ file, line: i + 1, match: m[0], value: m[1] });
+    }
   });
 
-  return { binaryOffenders, bogusOffenders };
+  return { binaryOffenders, bogusOffenders, localeBlindOffenders };
 }
 
 function main() {
   const files = ['src/App.jsx'];
   let allBinary = [];
   let allBogus = [];
+  let allLocaleBlind = [];
 
   for (const file of files) {
     const content = fs.readFileSync(path.join(process.cwd(), file), 'utf8');
-    const { binaryOffenders, bogusOffenders } = analyzeContent(content, { file });
+    const { binaryOffenders, bogusOffenders, localeBlindOffenders } = analyzeContent(content, { file });
     allBinary = allBinary.concat(binaryOffenders);
     allBogus = allBogus.concat(bogusOffenders);
+    allLocaleBlind = allLocaleBlind.concat(localeBlindOffenders);
   }
 
   if (process.argv.includes('--list')) {
@@ -91,10 +109,17 @@ function main() {
         console.log(`${o.file}:${o.line}  ${o.match}`);
       }
     }
+    if (allLocaleBlind.length) {
+      console.log('--- Locale-blind aria-label/title literals ---');
+      for (const o of allLocaleBlind) {
+        console.log(`${o.file}:${o.line}  ${o.match}`);
+      }
+    }
   }
 
   console.log(`Binary ru-only ternaries (no kk fallback): ${allBinary.length} / baseline ${BASELINE}`);
   console.log(`Bogus identical-branch ternaries: ${allBogus.length} (must be 0)`);
+  console.log(`Locale-blind aria-label/title literals: ${allLocaleBlind.length} (must be 0)`);
 
   let failed = false;
   if (allBinary.length > BASELINE) {
@@ -108,6 +133,13 @@ function main() {
     console.error('  Replace with the literal string. Re-run with --list to see locations.');
     failed = true;
   }
+  if (allLocaleBlind.length > 0) {
+    console.error(`\n⚠ ${allLocaleBlind.length} locale-blind aria-label/title literal strings.`);
+    console.error('  These are spoken by screen readers regardless of UI language.');
+    console.error('  Convert to lang-aware ternaries (`lang==="ru"?ru:lang==="kk"?kk:en`).');
+    console.error('  Re-run with --list to see locations.');
+    failed = true;
+  }
   if (failed) process.exit(1);
 
   if (allBinary.length < BASELINE) {
@@ -115,6 +147,6 @@ function main() {
   }
 }
 
-module.exports = { analyzeContent, BASELINE, BOGUS_TERNARY, DEFAULT_LOOKAHEAD };
+module.exports = { analyzeContent, BASELINE, BOGUS_TERNARY, DEFAULT_LOOKAHEAD, LOCALE_BLIND_LABEL };
 
 if (require.main === module) main();

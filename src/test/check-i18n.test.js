@@ -96,6 +96,48 @@ describe('check-i18n analyzeContent — bogus identical-branch detection', () =>
   });
 });
 
+describe('check-i18n analyzeContent — locale-blind aria-label/title detection', () => {
+  it('flags aria-label with English literal', () => {
+    const src = `<button aria-label="Close" />`;
+    const { localeBlindOffenders } = analyzeContent(src);
+    expect(localeBlindOffenders).toHaveLength(1);
+    expect(localeBlindOffenders[0].value).toBe('Close');
+  });
+
+  it('flags aria-label with Russian literal', () => {
+    const src = `<button aria-label="Закрыть" />`;
+    const { localeBlindOffenders } = analyzeContent(src);
+    expect(localeBlindOffenders).toHaveLength(1);
+    expect(localeBlindOffenders[0].value).toBe('Закрыть');
+  });
+
+  it('flags title attribute with literal string', () => {
+    const src = `<button title="Focus mode (F)" />`;
+    const { localeBlindOffenders } = analyzeContent(src);
+    expect(localeBlindOffenders).toHaveLength(1);
+  });
+
+  it('does NOT flag aria-label with JSX expression value', () => {
+    const src = `<button aria-label={lang==="ru"?"А":"B"} />`;
+    const { localeBlindOffenders } = analyzeContent(src);
+    expect(localeBlindOffenders).toHaveLength(0);
+  });
+
+  it('does NOT flag aria-label with empty string', () => {
+    const src = `<button aria-label="" />`;
+    const { localeBlindOffenders } = analyzeContent(src);
+    expect(localeBlindOffenders).toHaveLength(0);
+  });
+
+  it('does NOT flag aria-label with pure-symbol value', () => {
+    const src = `<button aria-label="×" />`;
+    const { localeBlindOffenders } = analyzeContent(src);
+    // Pure-symbol values like "×" / "→" / "?" are intentional — accessibility
+    // shorthand for icons. They don't need translation.
+    expect(localeBlindOffenders).toHaveLength(0);
+  });
+});
+
 describe('check-i18n analyzeContent — combined scenarios', () => {
   it('reports zero offenders for clean file', () => {
     const src = `<div>{lang==="ru"?"Привет":lang==="kk"?"Сәлем":"Hello"}</div>`;

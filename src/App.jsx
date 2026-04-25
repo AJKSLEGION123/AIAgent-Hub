@@ -1314,7 +1314,7 @@ function AgentHub({ data, loadTime }) {
               outline:"none", boxSizing:"border-box", transition:"border-color .15s",
             }} />
             <span style={{ position:"absolute", left:12, top:"50%", transform:"translateY(-50%)", fontSize:14, color:c.dim, pointerEvents:"none" }}>⌕</span>
-            {search && <button onClick={()=>setSearch("")} aria-label="Очистить поиск" style={{ position:"absolute", right:10, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.mut, cursor:"pointer", fontSize:16, padding:4, lineHeight:1, outline:"none" }}>×</button>}
+            {search && <button onClick={()=>setSearch("")} aria-label={lang==="ru"?"Очистить поиск":lang==="kk"?"Іздеуді тазалау":"Clear search"} style={{ position:"absolute", right:10, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.mut, cursor:"pointer", fontSize:16, padding:4, lineHeight:1, outline:"none" }}>×</button>}
           </div>
 
           {/* Filters */}
@@ -1660,7 +1660,7 @@ function AgentHub({ data, loadTime }) {
                 <div style={{ display:"flex", gap:6, flexShrink:0, alignItems:"center" }}>
                   {/* Task 75: Used indicator */}
                   {/* Feat 18: Focus mode button */}
-                  <button onClick={(e)=>{e.stopPropagation();setFocusPrompt(p)}} aria-label={lang==="ru"?"Фокус":lang==="kk"?"Фокус":"Focus"} title="Focus mode (F)" className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}><IconFocus /></button>
+                  <button onClick={(e)=>{e.stopPropagation();setFocusPrompt(p)}} aria-label={lang==="ru"?"Фокус":lang==="kk"?"Фокус":"Focus"} title={lang==="ru"?"Режим фокуса (F)":lang==="kk"?"Фокус режимі (F)":"Focus mode (F)"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}><IconFocus /></button>
                   {copyCounters[p.id] > 0 && <span style={{ fontSize:8, color:c.dim, fontWeight:600 }} title={lang==="ru"?`Скопировано ${copyCounters[p.id]}x`:lang==="kk"?`Көшірілді ${copyCounters[p.id]}x`:`Copied ${copyCounters[p.id]}x`}>×{copyCounters[p.id]}</span>}
                   {isUsed && <span style={{ fontSize:10, color:"#10b981" }} title={lang==="ru"?"Использован":lang==="kk"?"Қолданылған":"Used"}>✓</span>}
                   {/* Task 69: Compare checkbox */}
