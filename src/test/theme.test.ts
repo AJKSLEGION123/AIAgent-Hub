@@ -6,6 +6,38 @@ describe('detectTheme', () => {
     const theme = detectTheme();
     expect(['dark', 'light']).toContain(theme);
   });
+
+  it('returns "light" when prefers-color-scheme: light matches', () => {
+    const orig = window.matchMedia;
+    // @ts-expect-error stubbing for branch coverage
+    window.matchMedia = (q: string) => ({ matches: q.includes('light'), media: q, addListener() {}, removeListener() {} });
+    try {
+      expect(detectTheme()).toBe('light');
+    } finally {
+      window.matchMedia = orig;
+    }
+  });
+
+  it('returns "dark" when prefers-color-scheme: light does NOT match', () => {
+    const orig = window.matchMedia;
+    // @ts-expect-error stubbing for branch coverage
+    window.matchMedia = () => ({ matches: false, media: '', addListener() {}, removeListener() {} });
+    try {
+      expect(detectTheme()).toBe('dark');
+    } finally {
+      window.matchMedia = orig;
+    }
+  });
+
+  it('falls back to "dark" when matchMedia throws', () => {
+    const orig = window.matchMedia;
+    window.matchMedia = (() => { throw new Error('blocked'); }) as typeof window.matchMedia;
+    try {
+      expect(detectTheme()).toBe('dark');
+    } finally {
+      window.matchMedia = orig;
+    }
+  });
 });
 
 describe('toggleTheme', () => {

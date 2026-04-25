@@ -41,6 +41,24 @@ describe('exportMarkdown', () => {
     const md = exportMarkdown([mockPrompt], roleNames);
     expect(md).toContain('react, typescript');
   });
+
+  it('omits Tags line when prompt has no tags', () => {
+    const noTags = { ...mockPrompt, tags: [] };
+    const md = exportMarkdown([noTags], roleNames);
+    expect(md).not.toContain('Tags:');
+  });
+
+  it('falls back to p.role when roleNames lookup misses', () => {
+    const md = exportMarkdown([mockPrompt], {}); // empty roleNames
+    expect(md).toContain('frontend'); // raw role string used as fallback
+  });
+
+  it('groups prompts by model', () => {
+    const claudePrompt = { ...mockPrompt, id: 'c-1', mk: 'claude' as any };
+    const geminiPrompt = { ...mockPrompt, id: 'g-1', mk: 'gemini' as any };
+    const md = exportMarkdown([claudePrompt, geminiPrompt], roleNames);
+    expect(md).toMatch(/## claude.*## gemini/s);
+  });
 });
 
 describe('exportCSV', () => {
@@ -61,6 +79,16 @@ describe('exportCSV', () => {
     const csv = exportCSV([mockPrompt], roleNames);
     const expectedTokens = Math.ceil(mockPrompt.text.length / 4);
     expect(csv).toContain(String(expectedTokens));
+  });
+
+  it('falls back to p.role when roleNames lookup misses', () => {
+    const csv = exportCSV([mockPrompt], {});
+    expect(csv).toContain('frontend');
+  });
+
+  it('joins tags with semicolon', () => {
+    const csv = exportCSV([mockPrompt], roleNames);
+    expect(csv).toContain('react;typescript');
   });
 });
 
@@ -84,6 +112,17 @@ describe('exportHTML', () => {
     const html = exportHTML([mockPrompt], roleNames);
     expect(html).toContain('#react');
     expect(html).toContain('#typescript');
+  });
+
+  it('omits tag div when prompt has no tags', () => {
+    const noTags = { ...mockPrompt, tags: [] };
+    const html = exportHTML([noTags], roleNames);
+    expect(html).not.toContain('class="tag"');
+  });
+
+  it('falls back to p.role when roleNames lookup misses', () => {
+    const html = exportHTML([mockPrompt], {});
+    expect(html).toContain('frontend');
   });
 });
 
