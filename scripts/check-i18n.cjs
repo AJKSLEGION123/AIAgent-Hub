@@ -26,12 +26,6 @@ const path = require('path');
 // branch ternary fails CI immediately. Keep at 0 — never raise.
 const BASELINE = 0;
 
-const files = ['src/App.jsx'];
-let binaryTotal = 0;
-let bogusTotal = 0;
-const binaryOffenders = [];
-const bogusOffenders = [];
-
 // Match `?\s*"X"\s*:\s*"X"` where the two strings are byte-identical.
 // Backreference \1 ensures the second string equals the first.
 const BOGUS_TERNARY = /\?\s*"([^"]*)"\s*:\s*"\1"/g;
@@ -39,60 +33,88 @@ const BOGUS_TERNARY = /\?\s*"([^"]*)"\s*:\s*"\1"/g;
 // Look-ahead window for multi-line ternaries (e.g. ru-array on one line,
 // kk-array on a later line). 10 lines covers all observed cases without
 // misattributing kk fallbacks from unrelated nearby ternaries.
-const LOOKAHEAD = 10;
+const DEFAULT_LOOKAHEAD = 10;
 
-for (const file of files) {
-  const content = fs.readFileSync(path.join(process.cwd(), file), 'utf8');
+/**
+ * Analyze source content for i18n violations. Pure function — no I/O.
+ * @param {string} content - file source
+ * @param {object} [opts]
+ * @param {number} [opts.lookahead=10] - lines to scan ahead for kk fallback
+ * @param {string} [opts.file] - filename for offender records
+ * @returns {{binaryOffenders: Array, bogusOffenders: Array}}
+ */
+function analyzeContent(content, opts = {}) {
+  const lookahead = opts.lookahead ?? DEFAULT_LOOKAHEAD;
+  const file = opts.file ?? '<input>';
   const lines = content.split('\n');
+  const binaryOffenders = [];
+  const bogusOffenders = [];
+
   lines.forEach((line, i) => {
     if (/lang===['"]ru['"]\s*\?/.test(line) && !/lang===['"]kk['"]/.test(line)) {
-      // Check next LOOKAHEAD lines for a kk fallback completing this multi-line ternary
-      const window = lines.slice(i + 1, i + 1 + LOOKAHEAD).join('\n');
+      const window = lines.slice(i + 1, i + 1 + lookahead).join('\n');
       const hasKkInWindow = /lang===['"]kk['"]/.test(window);
       if (!hasKkInWindow) {
-        binaryTotal++;
         binaryOffenders.push({ file, line: i + 1, text: line.trim() });
       }
     }
     BOGUS_TERNARY.lastIndex = 0;
     let m;
     while ((m = BOGUS_TERNARY.exec(line)) !== null) {
-      bogusTotal++;
       bogusOffenders.push({ file, line: i + 1, match: m[0], text: line.trim() });
     }
   });
+
+  return { binaryOffenders, bogusOffenders };
 }
 
-if (process.argv.includes('--list')) {
-  console.log('--- Binary ru-only ternaries ---');
-  for (const o of binaryOffenders) {
-    console.log(`${o.file}:${o.line}  ${o.text.slice(0, 140)}`);
+function main() {
+  const files = ['src/App.jsx'];
+  let allBinary = [];
+  let allBogus = [];
+
+  for (const file of files) {
+    const content = fs.readFileSync(path.join(process.cwd(), file), 'utf8');
+    const { binaryOffenders, bogusOffenders } = analyzeContent(content, { file });
+    allBinary = allBinary.concat(binaryOffenders);
+    allBogus = allBogus.concat(bogusOffenders);
   }
-  if (bogusOffenders.length) {
-    console.log('--- Bogus identical-branch ternaries ---');
-    for (const o of bogusOffenders) {
-      console.log(`${o.file}:${o.line}  ${o.match}`);
+
+  if (process.argv.includes('--list')) {
+    console.log('--- Binary ru-only ternaries ---');
+    for (const o of allBinary) {
+      console.log(`${o.file}:${o.line}  ${o.text.slice(0, 140)}`);
+    }
+    if (allBogus.length) {
+      console.log('--- Bogus identical-branch ternaries ---');
+      for (const o of allBogus) {
+        console.log(`${o.file}:${o.line}  ${o.match}`);
+      }
     }
   }
+
+  console.log(`Binary ru-only ternaries (no kk fallback): ${allBinary.length} / baseline ${BASELINE}`);
+  console.log(`Bogus identical-branch ternaries: ${allBogus.length} (must be 0)`);
+
+  let failed = false;
+  if (allBinary.length > BASELINE) {
+    console.error(`\n⚠ Regression: ${allBinary.length - BASELINE} new binary ternaries vs baseline.`);
+    console.error('  Either add a kk fallback (`lang==="ru"?ru:lang==="kk"?kk:en`)');
+    console.error('  or lower BASELINE in this script if the new sites are intentional.');
+    failed = true;
+  }
+  if (allBogus.length > 0) {
+    console.error(`\n⚠ ${allBogus.length} bogus identical-branch ternaries — both branches return the same string.`);
+    console.error('  Replace with the literal string. Re-run with --list to see locations.');
+    failed = true;
+  }
+  if (failed) process.exit(1);
+
+  if (allBinary.length < BASELINE) {
+    console.log(`✓ Below baseline by ${BASELINE - allBinary.length}. Consider lowering BASELINE in this script.`);
+  }
 }
 
-console.log(`Binary ru-only ternaries (no kk fallback): ${binaryTotal} / baseline ${BASELINE}`);
-console.log(`Bogus identical-branch ternaries: ${bogusTotal} (must be 0)`);
+module.exports = { analyzeContent, BASELINE, BOGUS_TERNARY, DEFAULT_LOOKAHEAD };
 
-let failed = false;
-if (binaryTotal > BASELINE) {
-  console.error(`\n⚠ Regression: ${binaryTotal - BASELINE} new binary ternaries vs baseline.`);
-  console.error('  Either add a kk fallback (`lang==="ru"?ru:lang==="kk"?kk:en`)');
-  console.error('  or lower BASELINE in this script if the new sites are intentional.');
-  failed = true;
-}
-if (bogusTotal > 0) {
-  console.error(`\n⚠ ${bogusTotal} bogus identical-branch ternaries — both branches return the same string.`);
-  console.error('  Replace with the literal string. Re-run with --list to see locations.');
-  failed = true;
-}
-if (failed) process.exit(1);
-
-if (binaryTotal < BASELINE) {
-  console.log(`✓ Below baseline by ${BASELINE - binaryTotal}. Consider lowering BASELINE in this script.`);
-}
+if (require.main === module) main();
