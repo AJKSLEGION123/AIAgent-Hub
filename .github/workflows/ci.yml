@@ -17,6 +17,15 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      # Cheap gates first — fail fast before the slow steps
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Data integrity
+        run: node scripts/check-data.cjs
+
       - run: npm run build
       - run: npm test
 
