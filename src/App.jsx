@@ -2077,12 +2077,12 @@ function AgentHub({ data, loadTime }) {
             background:copied==="team-setup"?"transparent":c.accent,
             color:copied==="team-setup"?c.accent:textOn(c.accent),
             cursor:"pointer", transition:"all .15s", outline:"none",
-          }}>{copied==="team-setup" ? (lang==="ru"?"✓ Готово":"✓ Copied") : (lang==="ru"?"setup-agents.sh":"setup-agents.sh")}</button>
+          }}>{copied==="team-setup" ? (lang==="ru"?"✓ Готово":lang==="kk"?"✓ Дайын":"✓ Copied") : "setup-agents.sh"}</button>
         </div>
 
         {/* Setup commands section label */}
         <div style={{ marginBottom:14, paddingBottom:8, borderBottom:`1px solid ${c.brd}`, display:"flex", alignItems:"baseline", gap:12 }}>
-          <h3 className="display-serif" style={{ fontSize:22, fontWeight:400, margin:0, color:c.ink, lineHeight:1, letterSpacing:"-.3px" }}>{lang==="ru"?"Настройка и запуск":"Setup & Launch"}</h3>
+          <h3 className="display-serif" style={{ fontSize:22, fontWeight:400, margin:0, color:c.ink, lineHeight:1, letterSpacing:"-.3px" }}>{lang==="ru"?"Настройка и запуск":lang==="kk"?"Баптау және іске қосу":"Setup & Launch"}</h3>
           <span className="label-tech-sm" style={{ color:c.dim }}>02 · Setup</span>
         </div>
         {[
@@ -2119,7 +2119,7 @@ function AgentHub({ data, loadTime }) {
 
         {/* Feat 25: Quick launch generator */}
         <div style={{ marginBottom:16, padding:"14px 18px", borderRadius:0, border:`1px dashed ${c.brd}`, background:c.bg2 }}>
-          <div style={{ fontSize:12, fontWeight:700, color:c.mut, marginBottom:10 }}>⚡ {lang==="ru"?"Быстрый запуск одного агента":"Quick Launch Single Agent"}</div>
+          <div style={{ fontSize:12, fontWeight:700, color:c.mut, marginBottom:10 }}>⚡ {lang==="ru"?"Быстрый запуск одного агента":lang==="kk"?"Бір агентті жылдам іске қосу":"Quick Launch Single Agent"}</div>
           <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
             {P.filter(p=>p.type==="role").slice(0,12).map(p => (
               <button key={p.id} onClick={()=>{
@@ -2229,7 +2229,7 @@ function AgentHub({ data, loadTime }) {
           
           {/* Task 068: Changelog */}
           <details style={{ marginTop:8 }}>
-            <summary style={{ fontSize:10, fontWeight:600, color:c.mut, cursor:"pointer", letterSpacing:1, textTransform:"uppercase", marginBottom:6 }}>{lang==="ru"?"История версий":"Changelog"}</summary>
+            <summary style={{ fontSize:10, fontWeight:600, color:c.mut, cursor:"pointer", letterSpacing:1, textTransform:"uppercase", marginBottom:6 }}>{lang==="ru"?"История версий":lang==="kk"?"Версиялар тарихы":"Changelog"}</summary>
             <div style={{ fontSize:10, color:c.dim, lineHeight:1.8, paddingLeft:8, borderLeft:`2px solid ${c.brd}`, marginTop:8 }}>
               <div><strong>v9.0</strong> — {lang==="ru"?"165 промтов, 46 комбо, 10 хоткеев. 12 мега-промтов (ночной режим 100+ задач), ♾️ бесконечный режим, глобальный поиск, table view, infinite scroll, focus mode, glossary, pin промтов, copy counters, FAB, 43 теста, CSP, aria-modal, focus-visible.":"165 prompts, 46 combos, 10 shortcuts. 12 mega prompts (overnight 100+ tasks), ♾️ infinite mode, global search, table view, infinite scroll, focus mode, glossary, pin prompts, copy counters, FAB, 43 tests, CSP, aria-modal, focus-visible."}</div>
               <div style={{marginTop:4}}><strong>v8.0</strong> — {lang==="ru"?"132 промта, 14 конфигов, 35 комбо. Теги, сложность, related. Sticky поиск, сортировка, random, toast, CSS анимации, a11y, mobile responsive, ErrorBoundary, persistent storage, URL routing.":"132 prompts, 14 configs, 35 combos. Tags, difficulty, related. Sticky search, sorting, random, toast, CSS animations, a11y, mobile responsive, ErrorBoundary, persistent storage, URL routing."}</div>
@@ -2253,7 +2253,7 @@ function AgentHub({ data, loadTime }) {
 
           {/* Task 123: Timeline visualization */}
           <details style={{ marginTop:8 }}>
-            <summary style={{ fontSize:10, fontWeight:600, color:c.mut, cursor:"pointer", letterSpacing:1, textTransform:"uppercase", marginBottom:6 }}>{lang==="ru"?"Эволюция":"Evolution"}</summary>
+            <summary style={{ fontSize:10, fontWeight:600, color:c.mut, cursor:"pointer", letterSpacing:1, textTransform:"uppercase", marginBottom:6 }}>{lang==="ru"?"Эволюция":lang==="kk"?"Эволюция":"Evolution"}</summary>
             <div style={{ marginTop:8, padding:"8px 0" }}>
               <svg width="100%" height="90" viewBox="0 0 600 90">
                 {(() => {
@@ -2292,7 +2292,7 @@ function AgentHub({ data, loadTime }) {
 
           {/* Task 124: Coverage heatmap */}
           <details style={{ marginTop:8 }}>
-            <summary style={{ fontSize:10, fontWeight:600, color:c.mut, cursor:"pointer", letterSpacing:1, textTransform:"uppercase", marginBottom:6 }}>{lang==="ru"?"Покрытие":"Coverage"}</summary>
+            <summary style={{ fontSize:10, fontWeight:600, color:c.mut, cursor:"pointer", letterSpacing:1, textTransform:"uppercase", marginBottom:6 }}>{lang==="ru"?"Покрытие":lang==="kk"?"Қамту":"Coverage"}</summary>
             <div style={{ marginTop:8, display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(80px, 1fr))", gap:4 }}>
               {(() => {
                 const cats = [

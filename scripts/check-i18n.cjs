@@ -17,9 +17,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter78 fixed the workflow constructor cluster (10 sites).
+// Baseline: count after iter79 fixed setup-page cluster + section headers (6 sites).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 157;
+const BASELINE = 151;
 
 const files = ['src/App.jsx'];
 let total = 0;
