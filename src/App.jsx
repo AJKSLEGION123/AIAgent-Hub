@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useRef, Component, Fragment } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef, Fragment } from "react";
 import {
   IconStats, IconLog, IconBook, IconKeyboard, IconMoon, IconSun, IconLang,
   IconTextSize, IconDice, IconStar, IconStarOutline, IconZap, IconGrid,
@@ -8,6 +8,7 @@ import {
 } from "./icons.jsx";
 import { font, fontDisplay, alpha, textOn } from "./theme-utils.js";
 import { Pill, CBtn, Toast, EmptyState, HL } from "./components.jsx";
+import { ErrorBoundary } from "./ErrorBoundary.jsx";
 
 /* ═══════════════════════════════════════════════
    TRANSLATIONS
@@ -229,27 +230,8 @@ select{-webkit-appearance:none;appearance:none;background-image:url("data:image/
 
 // Pill, CBtn, Toast, EmptyState, HL extracted to ./components.jsx (iter115).
 
-/* ═══════════════════════════════════════════════
-   ERROR BOUNDARY (task: 004)
-   ═══════════════════════════════════════════════ */
-class ErrBound extends Component {
-  constructor(p){super(p);this.state={err:null}}
-  static getDerivedStateFromError(e){return{err:e}}
-  render(){
-    if(this.state.err) return (
-      <div style={{minHeight:"100vh",background:"#060609",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:font,color:"#ddddef",textAlign:"center",padding:32}}>
-        <div>
-          <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>AIAgent-Hub</div>
-          <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>Произошла ошибка</div>
-          <div style={{fontSize:11,color:"#5e5e78",marginBottom:16,maxWidth:400}}>{this.state.err?.message}</div>
-          {this.state.err?.stack && <details style={{marginBottom:16,textAlign:"left",maxWidth:500}}><summary style={{fontSize:10,color:"#5e5e78",cursor:"pointer"}}>Stack trace</summary><pre style={{fontSize:9,color:"#44445a",marginTop:8,padding:8,background:"#0a0a12",borderRadius:0,whiteSpace:"pre-wrap",wordBreak:"break-all",maxHeight:200,overflow:"auto"}}>{this.state.err.stack}</pre></details>}
-          <button onClick={()=>this.setState({err:null})} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:0,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>Перезагрузить</button>
-        </div>
-      </div>
-    );
-    return this.props.children;
-  }
-}
+// Inline ErrBound removed in iter117 — replaced with the polished ErrorBoundary
+// from ./ErrorBoundary.jsx (lang-aware, click-to-reload, 5 unit tests).
 
 /* ═══════════════════════════════════════════════
    APP WRAPPER (tasks: 004, 026, 027, 091)
@@ -306,7 +288,7 @@ export default function App() {
     </div>
   );
   
-  return <ErrBound><AgentHub data={data} loadTime={loadTime} /></ErrBound>;
+  return <ErrorBoundary><AgentHub data={data} loadTime={loadTime} /></ErrorBoundary>;
 }
 
 /* ═══════════════════════════════════════════════
