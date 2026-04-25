@@ -1353,7 +1353,7 @@ function AgentHub({ data, loadTime }) {
             const shown = filtered.slice(0, MAX);
             return <div style={{marginBottom:8}}>
               <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
-                <input type="search" value={tagFilter} onChange={e=>setTagFilter(e.target.value)} placeholder={lang==="ru"?`Поиск тегов (всего ${allTags.length})...`:`Search tags (${allTags.length} total)...`} style={{flex:1,maxWidth:300,height:28,padding:"0 10px",fontSize:11,fontFamily:font,letterSpacing:0.3,border:0,borderBottom:`1px solid ${c.brd}`,borderRadius:0,background:"transparent",color:c.text,outline:"none"}} />
+                <input type="search" value={tagFilter} onChange={e=>setTagFilter(e.target.value)} placeholder={lang==="ru"?`Поиск тегов (всего ${allTags.length})...`:lang==="kk"?`Тегтерді іздеу (барлығы ${allTags.length})...`:`Search tags (${allTags.length} total)...`} style={{flex:1,maxWidth:300,height:28,padding:"0 10px",fontSize:11,fontFamily:font,letterSpacing:0.3,border:0,borderBottom:`1px solid ${c.brd}`,borderRadius:0,background:"transparent",color:c.text,outline:"none"}} />
                 <span className="label-tech-sm" style={{color:c.dim}}>{filtered.length === allTags.length ? `${filtered.length}` : `${filtered.length}/${allTags.length}`}</span>
                 {tagFilter && <button onClick={()=>setTagFilter("")} aria-label={lang==="ru"?"Очистить":lang==="kk"?"Тазалау":"Clear"} style={{width:20,height:20,border:0,background:"none",color:c.dim,cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}}><IconX /></button>}
               </div>
@@ -1378,7 +1378,7 @@ function AgentHub({ data, loadTime }) {
           const shown = filtered.slice(0, MAX);
           return <div style={{marginBottom:12}}>
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
-              <input type="search" value={roleFilter} onChange={e=>setRoleFilter(e.target.value)} placeholder={lang==="ru"?`Поиск ролей (всего ${roles.length})...`:`Search roles (${roles.length} total)...`} style={{flex:1,maxWidth:300,height:28,padding:"0 10px",fontSize:11,fontFamily:font,letterSpacing:0.3,border:0,borderBottom:`1px solid ${c.brd}`,borderRadius:0,background:"transparent",color:c.text,outline:"none"}} />
+              <input type="search" value={roleFilter} onChange={e=>setRoleFilter(e.target.value)} placeholder={lang==="ru"?`Поиск ролей (всего ${roles.length})...`:lang==="kk"?`Рөлдерді іздеу (барлығы ${roles.length})...`:`Search roles (${roles.length} total)...`} style={{flex:1,maxWidth:300,height:28,padding:"0 10px",fontSize:11,fontFamily:font,letterSpacing:0.3,border:0,borderBottom:`1px solid ${c.brd}`,borderRadius:0,background:"transparent",color:c.text,outline:"none"}} />
               <span className="label-tech-sm" style={{color:c.dim}}>{filtered.length === roles.length ? `${filtered.length}` : `${filtered.length}/${roles.length}`}</span>
               {roleFilter && <button onClick={()=>setRoleFilter("")} aria-label={lang==="ru"?"Очистить":lang==="kk"?"Тазалау":"Clear"} style={{width:20,height:20,border:0,background:"none",color:c.dim,cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}}><IconX /></button>}
             </div>
@@ -1520,7 +1520,7 @@ function AgentHub({ data, loadTime }) {
                 </select>
               </div>
             </div>
-            <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:6 }}>{lang==="ru"?"Задачи (выбери несколько):":"Tasks (select multiple):"}</div>
+            <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:6 }}>{lang==="ru"?"Задачи (выбери несколько):":lang==="kk"?"Тапсырмалар (бірнешеуін таңда):":"Tasks (select multiple):"}</div>
             <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:12 }}>
               {["TypeScript strict","Тесты","Безопасность","Производительность","A11Y","SEO","Docker","CI/CD","Документация","Рефакторинг","Error handling","Мониторинг"].map(task => {
                 const sel = constructorTasks.includes(task);
@@ -1540,7 +1540,7 @@ function AgentHub({ data, loadTime }) {
                   prompt += `\nРЕЗУЛЬТАТ: .claude/reports/${constructorRole}.md\n\nАНТИ-ЛУП: 3 = смена подхода. 5 max.\n\nПЕРВЫЙ ШАГ: Прочитай проект → план → реализация.`;
                   cp("constructor", prompt);
                 }} style={{ padding:"8px 20px", fontSize:11, fontFamily:font, fontWeight:600, border:"1.5px solid #e86a2a", borderRadius:0, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
-                  {copied==="constructor" ? t.copied : (lang==="ru"?"Сгенерировать и скопировать":"Generate & Copy")}
+                  {copied==="constructor" ? t.copied : (lang==="ru"?"Сгенерировать и скопировать":lang==="kk"?"Жасап шығарып көшіру":"Generate & Copy")}
                 </button>
               </div>
             )}
@@ -1577,7 +1577,7 @@ function AgentHub({ data, loadTime }) {
               <option value="en">🇬🇧 English output</option>
             </select>
             {/* Compact mode for Claude Code */}
-            <button onClick={()=>setCompactMode(!compactMode)} aria-pressed={compactMode} title={lang==="ru"?"Компактные промты для Claude Code (~700 символов)":"Compact prompts for Claude Code (~700 chars)"} style={{ padding:"3px 10px", fontSize:9, fontFamily:font, border:`1px solid ${compactMode?"#10b981":c.brd}`, borderRadius:0, background:compactMode?"#10b98110":"transparent", color:compactMode?"#10b981":c.mut, cursor:"pointer", outline:"none", fontWeight:compactMode?700:400 }}>
+            <button onClick={()=>setCompactMode(!compactMode)} aria-pressed={compactMode} title={lang==="ru"?"Компактные промты для Claude Code (~700 символов)":lang==="kk"?"Claude Code үшін қысқа промттар (~700 таңба)":"Compact prompts for Claude Code (~700 chars)"} style={{ padding:"3px 10px", fontSize:9, fontFamily:font, border:`1px solid ${compactMode?"#10b981":c.brd}`, borderRadius:0, background:compactMode?"#10b98110":"transparent", color:compactMode?"#10b981":c.mut, cursor:"pointer", outline:"none", fontWeight:compactMode?700:400 }}>
               {compactMode ? "⇣ Compact" : "≡ Full"}
             </button>
             {/* Task 58: Stack override */}
@@ -1646,7 +1646,7 @@ function AgentHub({ data, loadTime }) {
                     <div style={{ display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
                       <span className="body-serif" style={{ fontSize:19, fontWeight:500, color:p.ac, letterSpacing:-0.1, lineHeight:1.15 }}>{debouncedSearch ? <HL text={t.r[p.role]||p.role} q={debouncedSearch} color={p.ac}/> : (t.r[p.role]||p.role)}</span>
                       <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:MC[p.mk], fontWeight:700, fontFamily:font }}>{ML[p.mk]}</span>
-                      {p.type==="task" && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:"#ef4444", fontWeight:700, fontFamily:font }}>· {lang==="ru"?"задача":"task"}</span>}
+                      {p.type==="task" && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:"#ef4444", fontWeight:700, fontFamily:font }}>· {lang==="ru"?"задача":lang==="kk"?"тапсырма":"task"}</span>}
                       {p.difficulty && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:diffColors[p.difficulty], fontWeight:600, fontFamily:font }} className="hide-mobile">· {p.difficulty}</span>}
                       {parseFloat(p.v)===maxV && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:"#10b981", fontWeight:700, fontFamily:font }}>· new</span>}
                       {p.time && <span style={{ fontSize:8, letterSpacing:1.5, color:c.dim, fontFamily:font }} className="hide-mobile">· {p.time}</span>}
@@ -1906,7 +1906,7 @@ function AgentHub({ data, loadTime }) {
                 <span>№{String(i+1).padStart(2,"0")}</span>
                 <span style={{ opacity:.4 }}>·</span>
                 <span style={{ color:c.mut }}>{(cb.ids||[]).length} {lang==="ru"?"агентов":lang==="kk"?"агент":"agents"}</span>
-                {hasConflict && <><span style={{ opacity:.4 }}>·</span><span style={{ color:"#f59e0b", fontWeight:700 }}>⚠ {lang==="ru"?"конфликт":"conflict"}</span></>}
+                {hasConflict && <><span style={{ opacity:.4 }}>·</span><span style={{ color:"#f59e0b", fontWeight:700 }}>⚠ {lang==="ru"?"конфликт":lang==="kk"?"қайшылық":"conflict"}</span></>}
               </div>
               <h3 className="display-serif" style={{ fontSize:24, fontWeight:400, color:c.ink, margin:0, lineHeight:1.1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144", textWrap:"balance" }}>{cb.name}</h3>
               {/* description block */}

@@ -21,9 +21,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter94 fixed modal headings + stats hero (5 sites).
+// Baseline: count after iter95 fixed search placeholders + constructor + compact + task + conflict (7 sites).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 20;
+const BASELINE = 13;
 
 const files = ['src/App.jsx'];
 let binaryTotal = 0;
