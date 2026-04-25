@@ -31,7 +31,7 @@
   <text x="80" y="300" fill="#b3a794" font-family="'Instrument Serif','Georgia',serif" font-size="30" font-style="italic">Полевой справочник автономной разработки с Claude Code.</text>
 
   <!-- Big stat -->
-  <text x="80" y="475" fill="#e86a2a" font-family="'Fraunces','Times New Roman',serif" font-size="220" font-weight="300" letter-spacing="-6">10 013</text>
+  <text x="80" y="475" fill="#e86a2a" font-family="'Fraunces','Times New Roman',serif" font-size="220" font-weight="300" letter-spacing="-6">10 014</text>
 
   <!-- Stat label -->
   <text x="80" y="520" fill="#a09584" font-family="'JetBrains Mono',monospace" font-size="16" letter-spacing="6">ПРОМТОВ ДЛЯ CLAUDE OPUS 4.7 · 1M CONTEXT</text>
@@ -41,6 +41,6 @@
   <line x1="80" y1="562" x2="1120" y2="562" stroke="#ece3ce" stroke-opacity="0.5" stroke-width="1"/>
 
   <!-- Footer row -->
-  <text x="80" y="598" fill="#a09584" font-family="'JetBrains Mono',monospace" font-size="13" letter-spacing="2">75 КОМБО · 30 ШПАРГАЛОК · 108 CLI-КОМАНД</text>
+  <text x="80" y="598" fill="#a09584" font-family="'JetBrains Mono',monospace" font-size="13" letter-spacing="2">76 КОМБО · 30 ШПАРГАЛОК · 108 CLI-КОМАНД</text>
   <text x="1120" y="598" text-anchor="end" fill="#e86a2a" font-family="'JetBrains Mono',monospace" font-size="13" letter-spacing="3" font-weight="700">AI-AGENT-HUB.NET</text>
 </svg>
