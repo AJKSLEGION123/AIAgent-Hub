@@ -1089,14 +1089,14 @@ function AgentHub({ data, loadTime }) {
           </div>
           {/* Cycle 26: Tag cloud in stats */}
           <div style={{ marginBottom:12 }}>
-            <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"Популярные теги":"Popular tags"}</div>
+            <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"Популярные теги":lang==="kk"?"Танымал тегтер":"Popular tags"}</div>
             <div style={{ display:"flex", gap:3, flexWrap:"wrap" }}>
               {(() => { const tc = {}; P.forEach(p=>(p.tags||[]).forEach(tg=>{tc[tg]=(tc[tg]||0)+1})); return Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,15).map(([tg,n])=><span key={tg} style={{ fontSize:Math.max(8,Math.min(12,7+n/3)), padding:"2px 6px", borderRadius:0, background:"#e86a2a10", color:"#e86a2a", border:"1px solid #e86a2a20", cursor:"pointer", fontFamily:font }} onClick={()=>{setFm("tag");setFv(tg);setSection("prompts");setShowStats(false)}}>{tg} <span style={{fontSize:8,color:c.dim}}>{n}</span></span>); })()}
             </div>
           </div>
           {/* Cycle 26: Most copied prompts */}
           {Object.keys(copyCounters).length > 0 && <div style={{ marginBottom:12 }}>
-            <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"Часто копируемые":"Most copied"}</div>
+            <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"Часто копируемые":lang==="kk"?"Жиі көшірілетін":"Most copied"}</div>
             {Object.entries(copyCounters).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([pid,n])=>{const pp=pGet(pid);return pp?<div key={pid} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"3px 0", fontSize:10 }}><span style={{ color:pp.ac }}>{pp.icon} {t.r[pp.role]||pp.role}</span><span style={{ color:c.dim }}>×{n}</span></div>:null})}
           </div>}
           {(() => { try { const used = localStorage.getItem("aiagent-hub-settings"); return used ? <div className="label-tech-sm" style={{ color:c.dim, marginTop:10 }}>⇩ localStorage · {(used.length/1024).toFixed(1)} KB</div> : null; } catch { return null; } })()}
@@ -1111,7 +1111,7 @@ function AgentHub({ data, loadTime }) {
             <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>≣ Log</div>
             <div className="display-serif" style={{ fontSize:22, fontWeight:400, color:c.ink, lineHeight:1.1, letterSpacing:"-.3px" }}>{lang==="ru"?"История копирования":"Copy History"}</div>
           </div>
-          {copyHistory.length===0 && <div style={{ fontSize:11, color:c.dim }}>{lang==="ru"?"Ещё ничего не скопировано":"Nothing copied yet"}</div>}
+          {copyHistory.length===0 && <div style={{ fontSize:11, color:c.dim }}>{lang==="ru"?"Ещё ничего не скопировано":lang==="kk"?"Әлі ештеңе көшірілмеген":"Nothing copied yet"}</div>}
           {copyHistory.map((h,i)=><div key={i} style={{ padding:"8px 10px", borderRadius:0, border:`1px solid ${c.brd}`, marginBottom:6, background:c.surf }}>
             <div style={{ fontSize:11, fontWeight:600, color:c.text }}>{h.icon} {h.name}</div>
             <div style={{ fontSize:9, color:c.dim, marginTop:2 }}>{h.time}</div>
@@ -1121,7 +1121,7 @@ function AgentHub({ data, loadTime }) {
       </div>}
 
       {/* Skip link (task 100) */}
-      <a href="#main-content" className="skip-link">{lang==="ru"?"К содержимому":"Skip to content"}</a>
+      <a href="#main-content" className="skip-link">{lang==="ru"?"К содержимому":lang==="kk"?"Мазмұнға өту":"Skip to content"}</a>
       
       {/* Grain texture */}
       <div className="grain" />
@@ -1171,7 +1171,7 @@ function AgentHub({ data, loadTime }) {
             <button onClick={()=>setShowStats(true)} aria-label="Statistics" title={lang==="ru"?"Статистика":lang==="kk"?"Статистика":"Statistics"} className="nav-btn" data-active={showStats} style={{ borderColor: showStats?c.accent:c.brd, color: showStats?c.accent:c.text }}>
               <IconStats />
             </button>
-            <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":"Copy history"} className="nav-btn" data-active={showCopyHistory} style={{ borderColor: showCopyHistory?c.accent:c.brd, color: showCopyHistory?c.accent:c.text }}>
+            <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":lang==="kk"?"Көшіру тарихы":"Copy history"} className="nav-btn" data-active={showCopyHistory} style={{ borderColor: showCopyHistory?c.accent:c.brd, color: showCopyHistory?c.accent:c.text }}>
               <IconLog />
               {copyCount>0 && <span className="dot" style={{ background:c.accent, color:c.onAccent }}>{copyCount}</span>}
             </button>
@@ -1202,9 +1202,9 @@ function AgentHub({ data, loadTime }) {
         {/* Feat 16: Welcome banner — editorial style */}
         {isFirstVisit && <div style={{ marginBottom:24, padding:"20px 24px", border:`1px solid ${c.accent}40`, borderLeft:`3px solid ${c.accent}`, background:`${c.accent}06`, position:"relative" }}>
           <button onClick={()=>setIsFirstVisit(false)} aria-label={lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"} style={{ position:"absolute", top:12, right:14, background:"none", border:"none", color:c.mut, cursor:"pointer", outline:"none", padding:4, display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconX /></button>
-          <div className="label-tech-sm" style={{ color:c.accent, marginBottom:10 }}>Ed. Note · {lang==="ru"?"Добро пожаловать":"Welcome"}</div>
+          <div className="label-tech-sm" style={{ color:c.accent, marginBottom:10 }}>Ed. Note · {lang==="ru"?"Добро пожаловать":lang==="kk"?"Қош келдіңіз":"Welcome"}</div>
           <div className="display-serif" style={{ fontSize:20, fontWeight:400, color:c.ink, marginBottom:10, lineHeight:1.25, fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>
-            {lang==="ru"?"Полевой справочник":"A Field Guide"}
+            {lang==="ru"?"Полевой справочник":lang==="kk"?"Далалық нұсқаулық":"A Field Guide"}
           </div>
           <div style={{ fontSize:12, color:c.mut, lineHeight:1.7, fontFamily:fontDisplay, fontStyle:"italic" }}>
             {lang==="ru"
@@ -1223,7 +1223,7 @@ function AgentHub({ data, loadTime }) {
           ))}
           <div style={{ flex:1, minWidth:20 }} />
           <div style={{ display:"flex", alignItems:"baseline", gap:8 }} className="hide-mobile">
-            <span className="label-tech-sm" style={{ color:c.dim }}>{lang==="ru"?"категорий":"categories"}</span>
+            <span className="label-tech-sm" style={{ color:c.dim }}>{lang==="ru"?"категорий":lang==="kk"?"санаттар":"categories"}</span>
             <span style={{ fontSize:16, fontWeight:400, color:c.text, fontFamily:fontDisplay }}>{Object.keys(categories.counts).length}</span>
           </div>
         </div>
@@ -1277,8 +1277,8 @@ function AgentHub({ data, loadTime }) {
         {!hasFilters && !debouncedSearch && (
           <div style={{ marginBottom:24 }}>
             <div style={{ display:"flex", alignItems:"baseline", justifyContent:"space-between", marginBottom:10 }}>
-              <span className="label-tech-sm" style={{ color:c.mut }}>{lang==="ru"?"Обзор по категориям":"Browse by category"}</span>
-              <span style={{ fontSize:9, color:c.dim, fontFamily:font }}>{lang==="ru"?`${Object.keys(categories.counts).length} категорий · ${P.length} промтов`:`${Object.keys(categories.counts).length} categories · ${P.length} prompts`}</span>
+              <span className="label-tech-sm" style={{ color:c.mut }}>{lang==="ru"?"Обзор по категориям":lang==="kk"?"Санаттар бойынша шолу":"Browse by category"}</span>
+              <span style={{ fontSize:9, color:c.dim, fontFamily:font }}>{lang==="ru"?`${Object.keys(categories.counts).length} категорий · ${P.length} промтов`:lang==="kk"?`${Object.keys(categories.counts).length} санат · ${P.length} промт`:`${Object.keys(categories.counts).length} categories · ${P.length} prompts`}</span>
             </div>
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(170px, 1fr))", gap:6 }}>
               {Object.entries(categories.counts).sort((a,b)=>b[1]-a[1]).map(([cat, n]) => {

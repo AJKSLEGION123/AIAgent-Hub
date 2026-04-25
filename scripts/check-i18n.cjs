@@ -21,9 +21,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter90 fixed bulk-export + POTD + constructor (7 sites).
+// Baseline: count after iter91 fixed copy-history + landing-hero clusters (10 sites).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 48;
+const BASELINE = 38;
 
 const files = ['src/App.jsx'];
 let binaryTotal = 0;
