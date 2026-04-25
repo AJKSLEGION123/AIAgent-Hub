@@ -1,0 +1,77 @@
+version: 2
+
+# Dependabot config for ongoing dependency hygiene.
+# Replaces the ad-hoc "iter17/iter18/iter28/iter32 manually bumped X" loop
+# with weekly automated PRs. Security advisories surface immediately
+# regardless of schedule.
+
+updates:
+  # npm — main dependency tree
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Asia/Almaty
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+      include: scope
+    labels:
+      - dependencies
+      - npm
+    groups:
+      # Group all React-ecosystem updates so they ship together
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react*"
+          - "@vitejs/plugin-react"
+          - "eslint-plugin-react-*"
+      # Group ESLint flat-config pieces
+      eslint:
+        patterns:
+          - "eslint"
+          - "@eslint/*"
+          - "globals"
+      # Group test tooling so changes land coherently
+      tests:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "@testing-library/*"
+          - "@playwright/*"
+          - "playwright"
+          - "jsdom"
+      # Group Vite + build tooling
+      build:
+        patterns:
+          - "vite"
+          - "@rolldown/*"
+          - "typescript"
+
+  # Python — scripts/requirements.txt (paramiko for self-hosted deploy)
+  - package-ecosystem: pip
+    directory: /scripts
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: "chore(deps,py)"
+    labels:
+      - dependencies
+      - python
+
+  # GitHub Actions — keep workflow runners + actions current
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: "chore(deps,ci)"
+    labels:
+      - dependencies
+      - github-actions
