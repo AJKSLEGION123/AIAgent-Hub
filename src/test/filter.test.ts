@@ -87,6 +87,13 @@ describe('filterPrompts', () => {
     expect(result[0]!.id).toBe('sm-new');
   });
 
+  it('NEW filter tracks the highest version dynamically (regression for iter68 stale-constant bug)', () => {
+    // Add a prompt with a higher version than 'sm-new' (8.2). NEW must follow.
+    const newer = mp('rl-newer', 'claude', 'feature', 'command', 'beginner', '~1h', ['fresh'], 'newest', '99.9');
+    const result = filterPrompts([...prompts, newer], { ...defaultOpts, showNew: true });
+    expect(result.map(p => p.id)).toEqual(['rl-newer']);
+  });
+
   it('hides used prompts', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, hideUsed: true, usedPrompts: { 'rl-feat': true, 'rl-api': true } });
     expect(result).toHaveLength(2);

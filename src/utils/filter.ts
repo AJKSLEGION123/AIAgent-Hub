@@ -18,7 +18,12 @@ export function filterPrompts(
   let f = prompts;
 
   if (options.showFavsOnly) f = f.filter(p => options.favs[p.id]);
-  if (options.showNew) f = f.filter(p => p.v === "7.1" || p.v === "8.1" || p.v === "8.2" || p.v === "8.3");
+  if (options.showNew) {
+    // Dynamic max version — "NEW" auto-tracks latest batch without manual sync.
+    let maxV = 0;
+    for (const p of prompts) { const pv = parseFloat(p.v); if (!isNaN(pv) && pv > maxV) maxV = pv; }
+    f = f.filter(p => parseFloat(p.v) === maxV);
+  }
   if (options.hideUsed) f = f.filter(p => !options.usedPrompts[p.id]);
 
   if (options.mode === "model" && options.value !== "all") {

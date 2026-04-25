@@ -833,7 +833,12 @@ function AgentHub({ data, loadTime }) {
   const list = useMemo(() => {
     let f = P;
     if (showFavsOnly) f = f.filter(p => favs[p.id]);
-    if (showNew) f = f.filter(p => p.v === "7.1");
+    if (showNew) {
+      // Dynamic max version — "NEW" auto-tracks latest batch without manual sync.
+      let maxV = 0;
+      for (const p of P) { const pv = parseFloat(p.v); if (!isNaN(pv) && pv > maxV) maxV = pv; }
+      f = f.filter(p => parseFloat(p.v) === maxV);
+    }
     if (hideUsed) f = f.filter(p => !usedPrompts[p.id]);
     if (fm === "model" && fv !== "all") f = f.filter(p => p.mk === fv);
     else if (fm === "category" && fv !== "all") {
