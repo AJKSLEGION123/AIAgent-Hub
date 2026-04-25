@@ -38,4 +38,14 @@ describe('copyToClipboard', () => {
     expect(result).toBe(true);
     expect(writeText).toHaveBeenCalledWith(longText);
   });
+
+  it('returns false when both navigator.clipboard and execCommand throw', async () => {
+    Object.assign(navigator, {
+      clipboard: { writeText: vi.fn().mockRejectedValue(new Error('clipboard blocked')) },
+    });
+    document.execCommand = vi.fn().mockImplementation(() => { throw new Error('execCommand also blocked'); });
+
+    const result = await copyToClipboard('abc');
+    expect(result).toBe(false);
+  });
 });
