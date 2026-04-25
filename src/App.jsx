@@ -568,6 +568,15 @@ function AgentHub({ data, loadTime }) {
     } catch {}
   }, []);
 
+  // A11y: sync <html lang> with the in-app language switcher so screen
+  // readers pick the correct pronunciation rules. index.html ships
+  // <html lang="ru"> as the default; this effect updates it on every
+  // user toggle (ru/en/kk) — without it, NVDA/VoiceOver/JAWS announce
+  // English/Kazakh content with Russian voice rules.
+  useEffect(() => {
+    try { document.documentElement.lang = lang; } catch {}
+  }, [lang]);
+
   // Task 16: Meta theme-color
   // index.html ships TWO static meta tags (dark + light, media-scoped) so the
   // browser can pick the right one for first paint based on system preference,
