@@ -46,6 +46,20 @@ const DEFAULT_LOOKAHEAD = 10;
 // like "×" / "→", and JSX expressions like {lang==="ru"?...}.
 const LOCALE_BLIND_LABEL = /(?:aria-label|title|placeholder|alt)="([A-Za-zА-Яа-я][^"]{0,200})"/g;
 
+// Hard-fail: locale-blind Cyrillic JSX text content. iter117 caught the
+// ErrBound Russian-only error UI; iter123 caught the App boot UI's Russian
+// loading/error literals. Both were JSX text content between tags (not
+// attributes) — the LOCALE_BLIND_LABEL check above doesn't see these.
+//
+// Matches: >RussianText< with 3+ Cyrillic chars and no lang===
+// conditional anywhere on the same line.
+//
+// Why only Cyrillic (not Latin): Latin English text appears in many
+// legitimate non-translation contexts (code identifiers, brand names,
+// "AIAgent-Hub" header, dev-tool labels meant to stay English). Cyrillic
+// is a clear-cut signal of "Russian-only UI" = locale-blind bug.
+const CYRILLIC_JSX_TEXT = />([А-Яа-яЁё][А-Яа-яЁё ,!?.\-:]{2,})</g;
+
 /**
  * Analyze source content for i18n violations. Pure function — no I/O.
  * @param {string} content - file source
@@ -61,6 +75,7 @@ function analyzeContent(content, opts = {}) {
   const binaryOffenders = [];
   const bogusOffenders = [];
   const localeBlindOffenders = [];
+  const cyrillicJsxOffenders = [];
 
   lines.forEach((line, i) => {
     if (/lang===['"]ru['"]\s*\?/.test(line) && !/lang===['"]kk['"]/.test(line)) {
@@ -79,9 +94,19 @@ function analyzeContent(content, opts = {}) {
     while ((m = LOCALE_BLIND_LABEL.exec(line)) !== null) {
       localeBlindOffenders.push({ file, line: i + 1, match: m[0], value: m[1] });
     }
+    // Skip Cyrillic JSX-text scan on lines with i18n conditionals (legitimate)
+    // or pathologically long lines (compressed data blobs etc.). Single-line
+    // <tag>Текст</tag> is the catchable shape; multi-line text-on-its-own-line
+    // remains a documented false-negative.
+    if (line.length < 1000 && !/lang===/.test(line)) {
+      CYRILLIC_JSX_TEXT.lastIndex = 0;
+      while ((m = CYRILLIC_JSX_TEXT.exec(line)) !== null) {
+        cyrillicJsxOffenders.push({ file, line: i + 1, match: m[0], value: m[1] });
+      }
+    }
   });
 
-  return { binaryOffenders, bogusOffenders, localeBlindOffenders };
+  return { binaryOffenders, bogusOffenders, localeBlindOffenders, cyrillicJsxOffenders };
 }
 
 function main() {
@@ -89,13 +114,15 @@ function main() {
   let allBinary = [];
   let allBogus = [];
   let allLocaleBlind = [];
+  let allCyrillicJsx = [];
 
   for (const file of files) {
     const content = fs.readFileSync(path.join(process.cwd(), file), 'utf8');
-    const { binaryOffenders, bogusOffenders, localeBlindOffenders } = analyzeContent(content, { file });
+    const { binaryOffenders, bogusOffenders, localeBlindOffenders, cyrillicJsxOffenders } = analyzeContent(content, { file });
     allBinary = allBinary.concat(binaryOffenders);
     allBogus = allBogus.concat(bogusOffenders);
     allLocaleBlind = allLocaleBlind.concat(localeBlindOffenders);
+    allCyrillicJsx = allCyrillicJsx.concat(cyrillicJsxOffenders);
   }
 
   if (process.argv.includes('--list')) {
@@ -115,11 +142,18 @@ function main() {
         console.log(`${o.file}:${o.line}  ${o.match}`);
       }
     }
+    if (allCyrillicJsx.length) {
+      console.log('--- Locale-blind Cyrillic JSX text content ---');
+      for (const o of allCyrillicJsx) {
+        console.log(`${o.file}:${o.line}  ${o.match}`);
+      }
+    }
   }
 
   console.log(`Binary ru-only ternaries (no kk fallback): ${allBinary.length} / baseline ${BASELINE}`);
   console.log(`Bogus identical-branch ternaries: ${allBogus.length} (must be 0)`);
   console.log(`Locale-blind aria-label/title/placeholder/alt literals: ${allLocaleBlind.length} (must be 0)`);
+  console.log(`Locale-blind Cyrillic JSX text content: ${allCyrillicJsx.length} (must be 0)`);
 
   let failed = false;
   if (allBinary.length > BASELINE) {
@@ -140,6 +174,13 @@ function main() {
     console.error('  Re-run with --list to see locations.');
     failed = true;
   }
+  if (allCyrillicJsx.length > 0) {
+    console.error(`\n⚠ ${allCyrillicJsx.length} Cyrillic JSX text literals not wrapped in lang switch.`);
+    console.error('  Russian text directly inside JSX bypasses ru/en/kk localization.');
+    console.error('  Convert to `{lang==="ru"?"Текст":lang==="kk"?"Мәтін":"Text"}`.');
+    console.error('  Re-run with --list to see locations.');
+    failed = true;
+  }
   if (failed) process.exit(1);
 
   if (allBinary.length < BASELINE) {
@@ -147,6 +188,6 @@ function main() {
   }
 }
 
-module.exports = { analyzeContent, BASELINE, BOGUS_TERNARY, DEFAULT_LOOKAHEAD, LOCALE_BLIND_LABEL };
+module.exports = { analyzeContent, BASELINE, BOGUS_TERNARY, DEFAULT_LOOKAHEAD, LOCALE_BLIND_LABEL, CYRILLIC_JSX_TEXT };
 
 if (require.main === module) main();
