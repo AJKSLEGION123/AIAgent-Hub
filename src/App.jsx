@@ -545,9 +545,19 @@ function AgentHub({ data, loadTime }) {
     return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
   }, []);
 
-  // Cycle 2: Dynamic page title
+  // Cycle 2: Dynamic page title — labels MUST match the editorial tab bar
+  // (line 1202-1206) so bookmarks / browser tab history / screen-reader
+  // page-title-on-navigation matches what the user clicked. Previous values
+  // (combos="Команды/Teams", setup="Setup") drifted from tab bar
+  // (combos="Комбо/Combos", setup="Настройка/Setup") — fixed.
   useEffect(() => {
-    const titles = { prompts:lang==="ru"?"Промты":"Prompts", combos:lang==="ru"?"Команды":"Teams", cheat:lang==="ru"?"Шпаргалки":"Cheat", quick:"CLI", setup:"Setup" };
+    const titles = {
+      prompts: lang==="ru"?"Промты":"Prompts",
+      combos:  lang==="ru"?"Комбо":"Combos",
+      cheat:   lang==="ru"?"Шпаргалки":"Cheat",
+      quick:   "CLI",
+      setup:   lang==="ru"?"Настройка":"Setup",
+    };
     document.title = `AIAgent-Hub — ${titles[section]||""}`;
   }, [section, lang]);
 
