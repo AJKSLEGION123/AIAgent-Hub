@@ -24,8 +24,35 @@ function preloadDataChunk() {
   };
 }
 
+// iter129: emit sitemap.xml at build time so <lastmod> always reflects the
+// build date (was hardcoded `2026-04-25`, going stale every iter). Also drops
+// the 5 fragment URLs (#prompts, #combos, …) — Google treats them as the
+// same canonical URL as `/`, so they were SEO noise. Single canonical entry
+// is the correct shape for a SPA.
+export function buildSitemapXml(today = new Date().toISOString().slice(0, 10)) {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://ai-agent-hub.net/</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
+`;
+}
+
+function generateSitemap() {
+  return {
+    name: 'generate-sitemap',
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: buildSitemapXml() });
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), preloadDataChunk()],
+  plugins: [react(), preloadDataChunk(), generateSitemap()],
   build: {
     // iter125 split the catalog Z blob into a separate `data-*.js` chunk via
     // dynamic import — main chunk dropped from 977KB to 380KB raw (-61%).
