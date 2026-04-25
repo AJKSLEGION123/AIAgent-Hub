@@ -976,7 +976,7 @@ function AgentHub({ data, loadTime }) {
         if (!dp || !dp.compact) return null;
         return <div onClick={()=>setShowDiff(null)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.8)", zIndex:9992, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
           <div role="dialog" aria-modal="true" aria-label="Diff" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:900, width:"100%", maxHeight:"90vh", overflowY:"auto", fontFamily:font }}>
-            <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{dp.icon} {t.r[dp.role]||dp.role} — {lang==="ru"?"Сравнение":"Diff"}</div>
+            <div style={{ fontSize:16, fontWeight:800, marginBottom:16, color:c.text }}>{dp.icon} {t.r[dp.role]||dp.role} — {lang==="ru"?"Сравнение":lang==="kk"?"Салыстыру":"Diff"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
               <div>
                 <div style={{ fontSize:10, fontWeight:700, color:"#e86a2a", marginBottom:8 }}>Original ({dp.text.length} chars)</div>
@@ -1399,8 +1399,8 @@ function AgentHub({ data, loadTime }) {
         })()}
         {fm==="type" && <div style={{display:"flex",gap:5,marginBottom:12,flexWrap:"wrap"}}>
           <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
-          <Pill on={fv==="role"} fn={()=>setFv("role")} lb={lang==="ru"?"Роли":"Roles"} cl="#10b981" c={c} />
-          <Pill on={fv==="task"} fn={()=>setFv("task")} lb={lang==="ru"?"Спец. задачи":"Tasks"} cl="#ef4444" c={c} />
+          <Pill on={fv==="role"} fn={()=>setFv("role")} lb={lang==="ru"?"Роли":lang==="kk"?"Рөлдер":"Roles"} cl="#10b981" c={c} />
+          <Pill on={fv==="task"} fn={()=>setFv("task")} lb={lang==="ru"?"Спец. задачи":lang==="kk"?"Арнайы тапсырмалар":"Tasks"} cl="#ef4444" c={c} />
         </div>}
 
         {/* ── TOOLBAR (tasks 045, 047, 069, 074, 075, 081) ── */}
@@ -1410,7 +1410,7 @@ function AgentHub({ data, loadTime }) {
             {/* Task 75: Progress tracker */}
             {usedCount > 0 && <span style={{ fontSize:10, color:"#10b981", fontWeight:600 }}>✓ {usedCount}/{P.length}</span>}
             <button onClick={randomPrompt} aria-label={lang==="ru"?"Случайный промпт":lang==="kk"?"Кездейсоқ промт":"Random prompt"} title={lang==="ru"?"Случайный промпт":lang==="kk"?"Кездейсоқ промт":"Random prompt"} style={{ width:28, height:28, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconDice /></button>
-            {favCount > 0 && <button onClick={()=>setShowFavsOnly(!showFavsOnly)} aria-pressed={showFavsOnly} aria-label={lang==="ru"?"Показать избранные":"Show favorites"} title={lang==="ru"?"Избранные":"Favorites"} style={{
+            {favCount > 0 && <button onClick={()=>setShowFavsOnly(!showFavsOnly)} aria-pressed={showFavsOnly} aria-label={lang==="ru"?"Показать избранные":lang==="kk"?"Таңдаулыларды көрсету":"Show favorites"} title={lang==="ru"?"Избранные":lang==="kk"?"Таңдаулылар":"Favorites"} style={{
               display:"inline-flex", alignItems:"center", justifyContent:"center", gap:5, padding:"0 8px", height:28, fontSize:9, fontWeight:700, fontFamily:font,
               border:`1px solid ${showFavsOnly?"#eab308":c.brd}`, borderRadius:0,
               background:showFavsOnly?"#eab30812":"transparent", color:showFavsOnly?"#eab308":c.mut,
@@ -1436,7 +1436,7 @@ function AgentHub({ data, loadTime }) {
               setExpanded(e=>({...e,[r.id]:true}));
               setFm("all"); setFv("all"); setSearch(""); setShowFavsOnly(false);
               setTimeout(()=>{document.getElementById(`card-${r.id}`)?.scrollIntoView({behavior:"smooth",block:"center"})},100);
-            }} aria-label={lang==="ru"?"Случайный промт":"Random"} title={lang==="ru"?"Случайный":"Random"} style={{ width:28, height:28, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconDice /></button>
+            }} aria-label={lang==="ru"?"Случайный промт":lang==="kk"?"Кездейсоқ промт":"Random"} title={lang==="ru"?"Случайный":lang==="kk"?"Кездейсоқ":"Random"} style={{ width:28, height:28, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconDice /></button>
             {list.length > 0 && hasFilters && <button onClick={() => {
               const allText = list.map(p => `═══ ${(t.r[p.role]||p.role).toUpperCase()} (${p.m}) ═══\n\n${compactMode && p.compact ? p.compact : p.text}`).join('\n\n\n');
               cp("copy-filtered", allText, true);
@@ -1446,7 +1446,7 @@ function AgentHub({ data, loadTime }) {
             <button onClick={toggleAll} style={{ fontSize:10, fontFamily:font, color:c.mut, background:"none", border:"none", cursor:"pointer", padding:"4px 8px", outline:"none" }}>{allExpanded ? t.collapseAll : t.expandAll}</button>
             {/* Feat 26: View mode toggle */}
             <div style={{ display:"flex", border:`1px solid ${c.brd}`, borderRadius:0, overflow:"hidden" }}>
-              {[{k:"card",I:IconCards,t:lang==="ru"?"Карточки":"Cards"},{k:"table",I:IconList,t:lang==="ru"?"Таблица":"Table"}].map(v=><button key={v.k} onClick={()=>setViewMode(v.k)} aria-pressed={viewMode===v.k} title={v.t} style={{ width:28, height:28, background:viewMode===v.k?c.accent+"15":"transparent", color:viewMode===v.k?c.accent:c.dim, border:"none", cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><v.I/></button>)}
+              {[{k:"card",I:IconCards,t:lang==="ru"?"Карточки":lang==="kk"?"Карточкалар":"Cards"},{k:"table",I:IconList,t:lang==="ru"?"Таблица":lang==="kk"?"Кесте":"Table"}].map(v=><button key={v.k} onClick={()=>setViewMode(v.k)} aria-pressed={viewMode===v.k} title={v.t} style={{ width:28, height:28, background:viewMode===v.k?c.accent+"15":"transparent", color:viewMode===v.k?c.accent:c.dim, border:"none", cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><v.I/></button>)}
             </div>
           </div>
         </div>
@@ -1454,7 +1454,7 @@ function AgentHub({ data, loadTime }) {
         {/* Task 69: Compare panel */}
         {compareMode && compareIds.length >= 2 && (
           <div style={{ marginBottom:12, padding:12, borderRadius:0, border:`2px solid #c4541d40`, background:"#c4541d08" }}>
-            <div style={{ fontSize:10, fontWeight:700, color:"#c4541d", marginBottom:8 }}>{lang==="ru"?"Сравнение":"Compare"} ({compareIds.length})</div>
+            <div style={{ fontSize:10, fontWeight:700, color:"#c4541d", marginBottom:8 }}>{lang==="ru"?"Сравнение":lang==="kk"?"Салыстыру":"Compare"} ({compareIds.length})</div>
             <div style={{ display:"grid", gridTemplateColumns:`repeat(${Math.min(compareIds.length, 3)}, 1fr)`, gap:8 }}>
               {compareIds.map(id => {
                 const p = pGet(id);
