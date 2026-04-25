@@ -17,9 +17,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter85 fixed topbar nav cluster (7 sites + a11y bug).
+// Baseline: count after iter86 fixed stats card (6) + filter pills (6).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 83;
+const BASELINE = 71;
 
 const files = ['src/App.jsx'];
 let total = 0;

@@ -1070,16 +1070,16 @@ function AgentHub({ data, loadTime }) {
             {[
               [stats.total, lang==="ru"?"Промтов":lang==="kk"?"Промттер":"Prompts", "#e86a2a"],
               [(COMBOS[lang]||COMBOS.ru).length, lang==="ru"?"Комбо":lang==="kk"?"Комбо":"Combos", "#f97316"],
-              [Object.keys(CHEAT).length, lang==="ru"?"Шпаргалок":"Cheats", "#c4541d"],
-              [Object.keys(categories.counts).length, lang==="ru"?"Категорий":"Categories", "#06b6d4"],
+              [Object.keys(CHEAT).length, lang==="ru"?"Шпаргалок":lang==="kk"?"Парақтар":"Cheats", "#c4541d"],
+              [Object.keys(categories.counts).length, lang==="ru"?"Категорий":lang==="kk"?"Санаттар":"Categories", "#06b6d4"],
               [`~${(stats.totalTokens/1000).toFixed(0)}K`, "Tokens", "#10b981"],
-              [copyCount, lang==="ru"?"Скопировано":"Copied", "#eab308"],
-              [usedCount, lang==="ru"?"Использовано":"Used", "#10b981"],
-              [favCount, lang==="ru"?"Избранных":"Favorites", "#eab308"],
+              [copyCount, lang==="ru"?"Скопировано":lang==="kk"?"Көшірілді":"Copied", "#eab308"],
+              [usedCount, lang==="ru"?"Использовано":lang==="kk"?"Қолданылды":"Used", "#10b981"],
+              [favCount, lang==="ru"?"Избранных":lang==="kk"?"Таңдаулылар":"Favorites", "#eab308"],
             ].map(([v,l,cl])=><div key={l} style={{ padding:"14px 12px 10px", borderRadius:0, background:"transparent", border:`1px solid ${c.brd}`, textAlign:"left" }}><div className="display-serif numeric" style={{ fontSize:32, fontWeight:300, color:cl, lineHeight:.9, letterSpacing:"-1px", fontVariationSettings:"'SOFT' 30,'opsz' 144" }}>{v}</div><div className="label-tech-sm" style={{ color:c.mut, marginTop:6 }}>{l}</div></div>)}
           </div>
           <div style={{ marginBottom:12 }}>
-            <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"По моделям":"By model"}</div>
+            <div style={{ fontSize:10, fontWeight:600, color:c.mut, marginBottom:6 }}>{lang==="ru"?"По моделям":lang==="kk"?"Модельдер бойынша":"By model"}</div>
             {stats.byModel.map(([mk,n])=><div key={mk} style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
               <div style={{ width:6, height:6, borderRadius:"50%", background:MC[mk] }} />
               <span style={{ fontSize:10, color:MC[mk], fontWeight:600, width:120 }}>{ML[mk]}</span>
@@ -1320,21 +1320,21 @@ function AgentHub({ data, loadTime }) {
             {[{k:"all",l:t.all},{k:"category",l:lang==="ru"?"Категории":"Categories"},{k:"model",l:t.byModel},{k:"role",l:t.byRole},{k:"type",l:t.byType},{k:"difficulty",l:lang==="ru"?"Сложность":lang==="kk"?"Күрделілік":"Difficulty"},{k:"time",l:lang==="ru"?"Время":"Time"},{k:"tag",l:lang==="ru"?"Теги":"Tags"}].map(f =>
               <Pill key={f.k} on={fm===f.k} fn={()=>{setFm(f.k);setFv("all");}} lb={f.l} c={c} />
             )}
-            {hasFilters && <button onClick={clearFilters} style={{ padding:"6px 2px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:600, border:0, borderBottom:`1.5px solid #ef4444`, background:"transparent", color:"#ef4444", cursor:"pointer", outline:"none", marginRight:12 }}>✕ {lang==="ru"?"Сброс":"Reset"}</button>}
+            {hasFilters && <button onClick={clearFilters} style={{ padding:"6px 2px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:600, border:0, borderBottom:`1.5px solid #ef4444`, background:"transparent", color:"#ef4444", cursor:"pointer", outline:"none", marginRight:12 }}>✕ {lang==="ru"?"Сброс":lang==="kk"?"Қалпына келтіру":"Reset"}</button>}
             <div style={{ width:1, height:16, background:c.brd }} />
             {/* Feat 10: NEW only */}
             <Pill on={showNew} fn={()=>setShowNew(!showNew)} lb="NEW" cl="#10b981" c={c} />
             {/* Feat 11: Hide used */}
-            {usedCount > 0 && <Pill on={hideUsed} fn={()=>setHideUsed(!hideUsed)} lb={lang==="ru"?"Скрыть ✓":"Hide ✓"} cl="#8888a0" c={c} />}
+            {usedCount > 0 && <Pill on={hideUsed} fn={()=>setHideUsed(!hideUsed)} lb={lang==="ru"?"Скрыть ✓":lang==="kk"?"Жасыру ✓":"Hide ✓"} cl="#8888a0" c={c} />}
             {/* Feat 8: Auto-collapse */}
-            <Pill on={autoCollapse} fn={()=>setAutoCollapse(!autoCollapse)} lb={lang==="ru"?"Авто-свёрт":"Auto-fold"} cl="#06b6d4" c={c} />
+            <Pill on={autoCollapse} fn={()=>setAutoCollapse(!autoCollapse)} lb={lang==="ru"?"Авто-свёрт":lang==="kk"?"Авто-бүктеу":"Auto-fold"} cl="#06b6d4" c={c} />
           </div>
           {/* Extra filter rows (tasks 044, 046) */}
           {fm==="difficulty" && <div style={{display:"flex",gap:5,marginBottom:8,flexWrap:"wrap"}}>
             <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
-            <Pill on={fv==="beginner"} fn={()=>setFv("beginner")} lb={lang==="ru"?"Начальный":"Beginner"} cl="#10b981" c={c} />
-            <Pill on={fv==="intermediate"} fn={()=>setFv("intermediate")} lb={lang==="ru"?"Средний":"Intermediate"} cl="#f59e0b" c={c} />
-            <Pill on={fv==="advanced"} fn={()=>setFv("advanced")} lb={lang==="ru"?"Продвинутый":"Advanced"} cl="#ef4444" c={c} />
+            <Pill on={fv==="beginner"} fn={()=>setFv("beginner")} lb={lang==="ru"?"Начальный":lang==="kk"?"Бастапқы":"Beginner"} cl="#10b981" c={c} />
+            <Pill on={fv==="intermediate"} fn={()=>setFv("intermediate")} lb={lang==="ru"?"Средний":lang==="kk"?"Орташа":"Intermediate"} cl="#f59e0b" c={c} />
+            <Pill on={fv==="advanced"} fn={()=>setFv("advanced")} lb={lang==="ru"?"Продвинутый":lang==="kk"?"Жетілдірілген":"Advanced"} cl="#ef4444" c={c} />
           </div>}
           {fm==="category" && <div style={{display:"flex",gap:6,marginBottom:8,flexWrap:"wrap"}}>
             <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
