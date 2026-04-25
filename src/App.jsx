@@ -1553,12 +1553,12 @@ function AgentHub({ data, loadTime }) {
           <div style={{ marginBottom:16, padding:"16px 18px", borderRadius:0, border:`2px dashed ${c.brd}`, background:c.bg2 }}>
             <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
               <span style={{ color:c.accent, display:"inline-flex" }}><IconUpload /></span>
-              <span className="label-tech-sm" style={{ color:c.mut }}>{lang==="ru"?"Импорт промта":"Import Prompt"}</span>
+              <span className="label-tech-sm" style={{ color:c.mut }}>{lang==="ru"?"Импорт промта":lang==="kk"?"Промт импорты":"Import Prompt"}</span>
             </div>
-            <textarea value={importText} onChange={e=>setImportText(e.target.value)} placeholder={lang==="ru"?"Вставь текст промта здесь...":"Paste prompt text here..."} style={{ width:"100%", height:120, padding:12, fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.text, outline:"none", resize:"vertical", boxSizing:"border-box" }} />
+            <textarea value={importText} onChange={e=>setImportText(e.target.value)} placeholder={lang==="ru"?"Вставь текст промта здесь...":lang==="kk"?"Промт мәтінін осында енгізіңіз...":"Paste prompt text here..."} style={{ width:"100%", height:120, padding:12, fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.text, outline:"none", resize:"vertical", boxSizing:"border-box" }} />
             {importText.trim().length > 50 && (
               <div style={{ marginTop:8, display:"flex", gap:8 }}>
-                <button onClick={()=>{cp("imported", importText); setToast(lang==="ru"?"Промт скопирован":"Prompt copied"); setShowImport(false); setImportText("");}} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #10b981", borderRadius:0, background:"#10b981", color:"#fff", cursor:"pointer", outline:"none" }}>{lang==="ru"?"Скопировать":"Copy"} ({Math.round(importText.length/4)} tokens)</button>
+                <button onClick={()=>{cp("imported", importText); setToast(lang==="ru"?"Промт скопирован":lang==="kk"?"Промт көшірілді":"Prompt copied"); setShowImport(false); setImportText("");}} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #10b981", borderRadius:0, background:"#10b981", color:"#fff", cursor:"pointer", outline:"none" }}>{lang==="ru"?"Скопировать":lang==="kk"?"Көшіру":"Copy"} ({Math.round(importText.length/4)} tokens)</button>
               </div>
             )}
             <button onClick={()=>{setShowImport(false);setImportText("")}} style={{ marginTop:8, padding:"4px 12px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"}</button>
@@ -1740,22 +1740,22 @@ function AgentHub({ data, loadTime }) {
 
         {list.length === 0 && (
           <div style={{ textAlign:"center", padding:"40px 0", color:c.dim, fontSize:12 }}>
-            {lang==="ru" ? "Ничего не найдено" : "Nothing found"}
-            {hasFilters && <div style={{marginTop:8}}><button onClick={clearFilters} style={{padding:"6px 16px",fontSize:11,fontFamily:font,border:`1px solid ${c.brd}`,borderRadius:0,background:c.card,color:c.text,cursor:"pointer",outline:"none"}}>{lang==="ru"?"Очистить фильтры":"Clear filters"}</button></div>}
+            {lang==="ru" ? "Ничего не найдено" : lang==="kk" ? "Ештеңе табылмады" : "Nothing found"}
+            {hasFilters && <div style={{marginTop:8}}><button onClick={clearFilters} style={{padding:"6px 16px",fontSize:11,fontFamily:font,border:`1px solid ${c.brd}`,borderRadius:0,background:c.card,color:c.text,cursor:"pointer",outline:"none"}}>{lang==="ru"?"Очистить фильтры":lang==="kk"?"Сүзгілерді тазалау":"Clear filters"}</button></div>}
           </div>
         )}
 
         {/* Feat 27: Infinite scroll sentinel */}
         {list.length > showCount && (
           <div ref={loadMoreRef} style={{ textAlign:"center", padding:"16px 0" }}>
-            <div style={{ fontSize:10, color:c.dim }}>{lang==="ru"?"Загрузка...":"Loading..."} ({list.length - showCount} {lang==="ru"?"осталось":"remaining"})</div>
+            <div style={{ fontSize:10, color:c.dim }}>{lang==="ru"?"Загрузка...":lang==="kk"?"Жүктелуде...":"Loading..."} ({list.length - showCount} {lang==="ru"?"осталось":lang==="kk"?"қалды":"remaining"})</div>
           </div>
         )}
 
         {/* Task 49: Search history */}
         {!search && searchHist.length > 0 && searchFocused && (
           <div style={{ marginBottom:12 }}>
-            <div style={{ fontSize:9, color:c.dim, marginBottom:4, letterSpacing:1 }}>{lang==="ru"?"НЕДАВНИЕ":"RECENT"}</div>
+            <div style={{ fontSize:9, color:c.dim, marginBottom:4, letterSpacing:1 }}>{lang==="ru"?"НЕДАВНИЕ":lang==="kk"?"СОҢҒЫЛАР":"RECENT"}</div>
             <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
               {searchHist.map((h,i) => (
                 <button key={i} onClick={()=>setSearch(h)} style={{ padding:"3px 10px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>{h}</button>

@@ -21,10 +21,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter88 fixed table-view headers (3 sites) + extended
-// check now also detects bogus identical-branch ternaries (hard-fail at >0).
+// Baseline: count after iter89 fixed import dialog + search-loading clusters (7 sites).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 62;
+const BASELINE = 55;
 
 const files = ['src/App.jsx'];
 let binaryTotal = 0;
