@@ -27,5 +27,31 @@
     }
   ],
   "categories": ["productivity", "developer", "utilities"],
-  "lang": "ru"
+  "lang": "ru",
+  "shortcuts": [
+    {
+      "name": "Промты",
+      "short_name": "Prompts",
+      "description": "3 299 портативных промтов для Claude Code",
+      "url": "/#prompts"
+    },
+    {
+      "name": "Комбо",
+      "short_name": "Combos",
+      "description": "76 готовых workflow-комбо",
+      "url": "/#combos"
+    },
+    {
+      "name": "Шпаргалки",
+      "short_name": "Cheat",
+      "description": "30 шпаргалок по CLI и инструментам",
+      "url": "/#cheat"
+    },
+    {
+      "name": "CLI",
+      "short_name": "CLI",
+      "description": "108 быстрых CLI-команд",
+      "url": "/#quick"
+    }
+  ]
 }
