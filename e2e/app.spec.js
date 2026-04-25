@@ -73,6 +73,21 @@ test.describe('AIAgent-Hub', () => {
     await expect(page.locator('role=dialog')).not.toBeVisible({ timeout: 3000 });
   });
 
+  // index.html JSON-LD advertises SearchAction at /?q={search_term_string}.
+  // Without this test the structured data could drift from the actual app
+  // behavior (the kind of "documentation lies" hazard iter46 caught).
+  test('?q= URL parameter seeds the search input', async ({ page }) => {
+    await page.goto('/?q=godmode');
+    await page.waitForSelector('[data-theme]', { timeout: 15000 });
+    const searchValue = await page.locator('input[type="search"]').inputValue();
+    expect(searchValue).toBe('godmode');
+    // Search uses 200ms debounce — wait for it to flush, then verify filter
+    await page.waitForTimeout(500);
+    const cards = await page.locator('[id^="card-"]').count();
+    expect(cards).toBeGreaterThan(0);
+    expect(cards).toBeLessThan(40);
+  });
+
   test('mobile viewport renders', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');

@@ -587,6 +587,18 @@ function AgentHub({ data, loadTime }) {
     try { document.documentElement.lang = lang; } catch {}
   }, [lang]);
 
+  // SEO: index.html JSON-LD declares SearchAction at "/?q={search_term_string}",
+  // so honor it — read ?q= once on mount and seed the search input. Enables
+  // shareable / bookmarkable search URLs (e.g. https://…/?q=rag) and aligns
+  // the structured data with reality (Google Rich Results would otherwise
+  // flag the SearchAction as misleading on validation).
+  useEffect(() => {
+    try {
+      const q = new URLSearchParams(window.location.search).get('q');
+      if (q) setSearch(q);
+    } catch {}
+  }, []);
+
   // Task 16: Meta theme-color
   // index.html ships TWO static meta tags (dark + light, media-scoped) so the
   // browser can pick the right one for first paint based on system preference,
