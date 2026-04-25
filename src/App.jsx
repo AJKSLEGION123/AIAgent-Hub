@@ -6,6 +6,7 @@ import {
   IconExpand, IconCollapse, IconFocus, IconPin, IconPinOutline, IconLink,
   IconList, IconCards,
 } from "./icons.jsx";
+import { font, fontDisplay, alpha, textOn } from "./theme-utils.js";
 
 /* ═══════════════════════════════════════════════
    TRANSLATIONS
@@ -83,21 +84,7 @@ const TH = {
 const MC = { opus47m:"#d4a574" };
 const ML = { opus47m:"Claude Opus 4.7 · 1M" };
 const MI = { opus47m:"∞" };
-const font = "'JetBrains Mono','IBM Plex Mono','Fira Code',monospace";
-const fontDisplay = "'Fraunces','Cormorant Garamond','Times New Roman',serif";
-const alpha = (hex, a) => hex + Math.round(a*255).toString(16).padStart(2,'0');
-// Relative luminance → best-contrast text color (dark vs pure white on the accent).
-// White beats cream on borderline mid-dark backgrounds (slate-500, red-600, fuchsia-600)
-// so small 9px button text clears WCAG AA 4.5:1.
-const textOn = (hex) => {
-  if (!hex || hex.length < 4) return "#0a0806";
-  const h = hex.replace("#","");
-  const to = (s) => parseInt(s.length===1?s+s:s,16)/255;
-  const [r,g,b] = h.length===3 ? [to(h[0]),to(h[1]),to(h[2])] : [to(h.slice(0,2)),to(h.slice(2,4)),to(h.slice(4,6))];
-  const lin = (c) => c<=0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4);
-  const L = 0.2126*lin(r) + 0.7152*lin(g) + 0.0722*lin(b);
-  return L > 0.18 ? "#0a0806" : "#ffffff";
-};
+// Typography stacks + color helpers extracted to ./theme-utils.js (iter114).
 /** Russian pluralization: pl(5,"модель","модели","моделей") → "моделей" */
 const pl = (n, one, few, many) => { const m=Math.abs(n)%100, d=m%10; return d===1&&m!==11?one:d>=2&&d<=4&&(m<12||m>14)?few:many; };
 
