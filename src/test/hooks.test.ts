@@ -42,4 +42,19 @@ describe('useLocalStorage', () => {
     act(() => { result.current[1]((prev) => prev + 1); });
     expect(result.current[0]).toBe(1);
   });
+
+  it('warns when payload exceeds 4 MB near-limit threshold', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      // 4 MB threshold is on JSON-stringified bytes; "x".repeat(5_000_000) → ~5 MB JSON string
+      const huge = 'x'.repeat(5_000_000);
+      renderHook(() => useLocalStorage('huge-key', huge));
+      expect(warnSpy).toHaveBeenCalled();
+      const message = warnSpy.mock.calls[0][0];
+      expect(String(message)).toMatch(/near limit/);
+      expect(String(message)).toContain('huge-key');
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
 });

@@ -10,6 +10,23 @@ describe('useOnlineStatus', () => {
     const { result } = renderHook(() => useOnlineStatus());
     expect(result.current).toBe(true);
   });
+
+  it('flips to false on offline event and back to true on online event', () => {
+    const { result } = renderHook(() => useOnlineStatus());
+    act(() => { window.dispatchEvent(new Event('offline')); });
+    expect(result.current).toBe(false);
+    act(() => { window.dispatchEvent(new Event('online')); });
+    expect(result.current).toBe(true);
+  });
+
+  it('cleans up online/offline listeners on unmount', () => {
+    const removeSpy = vi.spyOn(window, 'removeEventListener');
+    const { unmount } = renderHook(() => useOnlineStatus());
+    unmount();
+    expect(removeSpy).toHaveBeenCalledWith('online', expect.any(Function));
+    expect(removeSpy).toHaveBeenCalledWith('offline', expect.any(Function));
+    removeSpy.mockRestore();
+  });
 });
 
 describe('useBodyScrollLock', () => {
