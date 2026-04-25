@@ -1,0 +1,7 @@
+# Python deps for scripts/ssh-deploy-docker.py (self-hosted deploy via Cloudflare Tunnel).
+# Vercel deployment doesn't need any of this — only the SSH-based deploy path.
+#
+# Install:
+#   pip install -r scripts/requirements.txt
+# (or `python -m pip install` / `uv pip install`)
+paramiko>=4.0.0,<5

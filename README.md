@@ -95,6 +95,7 @@ git add -A && git commit -m "..." && git push origin master
 **Self-hosted** (pm.lanmaster.kz + Cloudflare Tunnel):
 
 ```bash
+pip install -r scripts/requirements.txt      # one-time: paramiko for SSH
 python scripts/ssh-deploy-docker.py deploy   # git reset + docker build + smoke test
 python scripts/ssh-deploy-docker.py rollback # откат к HEAD~1
 python scripts/ssh-deploy-docker.py status   # контейнер + URL + health
