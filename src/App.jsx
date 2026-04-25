@@ -1652,7 +1652,7 @@ function AgentHub({ data, loadTime }) {
                       {p.time && <span style={{ fontSize:8, letterSpacing:1.5, color:c.dim, fontFamily:font }} className="hide-mobile">· {p.time}</span>}
                     </div>
                     {!isO && <div style={{ fontSize:10, color:c.dim, marginTop:3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{preview}...</div>}
-                    {isO && <div style={{ fontSize:10, color:c.mut, marginTop:3 }}>{compactMode ? (p.compact||"").split("\n").length : ln} {t.lines} · {(compactMode ? (p.compact||"") : p.text).split(/\s+/).length} {lang==="ru"?"слов":"words"} · ~{Math.ceil((compactMode ? (p.compact||"").length : p.text.length)/4)} tokens {compactMode && <span style={{color:"#10b981",fontWeight:600}}>⚡</span>}</div>}
+                    {isO && <div style={{ fontSize:10, color:c.mut, marginTop:3 }}>{compactMode ? (p.compact||"").split("\n").length : ln} {t.lines} · {(compactMode ? (p.compact||"") : p.text).split(/\s+/).length} {lang==="ru"?"слов":lang==="kk"?"сөз":"words"} · ~{Math.ceil((compactMode ? (p.compact||"").length : p.text.length)/4)} tokens {compactMode && <span style={{color:"#10b981",fontWeight:600}}>⚡</span>}</div>}
                   </div>
                 </div>
                 <div style={{ display:"flex", gap:6, flexShrink:0, alignItems:"center" }}>
@@ -1684,13 +1684,13 @@ function AgentHub({ data, loadTime }) {
                   )}
                   <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>{lang==="ru"?"Полный промт":lang==="kk"?"Толық промт":"Full prompt"}</div>
                   <div style={{ maxHeight:420, overflowY:"auto", padding:16, background:c.surf, borderRadius:0, border:`1px solid ${c.brd}`, borderLeft:`2px solid ${p.ac}40` }}>
-                    {compactMode && <div style={{ marginBottom:8, padding:"4px 10px", borderRadius:0, background:"#10b98110", border:"1px solid #10b98120", fontSize:9, color:"#10b981", fontWeight:600 }}>⚡ COMPACT MODE — {lang==="ru"?"оптимизировано для Claude Code (~700 символов)":"optimized for Claude Code (~700 chars)"}</div>}
+                    {compactMode && <div style={{ marginBottom:8, padding:"4px 10px", borderRadius:0, background:"#10b98110", border:"1px solid #10b98120", fontSize:9, color:"#10b981", fontWeight:600 }}>⚡ COMPACT MODE — {lang==="ru"?"оптимизировано для Claude Code (~700 символов)":lang==="kk"?"Claude Code үшін оңтайландырылған (~700 таңба)":"optimized for Claude Code (~700 chars)"}</div>}
                     <pre style={{ fontSize:10.5, lineHeight:1.65, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", margin:0, fontFamily:font }}>{debouncedSearch ? <HL text={compactMode && p.compact ? p.compact : p.text} q={debouncedSearch} color={p.ac}/> : (compactMode && p.compact ? p.compact : p.text)}</pre>
                   </div>
                   {/* Task 033: Related prompts */}
                   {p.related && p.related.length > 0 && (
                     <div style={{ marginTop:10, display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
-                      <span style={{ fontSize:9, color:c.dim, marginRight:4 }}>{lang==="ru"?"Похожие:":"Related:"}</span>
+                      <span style={{ fontSize:9, color:c.dim, marginRight:4 }}>{lang==="ru"?"Похожие:":lang==="kk"?"Ұқсас:":"Related:"}</span>
                       {p.related.slice(0,4).map(rid => {
                         const rp = pGet(rid);
                         return rp ? <button key={rid} onClick={()=>{toggle(p.id);setExpanded(e=>({...e,[rid]:true}));setTimeout(()=>document.getElementById(`card-${rid}`)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"2px 8px", borderRadius:0, background:rp.ac+"10", color:rp.ac, border:`1px solid ${rp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{rp.icon} {t.r[rp.role]||rp.role}</button> : null;
@@ -1702,7 +1702,7 @@ function AgentHub({ data, loadTime }) {
                   {/* Prereqs display */}
                   {p.prereqs && p.prereqs.length > 0 && (
                     <div style={{ marginTop:6, display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
-                      <span style={{ fontSize:9, color:c.dim }}>⚙ {lang==="ru"?"Требуется:":"Requires:"}</span>
+                      <span style={{ fontSize:9, color:c.dim }}>⚙ {lang==="ru"?"Требуется:":lang==="kk"?"Қажет:":"Requires:"}</span>
                       {p.prereqs.map(pr => <span key={pr} style={{ fontSize:8, padding:"1px 6px", borderRadius:0, background:c.surf, color:c.mut, border:`1px solid ${c.brd}` }}>{pr}</span>)}
                     </div>
                   )}
@@ -1711,7 +1711,7 @@ function AgentHub({ data, loadTime }) {
                     const similar = P.filter(x => x.id !== p.id && x.tags && x.tags.some(t2 => p.tags.includes(t2))).slice(0, 3);
                     return similar.length > 0 ? (
                       <div style={{ marginTop:6, display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
-                        <span style={{ fontSize:9, color:c.dim, marginRight:4 }}>{lang==="ru"?"Похожие:":"Similar:"}</span>
+                        <span style={{ fontSize:9, color:c.dim, marginRight:4 }}>{lang==="ru"?"Похожие:":lang==="kk"?"Ұқсас:":"Similar:"}</span>
                         {similar.map(sp => <button key={sp.id} onClick={()=>{setExpanded(e=>({...e,[sp.id]:true}));setTimeout(()=>document.getElementById(`card-${sp.id}`)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"2px 8px", borderRadius:0, background:sp.ac+"10", color:sp.ac, border:`1px solid ${sp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{sp.icon} {t.r[sp.role]||sp.role}</button>)}
                       </div>
                     ) : null;
@@ -1731,7 +1731,7 @@ function AgentHub({ data, loadTime }) {
         {/* Feat 30: Recently viewed */}
         {!hasFilters && recentViewed.length > 0 && viewMode === "card" && (
           <div style={{ marginBottom:12, padding:"8px 12px", borderRadius:0, border:`1px solid ${c.brd}`, background:c.bg2 }}>
-            <div style={{ fontSize:9, color:c.dim, marginBottom:4, fontWeight:600 }}>{lang==="ru"?"Недавно просмотренные":"Recently viewed"}</div>
+            <div style={{ fontSize:9, color:c.dim, marginBottom:4, fontWeight:600 }}>{lang==="ru"?"Недавно просмотренные":lang==="kk"?"Жуырда қаралған":"Recently viewed"}</div>
             <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
               {recentViewed.map(rid => { const rp = pGet(rid); return rp ? <button key={rid} onClick={()=>{setExpanded(e=>({...e,[rid]:true}));setTimeout(()=>document.getElementById("card-"+rid)?.scrollIntoView({behavior:"smooth",block:"center"}),100)}} style={{ fontSize:9, padding:"3px 8px", borderRadius:0, background:rp.ac+"10", color:rp.ac, border:`1px solid ${rp.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{rp.icon} {t.r[rp.role]||rp.role}</button> : null; })}
             </div>

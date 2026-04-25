@@ -21,9 +21,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter91 fixed copy-history + landing-hero clusters (10 sites).
+// Baseline: count after iter92 fixed expanded-card body cluster (6 sites).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 38;
+const BASELINE = 32;
 
 const files = ['src/App.jsx'];
 let binaryTotal = 0;
