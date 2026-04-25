@@ -18,13 +18,21 @@ pip install -r scripts/requirements.txt
 
 ## Quality gates
 
-Эти команды должны проходить **до коммита** (CI запускает их же):
+Запустите **одну команду** перед коммитом — она цепляет все 5 проверок
+в том же порядке как CI (fail-fast — самые быстрые сначала):
+
+```bash
+npm run check
+# = lint → typecheck → check-data → test → build
+```
+
+Или по одной если нужно изолировать падение:
 
 ```bash
 npm run lint          # eslint, ноль warnings
 npm run typecheck     # tsc --noEmit, строгий режим
-npm test              # vitest run — ~250 unit, ~9 skipped когда api offline
 node scripts/check-data.cjs   # data integrity (zero broken refs/dupes)
+npm test              # vitest run — ~250 unit, ~9 skipped когда api offline
 npm run build         # vite build
 ```
 
