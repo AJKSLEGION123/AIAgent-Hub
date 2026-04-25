@@ -191,29 +191,46 @@ def cmd_sync_url():
         c.close()
 
 
-def _smoke_test(c):
-    """Return (ok, summary). Fails if local HTTP != 200, no <title>, or no JS asset link.
-
-    Runs against localhost:3000 so it's not affected by a flaky tunnel."""
-    rc, out, _ = run(
+def _smoke_check_once(c):
+    """One-shot HTTP+content check against localhost:3000. Returns problems[]."""
+    _, out, _ = run(
         c,
         "curl -sS --max-time 10 -w '\\n---HTTP %{http_code}' http://localhost:3000/",
         show=False,
     )
-    html = out
     problems = []
-    if "---HTTP 200" not in html:
+    if "---HTTP 200" not in out:
         problems.append("non-200 response")
-    if "<title>" not in html:
+    if "<title>" not in out:
         problems.append("no <title>")
-    if "/assets/index-" not in html:
+    if "/assets/index-" not in out:
         problems.append("no JS asset link")
-    if "AIAgent-Hub" not in html:
+    if "AIAgent-Hub" not in out:
         problems.append("title does not contain AIAgent-Hub")
-    ok = not problems
-    summary = "OK" if ok else f"FAILED: {', '.join(problems)}"
-    print(f"\n[smoke] {summary}")
-    return ok, summary
+    return problems
+
+
+def _smoke_test(c, attempts=5, base_delay=2):
+    """Return (ok, summary). Retries with exponential-ish backoff so a slow cold
+    start (~10-20s for the 537 KB JS bundle to be parseable) doesn't trigger a
+    false rollback. Fails only if all attempts exhaust.
+
+    Total max wait: 2+4+6+8+10 = 30s. Runs against localhost:3000 so it's not
+    affected by a flaky tunnel."""
+    last_problems = []
+    for i in range(1, attempts + 1):
+        problems = _smoke_check_once(c)
+        if not problems:
+            print(f"\n[smoke] OK (attempt {i}/{attempts})")
+            return True, "OK"
+        last_problems = problems
+        if i < attempts:
+            delay = base_delay * i
+            print(f"[smoke] attempt {i}/{attempts} not ready ({', '.join(problems)}), retry in {delay}s")
+            run(c, f"sleep {delay}", show=False)
+    summary = f"FAILED: {', '.join(last_problems)}"
+    print(f"\n[smoke] {summary} (after {attempts} attempts)")
+    return False, summary
 
 
 def cmd_deploy():
