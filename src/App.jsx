@@ -1777,9 +1777,9 @@ function AgentHub({ data, loadTime }) {
         
         {/* Task 70: Workflow Sequencer */}
         <details style={{ marginBottom:16 }}>
-          <summary style={{ fontSize:10, letterSpacing:3, textTransform:"uppercase", fontWeight:700, color:"#c4541d", cursor:"pointer", padding:"10px 0", fontFamily:font }}>⇄ {lang==="ru"?"Конструктор workflow":"Workflow Builder"}</summary>
+          <summary style={{ fontSize:10, letterSpacing:3, textTransform:"uppercase", fontWeight:700, color:"#c4541d", cursor:"pointer", padding:"10px 0", fontFamily:font }}>⇄ {lang==="ru"?"Конструктор workflow":lang==="kk"?"Workflow конструкторы":"Workflow Builder"}</summary>
           <div style={{ marginTop:8, padding:"14px 16px", borderRadius:0, border:`2px solid #c4541d30`, background:"#c4541d06" }}>
-            <div style={{ fontSize:10, color:c.dim, marginBottom:10 }}>{lang==="ru"?"Перетаскивай промты для создания последовательности выполнения:":"Drag prompts to create execution sequence:"}</div>
+            <div style={{ fontSize:10, color:c.dim, marginBottom:10 }}>{lang==="ru"?"Перетаскивай промты для создания последовательности выполнения:":lang==="kk"?"Орындау тізбегін жасау үшін промттарды сүйреңіз:":"Drag prompts to create execution sequence:"}</div>
             <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:12 }}>
               {P.filter(p=>!workflow.includes(p.id)).slice(0,30).map(p => (
                 <button key={p.id} onClick={()=>setWorkflow(w=>[...w,p.id])} style={{ fontSize:9, padding:"3px 8px", borderRadius:0, background:c.surf, color:p.ac, border:`1px solid ${p.ac}20`, cursor:"pointer", fontFamily:font, outline:"none" }}>{p.icon} {(t.r[p.role]||p.role).slice(0,12)}</button>
@@ -1787,7 +1787,7 @@ function AgentHub({ data, loadTime }) {
             </div>
             {workflow.length > 0 && (
               <div style={{ marginBottom:12 }}>
-                <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:8 }}>{lang==="ru"?"Последовательность":"Sequence"} ({workflow.length}):</div>
+                <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:8 }}>{lang==="ru"?"Последовательность":lang==="kk"?"Тізбек":"Sequence"} ({workflow.length}):</div>
                 <div style={{ display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
                   {workflow.map((wid,wi) => {
                     const wp = pGet(wid);
@@ -1810,9 +1810,9 @@ function AgentHub({ data, loadTime }) {
                     }).filter(Boolean).join("\n\n\n");
                     cp("workflow", wfText, true);
                   }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #c4541d", borderRadius:0, background:"#c4541d", color:"#fff", cursor:"pointer", outline:"none" }}>
-                    {copied==="workflow"?t.copied:(lang==="ru"?"Скопировать workflow":"Copy workflow")} ({workflow.length})
+                    {copied==="workflow"?t.copied:(lang==="ru"?"Скопировать workflow":lang==="kk"?"Workflow көшіру":"Copy workflow")} ({workflow.length})
                   </button>
-                  <button onClick={()=>setWorkflow([])} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Очистить":"Clear"}</button>
+                  <button onClick={()=>setWorkflow([])} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Очистить":lang==="kk"?"Тазалау":"Clear"}</button>
                 </div>
               </div>
             )}
@@ -1823,11 +1823,11 @@ function AgentHub({ data, loadTime }) {
         <div style={{ marginBottom:16, padding:"12px 16px", borderRadius:0, border:`1px dashed ${buildingCombo?'#e86a2a':c.brd}`, background:buildingCombo?'#e86a2a08':c.card }}>
           {!buildingCombo ? (
             <button onClick={()=>setBuildingCombo(true)} style={{ width:"100%", padding:"10px", fontSize:10, letterSpacing:3, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:"none", background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>
-              + {lang==="ru"?"Создать свою команду":"Build custom team"}
+              + {lang==="ru"?"Создать свою команду":lang==="kk"?"Өз командаңды құру":"Build custom team"}
             </button>
           ) : (
             <div>
-              <div style={{ fontSize:10, letterSpacing:3, textTransform:"uppercase", fontWeight:700, color:"#e86a2a", marginBottom:10, fontFamily:font }}>{lang==="ru"?"Выбери промты для команды":"Select prompts for team"}</div>
+              <div style={{ fontSize:10, letterSpacing:3, textTransform:"uppercase", fontWeight:700, color:"#e86a2a", marginBottom:10, fontFamily:font }}>{lang==="ru"?"Выбери промты для команды":lang==="kk"?"Команда үшін промттарды таңда":"Select prompts for team"}</div>
               <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:8 }}>
                 {P.filter(p=>p.type==="role"||customCombo.includes(p.id)).map(p => {
                   const sel = customCombo.includes(p.id);
@@ -1836,7 +1836,7 @@ function AgentHub({ data, loadTime }) {
               </div>
               {customCombo.length > 0 && (
                 <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:8 }}>
-                  <div style={{ fontSize:9, color:c.dim }}>{lang==="ru"?"Можно добавить задачи:":"Add tasks:"}</div>
+                  <div style={{ fontSize:9, color:c.dim }}>{lang==="ru"?"Можно добавить задачи:":lang==="kk"?"Тапсырмалар қосуға болады:":"Add tasks:"}</div>
                   {P.filter(p=>p.type==="task"&&!customCombo.includes(p.id)).slice(0,20).map(p => (
                     <button key={p.id} onClick={()=>setCustomCombo(cc=>[...cc,p.id])} style={{ fontSize:8, padding:"2px 6px", borderRadius:0, background:c.surf, color:c.dim, border:`1px solid ${c.brd}`, cursor:"pointer", fontFamily:font, outline:"none" }}>{p.icon} {t.r[p.role]||p.role}</button>
                   ))}
@@ -1847,9 +1847,9 @@ function AgentHub({ data, loadTime }) {
                   const allText = buildPromptBundle(customCombo);
                   cp("custom-combo", allText);
                 }} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, fontWeight:600, border:"1.5px solid #e86a2a", borderRadius:0, background:"#e86a2a", color:"#fff", cursor:"pointer", outline:"none" }}>
-                  {copied==="custom-combo" ? t.copied : (lang==="ru"?"Скопировать":"Copy")} ({customCombo.length})
+                  {copied==="custom-combo" ? t.copied : (lang==="ru"?"Скопировать":lang==="kk"?"Көшіру":"Copy")} ({customCombo.length})
                 </button>}
-                <button onClick={()=>{setBuildingCombo(false);setCustomCombo([])}} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Отмена":"Cancel"}</button>
+                <button onClick={()=>{setBuildingCombo(false);setCustomCombo([])}} style={{ padding:"6px 16px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}>{lang==="ru"?"Отмена":lang==="kk"?"Болдырмау":"Cancel"}</button>
               </div>
             </div>
           )}
