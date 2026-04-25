@@ -552,11 +552,11 @@ function AgentHub({ data, loadTime }) {
   // (combos="Комбо/Combos", setup="Настройка/Setup") — fixed.
   useEffect(() => {
     const titles = {
-      prompts: lang==="ru"?"Промты":"Prompts",
-      combos:  lang==="ru"?"Комбо":"Combos",
-      cheat:   lang==="ru"?"Шпаргалки":"Cheat",
+      prompts: lang==="ru"?"Промты":lang==="kk"?"Промттер":"Prompts",
+      combos:  lang==="ru"?"Комбо":lang==="kk"?"Комбо":"Combos",
+      cheat:   lang==="ru"?"Шпаргалки":lang==="kk"?"Парақтар":"Cheat",
       quick:   "CLI",
-      setup:   lang==="ru"?"Настройка":"Setup",
+      setup:   lang==="ru"?"Настройка":lang==="kk"?"Баптау":"Setup",
     };
     document.title = `AIAgent-Hub — ${titles[section]||""}`;
   }, [section, lang]);
@@ -1068,8 +1068,8 @@ function AgentHub({ data, loadTime }) {
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
             {[
-              [stats.total, lang==="ru"?"Промтов":"Prompts", "#e86a2a"],
-              [(COMBOS[lang]||COMBOS.ru).length, lang==="ru"?"Комбо":"Combos", "#f97316"],
+              [stats.total, lang==="ru"?"Промтов":lang==="kk"?"Промттер":"Prompts", "#e86a2a"],
+              [(COMBOS[lang]||COMBOS.ru).length, lang==="ru"?"Комбо":lang==="kk"?"Комбо":"Combos", "#f97316"],
               [Object.keys(CHEAT).length, lang==="ru"?"Шпаргалок":"Cheats", "#c4541d"],
               [Object.keys(categories.counts).length, lang==="ru"?"Категорий":"Categories", "#06b6d4"],
               [`~${(stats.totalTokens/1000).toFixed(0)}K`, "Tokens", "#10b981"],
@@ -1231,11 +1231,11 @@ function AgentHub({ data, loadTime }) {
         {/* ══════════════ EDITORIAL TAB BAR ══════════════ */}
         <nav role="tablist" aria-label="Sections" style={{ display:"flex", gap:28, marginBottom:28, overflowX:"auto", borderBottom:`1px solid ${c.brd}`, paddingBottom:0 }}>
           {[
-            { k:"prompts", l:lang==="ru"?"Промты":"Prompts", n:P.length },
-            { k:"combos", l:lang==="ru"?"Комбо":"Combos", n:(COMBOS[lang]||COMBOS.ru).length },
-            { k:"cheat", l:lang==="ru"?"Шпаргалки":"Cheat", n:Object.keys(CHEAT).length },
+            { k:"prompts", l:lang==="ru"?"Промты":lang==="kk"?"Промттер":"Prompts", n:P.length },
+            { k:"combos", l:lang==="ru"?"Комбо":lang==="kk"?"Комбо":"Combos", n:(COMBOS[lang]||COMBOS.ru).length },
+            { k:"cheat", l:lang==="ru"?"Шпаргалки":lang==="kk"?"Парақтар":"Cheat", n:Object.keys(CHEAT).length },
             { k:"quick", l:"CLI", n:(QUICK_CMDS[lang]||QUICK_CMDS.ru||[]).reduce((a,c)=>a+(c.cmds||[]).length,0) },
-            { k:"setup", l:lang==="ru"?"Настройка":"Setup", n:CONFIGS.length },
+            { k:"setup", l:lang==="ru"?"Настройка":lang==="kk"?"Баптау":"Setup", n:CONFIGS.length },
           ].map(s => (
             <button key={s.k} role="tab" aria-selected={section===s.k} aria-current={section===s.k?"page":undefined} aria-controls={`panel-${s.k}`} onClick={()=>{setSection(s.k);window.scrollTo({top:0,behavior:"smooth"})}} className="tab-editorial" style={{
               color: section===s.k ? c.ink : c.mut,
@@ -1254,7 +1254,7 @@ function AgentHub({ data, loadTime }) {
         <div style={{ display:"flex", alignItems:"center", gap:4, marginBottom:12, fontSize:10, color:c.dim }}>
           <span>AIAgent-Hub</span>
           <span>›</span>
-          <span style={{ color:c.text, fontWeight:600 }}>{section==="prompts"?(lang==="ru"?"Промты":"Prompts"):section==="combos"?(lang==="ru"?"Команды":"Teams"):section==="cheat"?(lang==="ru"?"Шпаргалки":"Cheat"):section==="quick"?"CLI":(lang==="ru"?"Настройка":"Setup")}</span>
+          <span style={{ color:c.text, fontWeight:600 }}>{section==="prompts"?(lang==="ru"?"Промты":lang==="kk"?"Промттер":"Prompts"):section==="combos"?(lang==="ru"?"Команды":lang==="kk"?"Командалар":"Teams"):section==="cheat"?(lang==="ru"?"Шпаргалки":lang==="kk"?"Парақтар":"Cheat"):section==="quick"?"CLI":(lang==="ru"?"Настройка":lang==="kk"?"Баптау":"Setup")}</span>
           {hasFilters && <><span>›</span><span style={{ color:"#e86a2a" }}>{debouncedSearch?`"${debouncedSearch}"`:fm!=="all"?(fm==="model"?(ML[fv]||fv):fm==="role"?(t.r[fv]||fv):fv):(showNew?"NEW":hideUsed?"Hide ✓":"filter")}</span></>}
         </div>
 
@@ -2453,10 +2453,10 @@ function AgentHub({ data, loadTime }) {
       <nav className="mobile-bottom-nav" style={{ display:"none", position:"fixed", bottom:0, left:0, right:0, background:c.card, borderTop:`1px solid ${c.brd}`, padding:"6px 0", zIndex:9000, fontFamily:font }}>
         <div style={{ display:"flex", justifyContent:"space-around", maxWidth:500, margin:"0 auto" }}>
           {[
-            { k:"prompts", i:"¶", l:lang==="ru"?"Промты":"Prompts" },
-            { k:"combos", i:"⧉", l:lang==="ru"?"Комбо":"Combos" },
-            { k:"cheat", i:"≣", l:lang==="ru"?"Шпаргалки":"Cheat" },
-            { k:"setup", i:"◎", l:lang==="ru"?"Setup":"Setup" },
+            { k:"prompts", i:"¶", l:lang==="ru"?"Промты":lang==="kk"?"Промттер":"Prompts" },
+            { k:"combos", i:"⧉", l:lang==="ru"?"Комбо":lang==="kk"?"Комбо":"Combos" },
+            { k:"cheat", i:"≣", l:lang==="ru"?"Шпаргалки":lang==="kk"?"Парақтар":"Cheat" },
+            { k:"setup", i:"◎", l:lang==="ru"?"Настройка":lang==="kk"?"Баптау":"Setup" },
           ].map(n=><button key={n.k} data-active={section===n.k ? "true" : "false"} onClick={()=>{setSection(n.k);window.scrollTo({top:0,behavior:"smooth"})}} style={{ background:"none", border:"none", color:section===n.k?c.text:c.dim, cursor:"pointer", outline:"none", textAlign:"center", padding:"4px 8px", fontSize:10, fontFamily:font, fontWeight:section===n.k?700:400 }}><div style={{ fontSize:16, marginBottom:2 }}>{n.i}</div>{n.l}</button>)}
         </div>
       </nav>

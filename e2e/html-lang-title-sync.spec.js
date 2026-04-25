@@ -32,10 +32,11 @@ test.describe('html.lang and document.title sync with runtime language', () => {
     expect(after).not.toBe(before); // changed via the cycle ru→en→kk→ru
   });
 
-  test('toggling language updates document.title (iter41 regression)', async ({ page }) => {
-    // Drive a full lang cycle (ru → en → kk → ru). The current title-build
-    // uses binary lang==="ru" so only the ru↔non-ru transitions change the
-    // string. Three clicks guarantees we cross that boundary at least once.
+  test('toggling language updates document.title (iter41 + iter75 regression)', async ({ page }) => {
+    // Drive a full lang cycle (ru → en → kk → ru). Post-iter75 the title-build
+    // is 3-way (ru / en / kk) so the cycle produces 3 distinct titles. Pre-iter75
+    // it was binary (ru / non-ru) so Kazakh fell back to English and we'd get
+    // only 2 distinct titles — this assertion guards iter75's i18n completeness.
     const langBtn = page.locator('button[aria-label="Switch language"]');
     const titles = new Set();
     titles.add(await page.title());
@@ -44,7 +45,7 @@ test.describe('html.lang and document.title sync with runtime language', () => {
       await page.waitForTimeout(200);
       titles.add(await page.title());
     }
-    expect(titles.size).toBeGreaterThanOrEqual(2); // at least one transition changed title
+    expect(titles.size).toBe(3); // ru, en, kk all produce distinct titles
     [...titles].forEach(t => expect(t).toMatch(/AIAgent-Hub/));
   });
 });
