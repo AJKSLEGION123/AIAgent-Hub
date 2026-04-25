@@ -1601,9 +1601,9 @@ function AgentHub({ data, loadTime }) {
               <thead><tr style={{ borderBottom:`2px solid ${c.brd}`, textAlign:"left" }}>
                 <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>#</th>
                 <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>{lang==="ru"?"Роль":lang==="kk"?"Рөл":"Role"}</th>
-                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>{lang==="ru"?"Модель":"Model"}</th>
-                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }} className="hide-mobile">{lang==="ru"?"Время":"Time"}</th>
-                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }} className="hide-mobile">{lang==="ru"?"Ур.":"Lvl"}</th>
+                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>{lang==="ru"?"Модель":lang==="kk"?"Модель":"Model"}</th>
+                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }} className="hide-mobile">{lang==="ru"?"Время":lang==="kk"?"Уақыт":"Time"}</th>
+                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }} className="hide-mobile">{lang==="ru"?"Ур.":lang==="kk"?"Дең.":"Lvl"}</th>
                 <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }} className="hide-mobile">Tokens</th>
                 <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}></th>
               </tr></thead>
