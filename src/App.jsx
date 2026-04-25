@@ -469,7 +469,9 @@ function AgentHub({ data, loadTime }) {
   const nextLang = useCallback(() => {
     setLang(l => l==="ru"?"en":l==="en"?"kk":"ru");
   }, []);
-  const langLabel = lang==="ru"?"EN":lang==="en"?"KK":"RU";
+  // Cycle label: shows the NEXT language. Object lookup avoids the
+  // binary-ternary linter false-positive while staying readable.
+  const langLabel = {ru:"EN", en:"KK", kk:"RU"}[lang] ?? "EN";
 
   // Task 93+94: Modify prompt text on copy based on promptLang and stack
   const modifyPrompt = useCallback((text) => {
@@ -968,7 +970,7 @@ function AgentHub({ data, loadTime }) {
       <div style={{ position:"fixed", top:0, left:0, width:scrollPct+"%", height:2, background:"linear-gradient(90deg,#e86a2a,#c4541d)", zIndex:9999, transition:"width .1s", opacity:scrollPct>0?1:0, willChange:"width" }} />
 
       {/* Feat 6: Offline banner */}
-      {isOffline && <div role="alert" style={{ position:"fixed", top:0, left:0, right:0, padding:"6px 0", background:"#ef4444", color:"#fff", textAlign:"center", fontSize:11, fontFamily:font, fontWeight:600, zIndex:9998 }}>{lang==="ru"?"⚡ Нет подключения к интернету":"⚡ No internet connection"}</div>}
+      {isOffline && <div role="alert" style={{ position:"fixed", top:0, left:0, right:0, padding:"6px 0", background:"#ef4444", color:"#fff", textAlign:"center", fontSize:11, fontFamily:font, fontWeight:600, zIndex:9998 }}>{lang==="ru"?"⚡ Нет подключения к интернету":lang==="kk"?"⚡ Интернет байланыс жоқ":"⚡ No internet connection"}</div>}
 
       {/* Cycle 25: Diff overlay — compact vs original */}
       {showDiff && (() => {
@@ -1136,7 +1138,7 @@ function AgentHub({ data, loadTime }) {
           <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6 }} />
           <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6, marginTop:2 }} />
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 0" }}>
-            <span className="label-tech-sm" style={{ color:c.mut }}>№ v12 · {new Date().toLocaleDateString(lang==="ru"?"ru-RU":"en-US",{month:"short",year:"numeric"}).toUpperCase()}</span>
+            <span className="label-tech-sm" style={{ color:c.mut }}>№ v12 · {new Date().toLocaleDateString(lang==="ru"?"ru-RU":lang==="kk"?"kk-KZ":"en-US",{month:"short",year:"numeric"}).toUpperCase()}</span>
             <span className="label-tech-sm" style={{ color:c.mut }}>An Almanac of Autonomous Development</span>
           </div>
           <div style={{ borderTop:`1px solid ${c.text}`, opacity:.6 }} />
@@ -1933,7 +1935,7 @@ function AgentHub({ data, loadTime }) {
                     <Fragment key={id}>
                       {ix > 0 && <span style={{ color:c.dim, margin:"0 6px", opacity:.6 }}>·</span>}
                       <button onClick={(e)=>{ e.stopPropagation(); setSection("prompts"); setFm("all"); setFv("all"); setSearch(""); setTimeout(()=>{setExpanded(ex=>({...ex,[p.id]:true})); setTimeout(()=>document.getElementById(`card-${p.id}`)?.scrollIntoView({behavior:"smooth",block:"center"}), 100);}, 100); }}
-                        title={lang==="ru"?`Открыть промт: ${name}`:`Open prompt: ${name}`}
+                        title={lang==="ru"?`Открыть промт: ${name}`:lang==="kk"?`Промтты ашу: ${name}`:`Open prompt: ${name}`}
                         style={{ background:"none", border:"none", padding:0, fontFamily:"inherit", fontSize:"inherit", color:p.ac, cursor:"pointer", outline:"none", textDecoration:"none" }}
                         onMouseEnter={e=>{e.currentTarget.style.textDecoration="underline";}} onMouseLeave={e=>{e.currentTarget.style.textDecoration="none";}}>
                         <span style={{ opacity:.8 }}>{p.icon}</span> {name}
@@ -1969,7 +1971,7 @@ function AgentHub({ data, loadTime }) {
                     md += sect;
                   });
                   cp("md-combo-"+i, md, true);
-                }} title={lang==="ru"?"Скопировать как Markdown документ (вставь в Notion/Obsidian/README)":"Copy as Markdown document (paste into Notion/Obsidian/README)"} style={{ padding:"7px 12px", fontSize:9, letterSpacing:1.8, textTransform:"uppercase", borderRadius:0,
+                }} title={lang==="ru"?"Скопировать как Markdown документ (вставь в Notion/Obsidian/README)":lang==="kk"?"Markdown ретінде көшіру (Notion/Obsidian/README ішіне қой)":"Copy as Markdown document (paste into Notion/Obsidian/README)"} style={{ padding:"7px 12px", fontSize:9, letterSpacing:1.8, textTransform:"uppercase", borderRadius:0,
                   border:`1px solid ${copied===("md-combo-"+i)?"#10b981":c.brd}`,
                   background:"transparent",
                   color:copied===("md-combo-"+i)?"#10b981":c.mut,
@@ -1986,7 +1988,7 @@ function AgentHub({ data, loadTime }) {
         {section === "cheat" && <div role="tabpanel" id="panel-cheat">
         {/* Cycle 20: Search in cheat sheets */}
         <div className="search-row" style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
-          <div style={{ fontSize:10, color:c.dim, flex:1 }}>{lang==="ru"?"Быстрые команды и сниппеты":"Quick commands and snippets"}</div>
+          <div style={{ fontSize:10, color:c.dim, flex:1 }}>{lang==="ru"?"Быстрые команды и сниппеты":lang==="kk"?"Жылдам командалар мен сниппеттер":"Quick commands and snippets"}</div>
           <div style={{ position:"relative", minWidth:200 }}>
             <input type="search" value={cheatSearch} onChange={e=>setCheatSearch(e.target.value)} placeholder={lang==="ru"?"Поиск команд...":lang==="kk"?"Команда іздеу...":"Search commands..."} style={{ width:"100%", height:32, padding:"0 30px 0 10px", fontSize:11, fontFamily:font, letterSpacing:0.3, borderRadius:0, border:0, borderBottom:`1px solid ${c.brd}`, background:"transparent", color:c.text, outline:"none", transition:"border-color .15s" }} />
             {cheatSearch && <button onClick={()=>setCheatSearch("")} style={{ position:"absolute", right:6, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:c.dim, cursor:"pointer", fontSize:12, padding:0, lineHeight:1 }}>×</button>}
@@ -2001,7 +2003,7 @@ function AgentHub({ data, loadTime }) {
           <div key={key} style={{ marginBottom:24 }}>
             <div style={{ display:"flex", alignItems:"baseline", gap:12, marginBottom:12, paddingBottom:8, borderBottom:`1px solid ${sheet.color}25` }}>
               <h3 className="display-serif" style={{ fontSize:22, fontWeight:400, margin:0, color:sheet.color, lineHeight:1, letterSpacing:"-.3px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{sheet.name}</h3>
-              <span className="label-tech-sm numeric" style={{ color:c.dim }}>{filteredCmds.length} {lang==="ru"?"команд":"cmds"}</span>
+              <span className="label-tech-sm numeric" style={{ color:c.dim }}>{filteredCmds.length} {lang==="ru"?"команд":lang==="kk"?"командалар":"cmds"}</span>
             </div>
             {filteredCmds.map((c2, i) => (
               <div key={i} onClick={()=>cp(`cheat-${key}-${i}`, c2.cmd)} className="card-enter" style={{
@@ -2214,6 +2216,11 @@ function AgentHub({ data, loadTime }) {
               {n:"2", t:"Скопируй команду", d:"/ralph-loop, /feature-dev..."},
               {n:"3", t:"Вставь в CLI", d:"Claude Code терминал"},
               {n:"4", t:"Агент работает", d:"автономно изучит проект"},
+            ]:lang==="kk"?[
+              {n:"1", t:"Промт таңда", d:"өз тапсырмаң үшін"},
+              {n:"2", t:"Команданы көшір", d:"/ralph-loop, /feature-dev..."},
+              {n:"3", t:"CLI ішіне қой", d:"Claude Code терминал"},
+              {n:"4", t:"Агент жұмыс істейді", d:"жобаны автономды зерттейді"},
             ]:[
               {n:"1", t:"Pick a prompt", d:"for your task"},
               {n:"2", t:"Copy command", d:"/ralph-loop, /feature-dev..."},
@@ -2400,7 +2407,7 @@ function AgentHub({ data, loadTime }) {
                 const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "aiagent-hub-settings.json"; a.click(); URL.revokeObjectURL(url);
               }
             } catch {}
-          }} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, padding:"8px 20px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}><IconDownload />{lang==="ru"?"Бэкап":"Backup"}</button>
+          }} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, padding:"8px 20px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}><IconDownload />{lang==="ru"?"Бэкап":lang==="kk"?"Бэкап":"Backup"}</button>
           <button onClick={() => {
             const input = document.createElement("input"); input.type = "file"; input.accept = ".json";
             input.onchange = (e) => {
@@ -2416,13 +2423,13 @@ function AgentHub({ data, loadTime }) {
                   if (s.used) setUsedPrompts(s.used);
                   if (s.hist) setSearchHist(s.hist);
                   if (s.cc) setCopyCounters(s.cc);
-                  setToast(lang==="ru"?"Настройки восстановлены":"Settings restored");
+                  setToast(lang==="ru"?"Настройки восстановлены":lang==="kk"?"Баптаулар қалпына келтірілді":"Settings restored");
                 } catch {}
               };
               reader.readAsText(file);
             };
             input.click();
-          }} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, padding:"8px 20px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}><IconUpload />{lang==="ru"?"Восстановить":"Restore"}</button>
+          }} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, padding:"8px 20px", fontSize:10, letterSpacing:2, textTransform:"uppercase", fontFamily:font, fontWeight:700, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none" }}><IconUpload />{lang==="ru"?"Восстановить":lang==="kk"?"Қалпына келтіру":"Restore"}</button>
         </div>
 
         {/* ── FOOTER ── */}
@@ -2435,8 +2442,8 @@ function AgentHub({ data, loadTime }) {
               </div>
             ))}
           </div>
-          <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AIAgent-Hub v12 · {P.length} {lang==="ru"?pl(P.length,"промт","промта","промтов"):t.prompts} · {(COMBOS[lang]||COMBOS.ru).length} {lang==="ru"?pl((COMBOS[lang]||COMBOS.ru).length,"комбо","комбо","комбо"):"combos"} · {stats.roles} {lang==="ru"?pl(stats.roles,"роль","роли","ролей"):"roles"}{loadTime ? ` · ${loadTime}ms` : ""}{copyCount > 0 ? ` · ${copyCount} ${lang==="ru"?"скопировано":"copied"}` : ""}</div>
-          {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":"Top"}</button>}
+          <div style={{ fontSize:9, color:c.dim, letterSpacing:2 }}>AIAgent-Hub v12 · {P.length} {lang==="ru"?pl(P.length,"промт","промта","промтов"):lang==="kk"?"промт":t.prompts} · {(COMBOS[lang]||COMBOS.ru).length} {lang==="ru"?pl((COMBOS[lang]||COMBOS.ru).length,"комбо","комбо","комбо"):lang==="kk"?"комбо":"combos"} · {stats.roles} {lang==="ru"?pl(stats.roles,"роль","роли","ролей"):lang==="kk"?"рөлдер":"roles"}{loadTime ? ` · ${loadTime}ms` : ""}{copyCount > 0 ? ` · ${copyCount} ${lang==="ru"?"скопировано":lang==="kk"?"көшірілді":"copied"}` : ""}</div>
+          {scrollPct > 10 && <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} aria-label="Scroll to top" style={{ marginTop:8, padding:"6px 20px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s" }}>↑ {lang==="ru"?"Наверх":lang==="kk"?"Жоғары":"Top"}</button>}
         </div>
       </main>
 

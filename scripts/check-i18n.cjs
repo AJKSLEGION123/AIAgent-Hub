@@ -21,9 +21,10 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter95 fixed search placeholders + constructor + compact + task + conflict (7 sites).
-// Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 13;
+// Baseline: 0 reached at iter96 (campaign complete: 179 → 0 over 21 iters).
+// Both checks are now hard-fail. Any new binary ru-only ternary OR identical-
+// branch ternary fails CI immediately. Keep at 0 — never raise.
+const BASELINE = 0;
 
 const files = ['src/App.jsx'];
 let binaryTotal = 0;
@@ -35,13 +36,23 @@ const bogusOffenders = [];
 // Backreference \1 ensures the second string equals the first.
 const BOGUS_TERNARY = /\?\s*"([^"]*)"\s*:\s*"\1"/g;
 
+// Look-ahead window for multi-line ternaries (e.g. ru-array on one line,
+// kk-array on a later line). 10 lines covers all observed cases without
+// misattributing kk fallbacks from unrelated nearby ternaries.
+const LOOKAHEAD = 10;
+
 for (const file of files) {
   const content = fs.readFileSync(path.join(process.cwd(), file), 'utf8');
   const lines = content.split('\n');
   lines.forEach((line, i) => {
     if (/lang===['"]ru['"]\s*\?/.test(line) && !/lang===['"]kk['"]/.test(line)) {
-      binaryTotal++;
-      binaryOffenders.push({ file, line: i + 1, text: line.trim() });
+      // Check next LOOKAHEAD lines for a kk fallback completing this multi-line ternary
+      const window = lines.slice(i + 1, i + 1 + LOOKAHEAD).join('\n');
+      const hasKkInWindow = /lang===['"]kk['"]/.test(window);
+      if (!hasKkInWindow) {
+        binaryTotal++;
+        binaryOffenders.push({ file, line: i + 1, text: line.trim() });
+      }
     }
     BOGUS_TERNARY.lastIndex = 0;
     let m;
