@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { execFileSync } from 'child_process';
+import { readFileSync } from 'fs';
 import path from 'path';
 
 const cli = path.join(process.cwd(), 'cli', 'index.cjs');
@@ -75,5 +76,20 @@ describe('CLI', () => {
     const out = run(['run', 'rl-feat']);
     expect(out).toContain('#!/bin/bash');
     expect(out).toContain('claude');
+  });
+
+  // iter48: VERSION had drifted to '8.3' (5 majors stale) — bumped to '13.0'.
+  // Pin the sync between CLI version and CHANGELOG.md so a future CHANGELOG
+  // bump without CLI bump fails this test instead of shipping stale.
+  it('CLI VERSION matches CHANGELOG.md latest entry', () => {
+    const helpOut = run(['help']);
+    const cliVer = helpOut.match(/CLI v(\d+\.\d+)/)?.[1];
+    expect(cliVer, 'CLI help should print v<version>').toBeTruthy();
+
+    const changelog = readFileSync('CHANGELOG.md', 'utf8');
+    const latestVer = changelog.match(/^## \[(\d+\.\d+)\]/m)?.[1];
+    expect(latestVer, 'CHANGELOG should have a [N.N] entry').toBeTruthy();
+
+    expect(cliVer).toBe(latestVer);
   });
 });

@@ -5,7 +5,9 @@ const path = require('path');
 const { inflateSync } = require('zlib');
 const { execFileSync } = require('child_process');
 
-const VERSION = '8.3';
+// Keep in sync with CHANGELOG.md latest section header.
+// Bumped iter48 — was '8.3' (5 majors stale).
+const VERSION = '13.0';
 const C = { reset:'\x1b[0m', bold:'\x1b[1m', dim:'\x1b[2m', red:'\x1b[31m', green:'\x1b[32m', yellow:'\x1b[33m', blue:'\x1b[34m', magenta:'\x1b[35m', cyan:'\x1b[36m' };
 const cl = (color, text) => `${C[color]}${text}${C.reset}`;
 
