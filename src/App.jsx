@@ -131,7 +131,6 @@ async function _d(b, onProgress) {
    GLOBAL CSS (tasks: 003, 011, 013, 014, 015, 022, 025, 104)
    ═══════════════════════════════════════════════ */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 .display-serif{font-family:'Fraunces','Cormorant Garamond','Times New Roman',serif;font-variation-settings:'SOFT' 60,'opsz' 144;font-feature-settings:'ss01','ss02','kern';text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
 .display-italic{font-style:italic;font-variation-settings:'SOFT' 100,'opsz' 144,'wonk' 1}
