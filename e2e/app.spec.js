@@ -60,6 +60,19 @@ test.describe('AIAgent-Hub', () => {
     await expect(page.locator('role=dialog')).toBeVisible({ timeout: 3000 });
   });
 
+  // Regression test for iter1's stale-closure bug: the global keydown effect
+  // had `[section, toggle]` deps so its closure froze modal state vars and
+  // ESC silently failed to close anything. Now that all 8 modal/state vars
+  // are in the deps, this should be the first ESC that closes the dialog.
+  test('Escape closes the shortcuts dialog (stale-closure regression)', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForSelector('[data-theme]', { timeout: 15000 });
+    await page.keyboard.press('?');
+    await expect(page.locator('role=dialog')).toBeVisible({ timeout: 3000 });
+    await page.keyboard.press('Escape');
+    await expect(page.locator('role=dialog')).not.toBeVisible({ timeout: 3000 });
+  });
+
   test('mobile viewport renders', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
