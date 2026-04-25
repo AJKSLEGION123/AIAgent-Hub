@@ -829,16 +829,20 @@ function AgentHub({ data, loadTime }) {
     return { map: CAT_MAP, counts: cats };
   }, [P]);
 
+  // Single source of truth for "what is the latest batch" — used by
+  // both the NEW filter pill and the per-card NEW badge. Auto-tracks
+  // max version so future batches don't require code edits.
+  const maxV = useMemo(() => {
+    let m = 0;
+    for (const p of P) { const pv = parseFloat(p.v); if (!isNaN(pv) && pv > m) m = pv; }
+    return m;
+  }, [P]);
+
   // ── Filtered list (tasks 041, 043, 045, 046, 125) ──
   const list = useMemo(() => {
     let f = P;
     if (showFavsOnly) f = f.filter(p => favs[p.id]);
-    if (showNew) {
-      // Dynamic max version — "NEW" auto-tracks latest batch without manual sync.
-      let maxV = 0;
-      for (const p of P) { const pv = parseFloat(p.v); if (!isNaN(pv) && pv > maxV) maxV = pv; }
-      f = f.filter(p => parseFloat(p.v) === maxV);
-    }
+    if (showNew) f = f.filter(p => parseFloat(p.v) === maxV);
     if (hideUsed) f = f.filter(p => !usedPrompts[p.id]);
     if (fm === "model" && fv !== "all") f = f.filter(p => p.mk === fv);
     else if (fm === "category" && fv !== "all") {
@@ -884,7 +888,7 @@ function AgentHub({ data, loadTime }) {
       f = [...pinned, ...rest];
     }
     return f;
-  }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy, showNew, hideUsed, usedPrompts, pinnedIds, categories]);
+  }, [fm, fv, debouncedSearch, t, showFavsOnly, favs, P, sortBy, showNew, hideUsed, usedPrompts, pinnedIds, categories, maxV]);
 
   const roles = useMemo(() => {
     const rc = {};
@@ -1644,7 +1648,7 @@ function AgentHub({ data, loadTime }) {
                       <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:MC[p.mk], fontWeight:700, fontFamily:font }}>{ML[p.mk]}</span>
                       {p.type==="task" && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:"#ef4444", fontWeight:700, fontFamily:font }}>· {lang==="ru"?"задача":"task"}</span>}
                       {p.difficulty && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:diffColors[p.difficulty], fontWeight:600, fontFamily:font }} className="hide-mobile">· {p.difficulty}</span>}
-                      {p.v==="7.1" && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:"#10b981", fontWeight:700, fontFamily:font }}>· new</span>}
+                      {parseFloat(p.v)===maxV && <span style={{ fontSize:8, letterSpacing:1.5, textTransform:"uppercase", color:"#10b981", fontWeight:700, fontFamily:font }}>· new</span>}
                       {p.time && <span style={{ fontSize:8, letterSpacing:1.5, color:c.dim, fontFamily:font }} className="hide-mobile">· {p.time}</span>}
                     </div>
                     {!isO && <div style={{ fontSize:10, color:c.dim, marginTop:3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{preview}...</div>}
