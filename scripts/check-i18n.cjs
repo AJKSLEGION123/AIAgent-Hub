@@ -17,9 +17,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter83 high-frequency-string sweep (9 replace_all edits, 17 sites).
+// Baseline: count after iter84 fixed sort/quickCopy/compare cluster (8 sites).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 98;
+const BASELINE = 90;
 
 const files = ['src/App.jsx'];
 let total = 0;

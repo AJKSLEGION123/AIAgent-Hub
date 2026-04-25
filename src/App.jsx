@@ -1417,19 +1417,19 @@ function AgentHub({ data, loadTime }) {
               cursor:"pointer", outline:"none",
             }}><IconStar />{favCount}</button>}
             {/* Sort (task 045) */}
-            <select value={sortBy} onChange={e=>setSortBy(e.target.value)} aria-label={lang==="ru"?"Сортировка":"Sort"} style={{ padding:"3px 8px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>
-              <option value="default">{lang==="ru"?"По умолчанию":"Default"}</option>
-              <option value="name">{lang==="ru"?"По имени":"By name"}</option>
-              <option value="length">{lang==="ru"?"По длине":"By length"}</option>
-              <option value="time">{lang==="ru"?"По времени":"By time"}</option>
-              <option value="model">{lang==="ru"?"По модели":"By model"}</option>
+            <select value={sortBy} onChange={e=>setSortBy(e.target.value)} aria-label={lang==="ru"?"Сортировка":lang==="kk"?"Сұрыптау":"Sort"} style={{ padding:"3px 8px", fontSize:10, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.mut, cursor:"pointer", outline:"none" }}>
+              <option value="default">{lang==="ru"?"По умолчанию":lang==="kk"?"Әдепкі":"Default"}</option>
+              <option value="name">{lang==="ru"?"По имени":lang==="kk"?"Атау бойынша":"By name"}</option>
+              <option value="length">{lang==="ru"?"По длине":lang==="kk"?"Ұзындығы бойынша":"By length"}</option>
+              <option value="time">{lang==="ru"?"По времени":lang==="kk"?"Уақыт бойынша":"By time"}</option>
+              <option value="model">{lang==="ru"?"По модели":lang==="kk"?"Модель бойынша":"By model"}</option>
             </select>
           </div>
           <div style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap" }}>
             {/* Task 74: Quick copy mode */}
-            <button onClick={()=>setQuickCopy(!quickCopy)} aria-pressed={quickCopy} title={lang==="ru"?"Быстрое копирование: клик = copy":"Quick copy: click = copy"} style={{ width:28, height:28, border:`1px solid ${quickCopy?"#06b6d4":c.brd}`, borderRadius:0, background:quickCopy?"#06b6d412":"transparent", color:quickCopy?"#06b6d4":c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconZap /></button>
+            <button onClick={()=>setQuickCopy(!quickCopy)} aria-pressed={quickCopy} title={lang==="ru"?"Быстрое копирование: клик = copy":lang==="kk"?"Жылдам көшіру: клик = көшіру":"Quick copy: click = copy"} style={{ width:28, height:28, border:`1px solid ${quickCopy?"#06b6d4":c.brd}`, borderRadius:0, background:quickCopy?"#06b6d412":"transparent", color:quickCopy?"#06b6d4":c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconZap /></button>
             {/* Task 69: Compare mode */}
-            <button onClick={()=>{setCompareMode(!compareMode);if(compareMode)setCompareIds([]);}} aria-pressed={compareMode} title={lang==="ru"?"Выбрать промты (сравнение/экспорт)":"Select prompts (compare/export)"} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:5, minWidth:28, height:28, padding: compareMode && compareIds.length ? "0 8px" : 0, fontSize:9, fontWeight:700, fontFamily:font, border:`1px solid ${compareMode?"#c4541d":c.brd}`, borderRadius:0, background:compareMode?"#c4541d12":"transparent", color:compareMode?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}><IconGrid />{compareMode && compareIds.length > 0 && compareIds.length}</button>
+            <button onClick={()=>{setCompareMode(!compareMode);if(compareMode)setCompareIds([]);}} aria-pressed={compareMode} title={lang==="ru"?"Выбрать промты (сравнение/экспорт)":lang==="kk"?"Промттарды таңдау (салыстыру/экспорт)":"Select prompts (compare/export)"} style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", gap:5, minWidth:28, height:28, padding: compareMode && compareIds.length ? "0 8px" : 0, fontSize:9, fontWeight:700, fontFamily:font, border:`1px solid ${compareMode?"#c4541d":c.brd}`, borderRadius:0, background:compareMode?"#c4541d12":"transparent", color:compareMode?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}><IconGrid />{compareMode && compareIds.length > 0 && compareIds.length}</button>
             {/* Random (task 047) */}
             <button onClick={() => {
               const r = P[Math.floor(Math.random()*P.length)];
