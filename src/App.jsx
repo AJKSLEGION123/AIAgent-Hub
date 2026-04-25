@@ -997,7 +997,7 @@ function AgentHub({ data, loadTime }) {
         <div role="dialog" aria-modal="true" aria-label="Glossary" onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:480, width:"100%", maxHeight:"80vh", overflowY:"auto", fontFamily:font }}>
           <div style={{ marginBottom:18, paddingBottom:12, borderBottom:`1px solid ${c.brd}` }}>
             <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>§ Reference</div>
-            <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Глоссарий":"Glossary"}</div>
+            <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Глоссарий":lang==="kk"?"Глоссарий":"Glossary"}</div>
           </div>
           {[
             ["АНТИ-ЛУП",lang==="ru"?"Защита от зацикливания: 3 похожих действия = смена подхода":lang==="kk"?"Циклден қорғау: 3 ұқсас әрекет = тәсіл өзгерту":"Loop protection: 3 similar actions = change approach"],
@@ -1052,7 +1052,7 @@ function AgentHub({ data, loadTime }) {
             </div>
             <div style={{ display:"flex", gap:6 }}>
               <CBtn id={"focus-"+focusPrompt.id} txt={focusPrompt.text} cl={focusPrompt.ac} copied={copied} cp={cp} t={t} bg={c.onAccent} />
-              <button onClick={()=>setFocusPrompt(null)} aria-label={lang==="ru"?"Закрыть":"Close"} style={{ width:32, height:32, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconX /></button>
+              <button onClick={()=>setFocusPrompt(null)} aria-label={lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"} style={{ width:32, height:32, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconX /></button>
             </div>
           </div>
           <pre style={{ fontSize:11, lineHeight:1.7, color:c.mut, whiteSpace:"pre-wrap", wordBreak:"break-word", margin:0, fontFamily:font, padding:16, background:c.surf, borderRadius:0, border:`1px solid ${c.brd}` }}>{focusPrompt.text}</pre>
@@ -1061,10 +1061,10 @@ function AgentHub({ data, loadTime }) {
 
       {/* Feat 24: Stats modal */}
       {showStats && <div onClick={()=>setShowStats(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-        <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Статистика":"Statistics"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:500, width:"100%", fontFamily:font }}>
+        <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Статистика":lang==="kk"?"Статистика":"Statistics"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 28px", maxWidth:500, width:"100%", fontFamily:font }}>
           <div style={{ marginBottom:18, paddingBottom:12, borderBottom:`1px solid ${c.brd}` }}>
             <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>◈ Index</div>
-            <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Статистика":"Statistics"}</div>
+            <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Статистика":lang==="kk"?"Статистика":"Statistics"}</div>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
             {[
@@ -1168,14 +1168,14 @@ function AgentHub({ data, loadTime }) {
 
           {/* Control row */}
           <div style={{ display:"flex", justifyContent:"flex-end", gap:6, marginTop:14, flexWrap:"wrap" }}>
-            <button onClick={()=>setShowStats(true)} aria-label="Statistics" title={lang==="ru"?"Статистика":"Statistics"} className="nav-btn" data-active={showStats} style={{ borderColor: showStats?c.accent:c.brd, color: showStats?c.accent:c.text }}>
+            <button onClick={()=>setShowStats(true)} aria-label="Statistics" title={lang==="ru"?"Статистика":lang==="kk"?"Статистика":"Statistics"} className="nav-btn" data-active={showStats} style={{ borderColor: showStats?c.accent:c.brd, color: showStats?c.accent:c.text }}>
               <IconStats />
             </button>
             <button onClick={()=>setShowCopyHistory(true)} aria-label="Copy history" title={lang==="ru"?"История копирования":"Copy history"} className="nav-btn" data-active={showCopyHistory} style={{ borderColor: showCopyHistory?c.accent:c.brd, color: showCopyHistory?c.accent:c.text }}>
               <IconLog />
               {copyCount>0 && <span className="dot" style={{ background:c.accent, color:c.onAccent }}>{copyCount}</span>}
             </button>
-            <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":"Glossary"} className="nav-btn" data-active={showGlossary} style={{ borderColor: showGlossary?c.accent:c.brd, color: showGlossary?c.accent:c.text }}>
+            <button onClick={()=>setShowGlossary(true)} aria-label="Glossary" title={lang==="ru"?"Глоссарий":lang==="kk"?"Глоссарий":"Glossary"} className="nav-btn" data-active={showGlossary} style={{ borderColor: showGlossary?c.accent:c.brd, color: showGlossary?c.accent:c.text }}>
               <IconBook />
             </button>
             <button onClick={()=>setShowShortcuts(true)} aria-label="Keyboard shortcuts" title={lang==="ru"?"Горячие клавиши (?)":"Keyboard shortcuts (?)"} className="nav-btn" data-active={showShortcuts} style={{ borderColor: showShortcuts?c.accent:c.brd, color: showShortcuts?c.accent:c.text }}>
@@ -1201,7 +1201,7 @@ function AgentHub({ data, loadTime }) {
 
         {/* Feat 16: Welcome banner — editorial style */}
         {isFirstVisit && <div style={{ marginBottom:24, padding:"20px 24px", border:`1px solid ${c.accent}40`, borderLeft:`3px solid ${c.accent}`, background:`${c.accent}06`, position:"relative" }}>
-          <button onClick={()=>setIsFirstVisit(false)} aria-label={lang==="ru"?"Закрыть":"Close"} style={{ position:"absolute", top:12, right:14, background:"none", border:"none", color:c.mut, cursor:"pointer", outline:"none", padding:4, display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconX /></button>
+          <button onClick={()=>setIsFirstVisit(false)} aria-label={lang==="ru"?"Закрыть":lang==="kk"?"Жабу":"Close"} style={{ position:"absolute", top:12, right:14, background:"none", border:"none", color:c.mut, cursor:"pointer", outline:"none", padding:4, display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconX /></button>
           <div className="label-tech-sm" style={{ color:c.accent, marginBottom:10 }}>Ed. Note · {lang==="ru"?"Добро пожаловать":"Welcome"}</div>
           <div className="display-serif" style={{ fontSize:20, fontWeight:400, color:c.ink, marginBottom:10, lineHeight:1.25, fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>
             {lang==="ru"?"Полевой справочник":"A Field Guide"}
@@ -1355,7 +1355,7 @@ function AgentHub({ data, loadTime }) {
               <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
                 <input type="search" value={tagFilter} onChange={e=>setTagFilter(e.target.value)} placeholder={lang==="ru"?`Поиск тегов (всего ${allTags.length})...`:`Search tags (${allTags.length} total)...`} style={{flex:1,maxWidth:300,height:28,padding:"0 10px",fontSize:11,fontFamily:font,letterSpacing:0.3,border:0,borderBottom:`1px solid ${c.brd}`,borderRadius:0,background:"transparent",color:c.text,outline:"none"}} />
                 <span className="label-tech-sm" style={{color:c.dim}}>{filtered.length === allTags.length ? `${filtered.length}` : `${filtered.length}/${allTags.length}`}</span>
-                {tagFilter && <button onClick={()=>setTagFilter("")} aria-label={lang==="ru"?"Очистить":"Clear"} style={{width:20,height:20,border:0,background:"none",color:c.dim,cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}}><IconX /></button>}
+                {tagFilter && <button onClick={()=>setTagFilter("")} aria-label={lang==="ru"?"Очистить":lang==="kk"?"Тазалау":"Clear"} style={{width:20,height:20,border:0,background:"none",color:c.dim,cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}}><IconX /></button>}
               </div>
               <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
                 <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
@@ -1365,7 +1365,7 @@ function AgentHub({ data, loadTime }) {
                   background:fv===tag?"#e86a2a15":"transparent",color:fv===tag?"#e86a2a":c.mut,
                   cursor:"pointer",outline:"none",whiteSpace:"nowrap"
                 }}>#{tag}<span style={{opacity:.55,fontSize:9}}>{count}</span></button>)}
-                {filtered.length > MAX && <span style={{fontSize:10,color:c.dim,alignSelf:"center",padding:"4px 8px"}}>+{filtered.length - MAX} {lang==="ru"?"ещё":"more"}</span>}
+                {filtered.length > MAX && <span style={{fontSize:10,color:c.dim,alignSelf:"center",padding:"4px 8px"}}>+{filtered.length - MAX} {lang==="ru"?"ещё":lang==="kk"?"тағы":"more"}</span>}
               </div>
             </div>;
           })()}
@@ -1380,7 +1380,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
               <input type="search" value={roleFilter} onChange={e=>setRoleFilter(e.target.value)} placeholder={lang==="ru"?`Поиск ролей (всего ${roles.length})...`:`Search roles (${roles.length} total)...`} style={{flex:1,maxWidth:300,height:28,padding:"0 10px",fontSize:11,fontFamily:font,letterSpacing:0.3,border:0,borderBottom:`1px solid ${c.brd}`,borderRadius:0,background:"transparent",color:c.text,outline:"none"}} />
               <span className="label-tech-sm" style={{color:c.dim}}>{filtered.length === roles.length ? `${filtered.length}` : `${filtered.length}/${roles.length}`}</span>
-              {roleFilter && <button onClick={()=>setRoleFilter("")} aria-label={lang==="ru"?"Очистить":"Clear"} style={{width:20,height:20,border:0,background:"none",color:c.dim,cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}}><IconX /></button>}
+              {roleFilter && <button onClick={()=>setRoleFilter("")} aria-label={lang==="ru"?"Очистить":lang==="kk"?"Тазалау":"Clear"} style={{width:20,height:20,border:0,background:"none",color:c.dim,cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center"}}><IconX /></button>}
             </div>
             <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
               <Pill on={fv==="all"} fn={()=>setFv("all")} lb={t.all} c={c} />
@@ -1393,7 +1393,7 @@ function AgentHub({ data, loadTime }) {
                   cursor:"pointer",outline:"none",transition:"all .15s",whiteSpace:"nowrap"
                 }}>{t.r[r]||r}<span style={{opacity:.55,fontSize:9}}>{n}</span></button>;
               })}
-              {filtered.length > MAX && <span style={{fontSize:10,color:c.dim,alignSelf:"center",padding:"4px 8px"}}>+{filtered.length - MAX} {lang==="ru"?"ещё":"more"}</span>}
+              {filtered.length > MAX && <span style={{fontSize:10,color:c.dim,alignSelf:"center",padding:"4px 8px"}}>+{filtered.length - MAX} {lang==="ru"?"ещё":lang==="kk"?"тағы":"more"}</span>}
             </div>
           </div>;
         })()}
@@ -1409,7 +1409,7 @@ function AgentHub({ data, loadTime }) {
             <span style={{ fontSize:11, color:c.dim }}>{debouncedSearch ? `${list.length} / ${P.length}` : list.length} {t.prompts} · ~{(filteredStats.tokens/1000).toFixed(0)}K</span>
             {/* Task 75: Progress tracker */}
             {usedCount > 0 && <span style={{ fontSize:10, color:"#10b981", fontWeight:600 }}>✓ {usedCount}/{P.length}</span>}
-            <button onClick={randomPrompt} aria-label={lang==="ru"?"Случайный промпт":"Random prompt"} title={lang==="ru"?"Случайный промпт":"Random prompt"} style={{ width:28, height:28, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconDice /></button>
+            <button onClick={randomPrompt} aria-label={lang==="ru"?"Случайный промпт":lang==="kk"?"Кездейсоқ промт":"Random prompt"} title={lang==="ru"?"Случайный промпт":lang==="kk"?"Кездейсоқ промт":"Random prompt"} style={{ width:28, height:28, border:`1px solid ${c.brd}`, borderRadius:0, background:"transparent", color:c.mut, cursor:"pointer", outline:"none", transition:"all .15s", display:"inline-flex", alignItems:"center", justifyContent:"center" }}><IconDice /></button>
             {favCount > 0 && <button onClick={()=>setShowFavsOnly(!showFavsOnly)} aria-pressed={showFavsOnly} aria-label={lang==="ru"?"Показать избранные":"Show favorites"} title={lang==="ru"?"Избранные":"Favorites"} style={{
               display:"inline-flex", alignItems:"center", justifyContent:"center", gap:5, padding:"0 8px", height:28, fontSize:9, fontWeight:700, fontFamily:font,
               border:`1px solid ${showFavsOnly?"#eab308":c.brd}`, borderRadius:0,
@@ -1502,7 +1502,7 @@ function AgentHub({ data, loadTime }) {
             <div style={{ fontSize:10, letterSpacing:4, textTransform:"uppercase", fontWeight:700, color:"#e86a2a", marginBottom:12, fontFamily:font }}>✎ {lang==="ru"?"Конструктор промта":"Prompt Constructor"}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }} className="stack-mobile">
               <div>
-                <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:6 }}>{lang==="ru"?"Роль":"Role"}</div>
+                <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:6 }}>{lang==="ru"?"Роль":lang==="kk"?"Рөл":"Role"}</div>
                 <select value={constructorRole} onChange={e=>setConstructorRole(e.target.value)} style={{ width:"100%", padding:"6px 10px", fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.text, outline:"none" }}>
                   <option value="">{lang==="ru"?"Выбери роль...":"Choose role..."}</option>
                   {["frontend","backend","fullstack","tester","designer","devops","reviewer"].map(r => (
@@ -1511,7 +1511,7 @@ function AgentHub({ data, loadTime }) {
                 </select>
               </div>
               <div>
-                <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:6 }}>{lang==="ru"?"Стек":"Stack"}</div>
+                <div style={{ fontSize:10, fontWeight:600, color:c.text, marginBottom:6 }}>{lang==="ru"?"Стек":lang==="kk"?"Стек":"Stack"}</div>
                 <select value={constructorStack} onChange={e=>setConstructorStack(e.target.value)} style={{ width:"100%", padding:"6px 10px", fontSize:11, fontFamily:font, border:`1px solid ${c.brd}`, borderRadius:0, background:c.card, color:c.text, outline:"none" }}>
                   <option value="">---</option>
                   {["React + Next.js + TypeScript","Vue + Nuxt + TypeScript","Svelte + SvelteKit","Python + Django","Python + FastAPI","Go + Gin","Rust + Axum","Node.js + Express"].map(s => (
@@ -1582,7 +1582,7 @@ function AgentHub({ data, loadTime }) {
             </button>
             {/* Task 58: Stack override */}
             <select value={stackOverride} onChange={e=>setStackOverride(e.target.value)} aria-label="Stack override" style={{ padding:"3px 8px", fontSize:9, fontFamily:font, border:`1px solid ${stackOverride?"#c4541d":c.brd}`, borderRadius:0, background:stackOverride?"#c4541d08":c.card, color:stackOverride?"#c4541d":c.mut, cursor:"pointer", outline:"none" }}>
-              <option value="">◎ {lang==="ru"?"Стек":"Stack"}: Auto</option>
+              <option value="">◎ {lang==="ru"?"Стек":lang==="kk"?"Стек":"Stack"}: Auto</option>
               <option value="React + Next.js + TypeScript">React + Next.js</option>
               <option value="Vue + Nuxt + TypeScript">Vue + Nuxt</option>
               <option value="Svelte + SvelteKit">SvelteKit</option>
@@ -1600,7 +1600,7 @@ function AgentHub({ data, loadTime }) {
             <table style={{ width:"100%", borderCollapse:"collapse", fontSize:10, fontFamily:font }}>
               <thead><tr style={{ borderBottom:`2px solid ${c.brd}`, textAlign:"left" }}>
                 <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>#</th>
-                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>{lang==="ru"?"Роль":"Role"}</th>
+                <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>{lang==="ru"?"Роль":lang==="kk"?"Рөл":"Role"}</th>
                 <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }}>{lang==="ru"?"Модель":"Model"}</th>
                 <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }} className="hide-mobile">{lang==="ru"?"Время":"Time"}</th>
                 <th style={{ padding:"6px 8px", color:c.dim, fontWeight:600 }} className="hide-mobile">{lang==="ru"?"Ур.":"Lvl"}</th>
@@ -1670,7 +1670,7 @@ function AgentHub({ data, loadTime }) {
                   {/* Cycle 6: Copy as markdown */}
                   {isO && <button onClick={(e)=>{e.stopPropagation();const md=`## ${p.icon} ${t.r[p.role]||p.role} (${p.m})\n\n\`\`\`\n${p.text}\n\`\`\`\n`;cp("md-"+p.id,md,true)}} title={lang==="ru"?"Копировать как Markdown":"Copy as Markdown"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${copied===("md-"+p.id)?"#10b981":c.brd}`, background:copied===("md-"+p.id)?"#10b98112":"transparent", color:copied===("md-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", fontSize:10, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s", fontFamily:font, fontWeight:700 }}>{copied===("md-"+p.id)?"✓":"MD"}</button>}
                   {isO && p.compact && <button onClick={(e)=>{e.stopPropagation();setShowDiff(p.id)}} title={lang==="ru"?"Сравнить original vs compact":"Diff original vs compact"} className="hide-mobile" style={{ width:28, height:28, borderRadius:0, border:`1px solid ${c.brd}`, background:"transparent", color:c.dim, cursor:"pointer", outline:"none", fontSize:9, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s", fontFamily:font, fontWeight:700 }}>⇄</button>}
-                  <button onClick={(e)=>{e.stopPropagation();const url=location.origin+location.pathname+`#prompt-${p.id}`;navigator.clipboard?.writeText(url);setCopied("share-"+p.id);setTimeout(()=>setCopied(null),2000)}} aria-label={lang==="ru"?"Скопировать ссылку":"Copy link"} title={lang==="ru"?"Скопировать ссылку":"Copy link"} style={{ width:28, height:28, borderRadius:0, border:`1px solid ${copied===("share-"+p.id)?"#10b981":c.brd}`, background:copied===("share-"+p.id)?"#10b98112":"transparent", color:copied===("share-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{copied===("share-"+p.id)?<IconCheck/>:<IconLink/>}</button>
+                  <button onClick={(e)=>{e.stopPropagation();const url=location.origin+location.pathname+`#prompt-${p.id}`;navigator.clipboard?.writeText(url);setCopied("share-"+p.id);setTimeout(()=>setCopied(null),2000)}} aria-label={lang==="ru"?"Скопировать ссылку":lang==="kk"?"Сілтемені көшіру":"Copy link"} title={lang==="ru"?"Скопировать ссылку":lang==="kk"?"Сілтемені көшіру":"Copy link"} style={{ width:28, height:28, borderRadius:0, border:`1px solid ${copied===("share-"+p.id)?"#10b981":c.brd}`, background:copied===("share-"+p.id)?"#10b98112":"transparent", color:copied===("share-"+p.id)?"#10b981":c.dim, cursor:"pointer", outline:"none", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}>{copied===("share-"+p.id)?<IconCheck/>:<IconLink/>}</button>
                 </div>
               </div>
               {/* Body (task 084: lazy render) */}

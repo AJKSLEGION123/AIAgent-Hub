@@ -17,9 +17,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter82 fixed shortcuts (11) + Close buttons (8 via replace_all).
+// Baseline: count after iter83 high-frequency-string sweep (9 replace_all edits, 17 sites).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 115;
+const BASELINE = 98;
 
 const files = ['src/App.jsx'];
 let total = 0;
