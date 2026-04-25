@@ -91,6 +91,24 @@ describe('filterPrompts', () => {
     const result = filterPrompts(prompts, { ...defaultOpts, hideUsed: true, usedPrompts: { 'rl-feat': true, 'rl-api': true } });
     expect(result).toHaveLength(2);
   });
+
+  it('filters by time >2h', () => {
+    const result = filterPrompts(prompts, { ...defaultOpts, mode: 'time', value: '>2h' });
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('rv-pr');
+  });
+
+  it('time filter excludes prompts whose time has no h/m unit', () => {
+    const noTime = mp('rl-notime', 'claude', 'role', 'command', 'beginner', '???', [], 'no time');
+    const result = filterPrompts([noTime, ...prompts], { ...defaultOpts, mode: 'time', value: '<1h' });
+    expect(result.find(p => p.id === 'rl-notime')).toBeUndefined();
+  });
+
+  it('time filter falls through (returns true) on unknown value', () => {
+    const result = filterPrompts(prompts, { ...defaultOpts, mode: 'time', value: 'weird' });
+    // unknown value → return true → keeps all that have a parseable time
+    expect(result.length).toBeGreaterThan(0);
+  });
 });
 
 describe('sortPrompts', () => {
@@ -118,5 +136,10 @@ describe('sortPrompts', () => {
     const sorted = sortPrompts(prompts, 'model', defaultOpts.roleNames);
     expect(sorted[0].mk).toBe('claude');
     expect(sorted[sorted.length - 1].mk).toBe('claude');
+  });
+
+  it('falls through to identity sort on unknown sortBy', () => {
+    const sorted = sortPrompts(prompts, 'made-up-mode' as never, defaultOpts.roleNames);
+    expect(sorted.map(p => p.id)).toEqual(prompts.map(p => p.id));
   });
 });
