@@ -2,6 +2,7 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "entry": [
     "scripts/generate-og-png.cjs",
+    "scripts/generate-pwa-icons.cjs",
     "scripts/generate-prompts.cjs",
     "bot/telegram.cjs",
     "vscode-extension/extension.js"
