@@ -48,4 +48,36 @@ describe('ErrorBoundary', () => {
       Object.defineProperty(window, 'location', { value: origLocation, writable: true, configurable: true });
     }
   });
+
+  it('renders Russian text when navigator.language matches /^ru/', () => {
+    const origDescriptor = Object.getOwnPropertyDescriptor(Navigator.prototype, 'language')
+      ?? Object.getOwnPropertyDescriptor(navigator, 'language');
+    Object.defineProperty(navigator, 'language', {
+      get() { return 'ru-RU'; },
+      configurable: true,
+    });
+    try {
+      render(<ErrorBoundary><Throw /></ErrorBoundary>);
+      expect(screen.getByText('Что-то пошло не так')).toBeTruthy();
+      expect(screen.getByText(/Перезагрузить/)).toBeTruthy();
+    } finally {
+      if (origDescriptor) Object.defineProperty(navigator, 'language', origDescriptor);
+    }
+  });
+
+  it('renders English text when navigator.language is non-Russian', () => {
+    const origDescriptor = Object.getOwnPropertyDescriptor(Navigator.prototype, 'language')
+      ?? Object.getOwnPropertyDescriptor(navigator, 'language');
+    Object.defineProperty(navigator, 'language', {
+      get() { return 'en-US'; },
+      configurable: true,
+    });
+    try {
+      render(<ErrorBoundary><Throw /></ErrorBoundary>);
+      expect(screen.getByText('Something went wrong')).toBeTruthy();
+      expect(screen.getByText(/^Reload$/)).toBeTruthy();
+    } finally {
+      if (origDescriptor) Object.defineProperty(navigator, 'language', origDescriptor);
+    }
+  });
 });
