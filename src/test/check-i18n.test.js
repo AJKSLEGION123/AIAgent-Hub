@@ -117,6 +117,18 @@ describe('check-i18n analyzeContent — locale-blind aria-label/title detection'
     expect(localeBlindOffenders).toHaveLength(1);
   });
 
+  it('flags placeholder attribute with literal string', () => {
+    const src = `<input placeholder="Search..." />`;
+    const { localeBlindOffenders } = analyzeContent(src);
+    expect(localeBlindOffenders).toHaveLength(1);
+  });
+
+  it('flags alt attribute with literal string', () => {
+    const src = `<img alt="Profile photo" />`;
+    const { localeBlindOffenders } = analyzeContent(src);
+    expect(localeBlindOffenders).toHaveLength(1);
+  });
+
   it('does NOT flag aria-label with JSX expression value', () => {
     const src = `<button aria-label={lang==="ru"?"А":"B"} />`;
     const { localeBlindOffenders } = analyzeContent(src);

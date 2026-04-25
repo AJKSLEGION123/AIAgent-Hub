@@ -35,16 +35,16 @@ const BOGUS_TERNARY = /\?\s*"([^"]*)"\s*:\s*"\1"/g;
 // misattributing kk fallbacks from unrelated nearby ternaries.
 const DEFAULT_LOOKAHEAD = 10;
 
-// Hard-fail: locale-blind aria-label / title literal strings. iter85 caught
+// Hard-fail: locale-blind user-facing string attributes. iter85 caught
 // the theme-button Russian-only aria-label; iter109 caught 13 English-only
 // dialog/button labels; iter110 caught one of each direction. Class-fix:
-// any aria-label or title with a literal Cyrillic or Latin-letter string
-// (not a JSX expression) bypasses the runtime lang switch.
+// any user-visible attribute (aria-label, title, placeholder, alt) with a
+// literal Cyrillic or Latin-letter string bypasses the runtime lang switch.
 //
-// Matches: aria-label="<at-least-one-letter-A-Za-zА-Яа-я>"  with a literal
-// non-empty value. Excluded by accident: empty string aria-labels (uncommon)
-// and pure-symbol/single-char ones (which we don't want to flag anyway).
-const LOCALE_BLIND_LABEL = /(?:aria-label|title)="([A-Za-zА-Яа-я][^"]{0,200})"/g;
+// Matches: <attr>="<at-least-one-letter-A-Za-zА-Яа-я>"  with a literal
+// non-empty value. Excluded by design: empty strings, pure-symbol values
+// like "×" / "→", and JSX expressions like {lang==="ru"?...}.
+const LOCALE_BLIND_LABEL = /(?:aria-label|title|placeholder|alt)="([A-Za-zА-Яа-я][^"]{0,200})"/g;
 
 /**
  * Analyze source content for i18n violations. Pure function — no I/O.
@@ -110,7 +110,7 @@ function main() {
       }
     }
     if (allLocaleBlind.length) {
-      console.log('--- Locale-blind aria-label/title literals ---');
+      console.log('--- Locale-blind aria-label/title/placeholder/alt literals ---');
       for (const o of allLocaleBlind) {
         console.log(`${o.file}:${o.line}  ${o.match}`);
       }
@@ -119,7 +119,7 @@ function main() {
 
   console.log(`Binary ru-only ternaries (no kk fallback): ${allBinary.length} / baseline ${BASELINE}`);
   console.log(`Bogus identical-branch ternaries: ${allBogus.length} (must be 0)`);
-  console.log(`Locale-blind aria-label/title literals: ${allLocaleBlind.length} (must be 0)`);
+  console.log(`Locale-blind aria-label/title/placeholder/alt literals: ${allLocaleBlind.length} (must be 0)`);
 
   let failed = false;
   if (allBinary.length > BASELINE) {
@@ -134,8 +134,8 @@ function main() {
     failed = true;
   }
   if (allLocaleBlind.length > 0) {
-    console.error(`\n⚠ ${allLocaleBlind.length} locale-blind aria-label/title literal strings.`);
-    console.error('  These are spoken by screen readers regardless of UI language.');
+    console.error(`\n⚠ ${allLocaleBlind.length} locale-blind user-facing literal strings.`);
+    console.error('  aria-label/title/placeholder/alt with literal text bypass the lang switch.');
     console.error('  Convert to lang-aware ternaries (`lang==="ru"?ru:lang==="kk"?kk:en`).');
     console.error('  Re-run with --list to see locations.');
     failed = true;
