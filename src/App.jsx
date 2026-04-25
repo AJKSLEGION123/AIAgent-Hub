@@ -12,8 +12,12 @@ import { ErrorBoundary } from "./ErrorBoundary.jsx";
 import { TH, MC, ML, MI, pl } from "./constants.js";
 import { T } from "./translations.js";
 import { decompress } from "./utils/decompress.ts";
-import { Z } from "./data.js";
 import { detectLanguage } from "./utils/i18n.ts";
+
+// Z (compressed catalog blob, ~600KB raw) lives in ./data.js and is loaded via
+// dynamic import below. iter125 split this into a separate chunk so the initial
+// JS payload drops from 977KB to ~378KB raw — boot UI shell paints sooner while
+// the data chunk streams in parallel.
 
 // TH/MC/ML/MI/pl extracted to ./constants.js (iter118).
 // T (translations ru/en/kk) extracted to ./translations.js (iter119).
@@ -42,21 +46,29 @@ export default function App() {
   const dataRef = useRef(null);
   const startTime = useRef(performance.now());
   const bootLang = detectLanguage();
-  
-  useEffect(() => {
-    if (dataRef.current) { setData(dataRef.current); return; }
-    decompress(Z, (pct) => setLoadPct(Math.round(pct * 100)))
+
+  const loadData = useCallback(() => {
+    setErr(null);
+    setLoadPct(0);
+    startTime.current = performance.now();
+    import("./data.js")
+      .then(({ Z }) => decompress(Z, (pct) => setLoadPct(Math.round(pct * 100))))
       .then(d => { dataRef.current = d; setLoadTime(Math.round(performance.now() - startTime.current)); setData(d); })
       .catch(e => setErr(e));
   }, []);
-  
+
+  useEffect(() => {
+    if (dataRef.current) { setData(dataRef.current); return; }
+    loadData();
+  }, [loadData]);
+
   if (err) return (
     <div style={{minHeight:"100vh",background:"#060609",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:font,color:"#ddddef",textAlign:"center",padding:32}}>
       <div>
         <div style={{fontSize:28,fontWeight:800,marginBottom:12}}>AIAgent-Hub</div>
         <div style={{fontSize:14,color:"#ef4444",marginBottom:8}}>{bootLang==="ru"?"Ошибка загрузки данных":bootLang==="kk"?"Деректерді жүктеу қатесі":"Failed to load data"}</div>
         <div style={{fontSize:11,color:"#5e5e78",marginBottom:16}}>{err?.message}</div>
-        <button onClick={()=>{setErr(null);setLoadPct(0);decompress(Z,(pct)=>setLoadPct(Math.round(pct*100))).then(d=>{dataRef.current=d;setData(d)}).catch(e=>setErr(e))}} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:0,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>{bootLang==="ru"?"Обновить":bootLang==="kk"?"Жаңарту":"Reload"}</button>
+        <button onClick={loadData} style={{padding:"8px 24px",fontSize:12,fontFamily:font,fontWeight:600,border:"1.5px solid #e86a2a",borderRadius:0,background:"#e86a2a",color:"#fff",cursor:"pointer"}}>{bootLang==="ru"?"Обновить":bootLang==="kk"?"Жаңарту":"Reload"}</button>
       </div>
     </div>
   );
