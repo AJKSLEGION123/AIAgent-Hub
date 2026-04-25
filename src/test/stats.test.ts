@@ -57,6 +57,16 @@ describe('calculateStats', () => {
     expect(stats.byDifficulty.advanced).toBe(1);
   });
 
+  it('skips prompts with falsy difficulty in byDifficulty count', () => {
+    // Real catalog has prompts where p.difficulty is undefined/empty.
+    // The reduce should NOT count them (falsy branch in `if (p.difficulty)`).
+    const noDiff = mp('rl-no-diff', 'claude', 'role', '', '~1h', [], 'no difficulty');
+    const withDiff = mp('rl-with-diff', 'claude', 'role', 'beginner', '~1h', [], 'with diff');
+    const stats = calculateStats([noDiff, withDiff]);
+    expect(stats.byDifficulty.beginner).toBe(1);
+    expect(stats.byDifficulty['']).toBeUndefined(); // empty-string difficulty NOT counted
+  });
+
   it('handles empty array', () => {
     const stats = calculateStats([]);
     expect(stats.total).toBe(0);

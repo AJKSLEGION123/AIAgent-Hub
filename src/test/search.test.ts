@@ -63,6 +63,16 @@ describe('matchesSearch', () => {
   it('does not match unrelated query', () => {
     expect(matchesSearch(mockPrompt, 'kubernetes', roleNames)).toBe(false);
   });
+
+  it('handles prompt with undefined tags (fallback to empty array)', () => {
+    const noTags = { ...mockPrompt, tags: undefined as unknown as string[] };
+    expect(matchesSearch(noTags, 'react', roleNames)).toBe(true); // still matches text
+    expect(matchesSearch(noTags, 'kubernetes', roleNames)).toBe(false);
+  });
+
+  it('handles missing role in roleNames map', () => {
+    expect(matchesSearch(mockPrompt, 'feature', {})).toBe(true); // raw role still in haystack
+  });
 });
 
 describe('highlightMatch', () => {
@@ -110,5 +120,11 @@ describe('searchRelevance', () => {
   it('low score for text-only match', () => {
     const score = searchRelevance(mockPrompt, 'development', roleNames);
     expect(score).toBe(10);
+  });
+
+  it('falls back to prompt.role when roleNames lookup misses', () => {
+    // With empty roleNames, "feature" still matches via raw prompt.role
+    const score = searchRelevance(mockPrompt, 'feature', {});
+    expect(score).toBeGreaterThanOrEqual(50); // role match gives 50
   });
 });
