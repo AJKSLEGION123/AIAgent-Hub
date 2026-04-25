@@ -1,3 +1,36 @@
+# AIAgent-Hub welcomes all crawlers, including AI training/search bots.
+# This catalog exists to be discovered by AI agents — explicit allowances
+# below are signals of intent, not behavior change vs the wildcard default.
+
 User-agent: *
 Allow: /
+
+# AI search/index bots
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
 Sitemap: https://ai-agent-hub.net/sitemap.xml
