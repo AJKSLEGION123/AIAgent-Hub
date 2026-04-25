@@ -569,11 +569,22 @@ function AgentHub({ data, loadTime }) {
   }, []);
 
   // Task 16: Meta theme-color
+  // index.html ships TWO static meta tags (dark + light, media-scoped) so the
+  // browser can pick the right one for first paint based on system preference,
+  // before this effect runs. When the user explicitly toggles theme in-app, we
+  // overwrite EVERY tag's content with the chosen color so the system-pref
+  // media query no longer fights the user's choice.
   useEffect(() => {
     try {
-      let meta = document.querySelector('meta[name="theme-color"]');
-      if (!meta) { meta = document.createElement('meta'); meta.name = 'theme-color'; document.head.appendChild(meta); }
-      meta.content = TH[theme].meta;
+      const metas = document.querySelectorAll('meta[name="theme-color"]');
+      if (metas.length === 0) {
+        const meta = document.createElement('meta');
+        meta.name = 'theme-color';
+        document.head.appendChild(meta);
+        meta.content = TH[theme].meta;
+      } else {
+        metas.forEach(m => { m.content = TH[theme].meta; });
+      }
     } catch {}
   }, [theme]);
 
