@@ -17,9 +17,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Baseline: count after iter84 fixed sort/quickCopy/compare cluster (8 sites).
+// Baseline: count after iter85 fixed topbar nav cluster (7 sites + a11y bug).
 // Lower this number whenever a future iter drives it down — never raise.
-const BASELINE = 90;
+const BASELINE = 83;
 
 const files = ['src/App.jsx'];
 let total = 0;
