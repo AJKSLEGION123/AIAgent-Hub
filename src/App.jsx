@@ -1017,10 +1017,10 @@ function AgentHub({ data, loadTime }) {
 
       {/* Feat 4: Keyboard shortcuts overlay */}
       {showShortcuts && <div onClick={()=>setShowShortcuts(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.7)", zIndex:9990, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-        <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Горячие клавиши":"Keyboard Shortcuts"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 32px", maxWidth:420, width:"100%", fontFamily:font }}>
+        <div role="dialog" aria-modal="true" aria-label={lang==="ru"?"Горячие клавиши":lang==="kk"?"Хоткейлер":"Keyboard Shortcuts"} onClick={e=>e.stopPropagation()} style={{ background:c.card, border:`1px solid ${c.brd}`, borderRadius:0, padding:"24px 32px", maxWidth:420, width:"100%", fontFamily:font }}>
           <div style={{ marginBottom:18, paddingBottom:12, borderBottom:`1px solid ${c.brd}` }}>
             <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>⌨ Keyboard</div>
-            <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Горячие клавиши":"Shortcuts"}</div>
+            <div className="display-serif" style={{ fontSize:28, fontWeight:400, color:c.ink, lineHeight:1, letterSpacing:"-.5px", fontVariationSettings:"'SOFT' 50,'opsz' 144" }}>{lang==="ru"?"Горячие клавиши":lang==="kk"?"Хоткейлер":"Shortcuts"}</div>
           </div>
           {[
             ["Ctrl+K",lang==="ru"?"Фокус на поиск":lang==="kk"?"Іздеуге назар":"Focus search"],
@@ -1109,7 +1109,7 @@ function AgentHub({ data, loadTime }) {
         <div onClick={e=>e.stopPropagation()} style={{ position:"fixed", right:0, top:0, bottom:0, width:280, background:c.card, borderLeft:`1px solid ${c.brd}`, padding:"20px 16px", fontFamily:font, overflowY:"auto" }}>
           <div style={{ marginBottom:18, paddingBottom:10, borderBottom:`1px solid ${c.brd}` }}>
             <div className="label-tech-sm" style={{ color:c.mut, marginBottom:6 }}>≣ Log</div>
-            <div className="display-serif" style={{ fontSize:22, fontWeight:400, color:c.ink, lineHeight:1.1, letterSpacing:"-.3px" }}>{lang==="ru"?"История копирования":"Copy History"}</div>
+            <div className="display-serif" style={{ fontSize:22, fontWeight:400, color:c.ink, lineHeight:1.1, letterSpacing:"-.3px" }}>{lang==="ru"?"История копирования":lang==="kk"?"Көшіру тарихы":"Copy History"}</div>
           </div>
           {copyHistory.length===0 && <div style={{ fontSize:11, color:c.dim }}>{lang==="ru"?"Ещё ничего не скопировано":lang==="kk"?"Әлі ештеңе көшірілмеген":"Nothing copied yet"}</div>}
           {copyHistory.map((h,i)=><div key={i} style={{ padding:"8px 10px", borderRadius:0, border:`1px solid ${c.brd}`, marginBottom:6, background:c.surf }}>
@@ -1157,8 +1157,8 @@ function AgentHub({ data, loadTime }) {
               <div className="display-serif masthead-stat-num numeric" style={{ fontSize:88, lineHeight:.85, fontWeight:300, letterSpacing:"-4px", color:c.accent, fontVariationSettings:"'SOFT' 30,'opsz' 144" }}>
                 {stats.total}
               </div>
-              <div className="label-tech" style={{ color:c.mut, marginTop:10 }}>{lang==="ru"?"промтов":"prompts"}</div>
-              <div className="label-tech-sm" style={{ color:c.dim, marginTop:8 }}>{(COMBOS[lang]||COMBOS.ru).length} {lang==="ru"?"комбо":"combos"} · {Object.keys(CHEAT).length} {lang==="ru"?"шпаргалок":"cheats"} · ~{Math.round(stats.totalTokens/1000)}K tok{usedCount>0?` · ✓${usedCount}`:""}</div>
+              <div className="label-tech" style={{ color:c.mut, marginTop:10 }}>{lang==="ru"?"промтов":lang==="kk"?"промт":"prompts"}</div>
+              <div className="label-tech-sm" style={{ color:c.dim, marginTop:8 }}>{(COMBOS[lang]||COMBOS.ru).length} {lang==="ru"?"комбо":lang==="kk"?"комбо":"combos"} · {Object.keys(CHEAT).length} {lang==="ru"?"шпаргалок":lang==="kk"?"парақ":"cheats"} · ~{Math.round(stats.totalTokens/1000)}K tok{usedCount>0?` · ✓${usedCount}`:""}</div>
             </div>
           </div>
 
