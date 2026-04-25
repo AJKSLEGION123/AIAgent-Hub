@@ -1,0 +1,63 @@
+name: Feature request
+description: Идея нового промта, combo, UI улучшения или интеграции
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Прежде чем предложить новый промт — проверьте что аналог не существует
+        (поиск в UI на ai-agent-hub.net). После consolidation v13 каталог
+        целенаправленно избегает per-language / per-cloud формульных матриц
+        — лучше **расширить существующий промт чтобы он покрывал больше
+        стеков**, чем создавать дубль.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Тип запроса
+      options:
+        - Новый промт
+        - Новое combo
+        - Новая шпаргалка
+        - Новая CLI-команда в каталоге
+        - UI / UX улучшение
+        - Интеграция (Telegram bot / VS Code / API)
+        - Другое
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Какую проблему решает
+      description: От чего пользователь страдает / что не получается сейчас
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Предлагаемое решение
+      description: Как именно должно работать; для промтов — приведите черновик
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Альтернативы которые рассмотрели
+      description: Существующие промты / workarounds / другие реализации
+
+  - type: checkboxes
+    id: portability
+    attributes:
+      label: Портативность (для новых промтов)
+      description: |
+        После v13 consolidation все промты должны работать в любом проекте,
+        а не быть привязаны к AIAgent-Hub-specific stack. Подтвердите хотя
+        бы один пункт.
+      options:
+        - label: Промт не упоминает специфические файлы/пути из AIAgent-Hub
+        - label: Stack определяется автоматически (package.json / pyproject / Cargo / go.mod)
+        - label: Включает [AUTONOMY-v4] wrapper если это командный промт
+        - label: Не дублирует существующие промты по другому языку/стеку

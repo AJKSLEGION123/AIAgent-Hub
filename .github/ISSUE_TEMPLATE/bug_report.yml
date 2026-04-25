@@ -1,0 +1,91 @@
+name: Bug report
+description: Что-то сломано или работает не так как описано
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо за репорт. Чем больше деталей, тем быстрее починим. Прежде чем
+        отправить — проверьте что то же самое не висит в открытых issues.
+
+  - type: input
+    id: where
+    attributes:
+      label: Где воспроизводится
+      description: Live URL / self-hosted / local dev
+      placeholder: "https://ai-agent-hub.net (Vercel) | self-hosted | npm run dev (localhost:5173)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Как воспроизвести
+      description: Пошагово что вы делали
+      placeholder: |
+        1. Открыл https://ai-agent-hub.net/
+        2. Кликнул на табе "Комбо"
+        3. Нажал "Копировать" на первой карточке
+        4. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Ожидаемое поведение
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Что произошло на самом деле
+      description: Включите console errors / network HAR / скриншоты если есть
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Браузер
+      options:
+        - Chrome / Chromium / Edge
+        - Firefox
+        - Safari
+        - Mobile Safari (iOS)
+        - Mobile Chrome (Android)
+        - Other (укажите в комментариях)
+    validations:
+      required: true
+
+  - type: input
+    id: viewport
+    attributes:
+      label: Viewport (если UI bug)
+      placeholder: "1440×900 desktop | 375×812 mobile"
+
+  - type: dropdown
+    id: theme
+    attributes:
+      label: Тема (если визуальный bug)
+      options:
+        - Dark
+        - Light
+        - Both / system pref auto
+
+  - type: dropdown
+    id: lang
+    attributes:
+      label: Язык (если копирование/i18n bug)
+      options:
+        - Русский (ru)
+        - English (en)
+        - Қазақша (kk)
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors
+      description: DevTools → Console — скопируйте красные сообщения
+      render: text
