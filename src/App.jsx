@@ -1,4 +1,11 @@
 import { useState, useCallback, useMemo, useEffect, useRef, memo, Component, Fragment } from "react";
+import {
+  IconStats, IconLog, IconBook, IconKeyboard, IconMoon, IconSun, IconLang,
+  IconTextSize, IconDice, IconStar, IconStarOutline, IconZap, IconGrid,
+  IconDownload, IconUpload, IconPencil, IconX, IconCopy, IconCheck,
+  IconExpand, IconCollapse, IconFocus, IconPin, IconPinOutline, IconLink,
+  IconList, IconCards,
+} from "./icons.jsx";
 
 /* ═══════════════════════════════════════════════
    TRANSLATIONS
@@ -228,36 +235,9 @@ select{-webkit-appearance:none;appearance:none;background-image:url("data:image/
 [id^="card-"]:focus:not(:focus-visible){outline:none}
 `;
 
-/* ═══════════════════════════════════════════════
-   NAV ICONS (SVG, inherit color via currentColor)
-   ═══════════════════════════════════════════════ */
-const IconStats = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M2.5 13.5V9M6 13.5V5M9.5 13.5V10.5M13 13.5V2.5"/></svg>;
-const IconLog = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.3 2.3"/></svg>;
-const IconBook = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h7.5a2 2 0 012 2v8a1 1 0 01-1 1H4a1 1 0 01-1-1V3z"/><path d="M3 3v11M6 6h4M6 9h3"/></svg>;
-const IconKeyboard = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1.5" y="4.5" width="13" height="8" rx="1"/><path d="M4 7.5h.01M7 7.5h.01M10 7.5h.01M4.5 10.5h7"/></svg>;
-const IconMoon = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13.5 9.3A5.5 5.5 0 116.7 2.5a4.2 4.2 0 006.8 6.8z"/></svg>;
-const IconSun = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.3 3.3l1 1M11.7 11.7l1 1M3.3 12.7l1-1M11.7 4.3l1-1"/></svg>;
-const IconLang = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2a9 9 0 010 12M8 2a9 9 0 000 12"/></svg>;
-const IconTextSize = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 13l3-9 3 9M3.2 10.3h3.6"/><path d="M11 7v6M9 10l2 2 2-2"/></svg>;
-const IconDice = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><circle cx="5.5" cy="5.5" r=".8" fill="currentColor"/><circle cx="10.5" cy="5.5" r=".8" fill="currentColor"/><circle cx="8" cy="8" r=".8" fill="currentColor"/><circle cx="5.5" cy="10.5" r=".8" fill="currentColor"/><circle cx="10.5" cy="10.5" r=".8" fill="currentColor"/></svg>;
-const IconStar = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l1.9 4.2 4.6.4-3.5 3 1 4.5L8 11.3 3.9 13.6l1-4.5-3.5-3 4.6-.4z"/></svg>;
-const IconStarOutline = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"><path d="M8 1.5l1.9 4.2 4.6.4-3.5 3 1 4.5L8 11.3 3.9 13.6l1-4.5-3.5-3 4.6-.4z"/></svg>;
-const IconZap = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 1L3 9h4l-1.5 6L13 7H9z"/></svg>;
-const IconGrid = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg>;
-const IconDownload = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 2v8m0 0l-3-3m3 3l3-3M2.5 13h11"/></svg>;
-const IconUpload = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 11V3m0 0L5 6m3-3l3 3M2.5 13h11"/></svg>;
-const IconPencil = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11.5 2.5l2 2-8 8-3 1 1-3z"/><path d="M10 4l2 2"/></svg>;
-const IconX = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>;
-const IconCopy = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="5" width="9" height="9" rx="1"/><path d="M11 5V3a1 1 0 00-1-1H3a1 1 0 00-1 1v7a1 1 0 001 1h2"/></svg>;
-const IconCheck = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>;
-const IconExpand = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 6l3 3 3-3"/></svg>;
-const IconCollapse = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 10l3-3 3 3"/></svg>;
-const IconFocus = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5V3h2M11 3h2v2M13 11v2h-2M5 13H3v-2"/></svg>;
-const IconPin = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M10.5 1.5l4 4-3 1-1 4-2-2-3.5 3.5V11L7.5 7.5l-2-2 4-1z"/></svg>;
-const IconPinOutline = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"><path d="M10.5 1.5l4 4-3 1-1 4-2-2-3.5 3.5V11L7.5 7.5l-2-2 4-1z"/></svg>;
-const IconLink = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6.5 9.5l3-3M9 11l-1.5 1.5a2.5 2.5 0 01-3.5-3.5L5.5 7.5M10.5 8.5L12 7a2.5 2.5 0 013.5 3.5L14 12"/></svg>;
-const IconList = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg>;
-const IconCards = () => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"><rect x="2" y="2.5" width="12" height="4.5"/><rect x="2" y="9" width="12" height="4.5"/></svg>;
+// Icons extracted to ./icons.jsx in iter113 — all 27 SVG components are
+// pure stateless and self-contained. Re-imported here to avoid touching
+// every JSX site that uses them.
 
 /* ═══════════════════════════════════════════════
    MEMOIZED COMPONENTS (tasks: 001, 002, 082, 096, 098)
