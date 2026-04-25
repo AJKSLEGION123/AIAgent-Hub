@@ -66,7 +66,9 @@ Object.entries(data.CHEAT||{}).forEach(([key, val]) => {
 
 if (issues.length === 0) {
   console.log('\n✅ No issues found!');
-} else {
-  console.log('\n⚠️  Found', issues.length, 'issues:');
-  issues.forEach(i => console.log('  - ' + i));
+  process.exit(0);
 }
+
+console.error('\n⚠️  Found', issues.length, 'issues:');
+issues.forEach(i => console.error('  - ' + i));
+process.exit(1);
